@@ -3,3 +3,4 @@ A food review app for canteen food in NUS, so that students and staffs can see m
 
 ## Screens
 ![Screens](screens.jpg | height=300)
+<img src="screens.jpg" height="300">
