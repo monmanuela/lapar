@@ -11,26 +11,55 @@ import {
   Text,
   View
 } from 'react-native';
-import MainTabNavigator from './navigation/MainTabNavigator';
+// import MainTabNavigator from './navigation/MainTabNavigator';
 import firebase from 'react-native-firebase';
-import { SwitchNavigator } from 'react-navigation'
+import { createAppNavigator } from "./navigation/AppNavigator";
+import { isSignedIn } from "./auth";
+//import SignedIn from './screens/SignedIn' 
 
-import Loading from './screens/LoadingScreen'
-import SignUp from './screens/SignUpScreen'
-import Login from './screens/LoginScreen'
-import Home from './screens/HomeScreen'
+// const App = SwitchNavigator(
+//   {
+//     SignedIn: {
+//       screen: SignedIn
+//     },
+//     SignedOut: {
+//       screen: SignedOut
+//     }
+//   },
+//   {
+//     initialRouteName: signedIn ? "SignedIn" : "SignedOut"
+//   }
+// )
 
-const App = SwitchNavigator(
-  {
-    Loading,
-    SignUp,
-    Login,
-    Home
-  },
-  {
-    initialRouteName: 'Login'
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      signedIn: false,
+      checkedSignIn: false
+    };
   }
-)
+
+  componentDidMount() {
+    isSignedIn()
+      .then(res => this.setState({ signedIn: res, checkedSignIn: true }))
+      .catch(err => alert("An error occurred"));
+  }
+
+  render() {
+    const { checkedSignIn, signedIn } = this.state;
+
+    // If we haven't checked AsyncStorage yet, don't render anything (better ways to do this)
+    if (!checkedSignIn) {
+      return null;
+    }
+
+    const Layout = createAppNavigator(signedIn);
+    return <Layout />;
+  }
+}
+
 
 export default App
 

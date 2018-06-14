@@ -1,10 +1,10 @@
 import React from 'react';
-import { createBottomTabNavigator } from 'react-navigation';
+import { TabNavigator } from 'react-navigation';
 import HomeScreen from '../screens/HomeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
-export default createBottomTabNavigator(
+export default MainTabNavigator = TabNavigator(
   {
     Home: HomeScreen,
     Explore: ExploreScreen,
@@ -16,5 +16,6 @@ export default createBottomTabNavigator(
     		fontSize: 18,
   		},
     },
+    tabBarPosition: 'bottom',
   }
 );
