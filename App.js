@@ -12,38 +12,59 @@ import {
   View
 } from 'react-native';
 import MainTabNavigator from './navigation/MainTabNavigator';
+import firebase from 'react-native-firebase';
+import { SwitchNavigator } from 'react-navigation'
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import Loading from './screens/LoadingScreen'
+import SignUp from './screens/SignUpScreen'
+import Login from './screens/LoginScreen'
+import Home from './screens/HomeScreen'
 
-type Props = {};
-export default class App extends Component<Props> {
-  render() {
-    return (
-      <MainTabNavigator />
-    );
+const App = SwitchNavigator(
+  {
+    Loading,
+    SignUp,
+    Login,
+    Home
+  },
+  {
+    initialRouteName: 'Login'
   }
-}
+)
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+export default App
+
+// const instructions = Platform.select({
+//   ios: 'Press Cmd+R to reload,\n' +
+//     'Cmd+D or shake for dev menu',
+//   android: 'Double tap R on your keyboard to reload,\n' +
+//     'Shake or press menu button for dev menu',
+// });
+
+// type Props = {};
+// export default class App extends Component<Props> {
+//   render() {
+//     return (
+//       <MainTabNavigator />
+//     );
+//   }
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: '#F5FCFF',
+//   },
+//   welcome: {
+//     fontSize: 20,
+//     textAlign: 'center',
+//     margin: 10,
+//   },
+//   instructions: {
+//     textAlign: 'center',
+//     color: '#333333',
+//     marginBottom: 5,
+//   },
+// });

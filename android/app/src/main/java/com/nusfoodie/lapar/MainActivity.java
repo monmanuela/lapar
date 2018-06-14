@@ -1,4 +1,4 @@
-package com.lapar;
+package com.nusfoodie.lapar;
 
 import com.facebook.react.ReactActivity;
 
