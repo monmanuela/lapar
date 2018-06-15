@@ -3,30 +3,36 @@ import { StyleSheet, Text, TextInput, View, Button } from 'react-native'
 import firebase from 'react-native-firebase'
 
 export default class SignUp extends React.Component {
-  state = {
-    displayName: '',
-    username: '',
-    email: '',
-    password: '',
-    errorMessage: null
+  constructor() {
+    super()
+    this.state = {
+      displayName: '',
+      username: '',
+      email: '',
+      password: '',
+      errorMessage: null
+    }
   }
 
-  handleSignUp = () => {
+  handleSignUp = async () => {
     const db = firebase.database()
 
-    firebase
+    await firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => this.props.navigation.navigate('Home'))
       .catch(error => this.setState({ errorMessage: error.message }))
 
-    db.ref('users/' + userId).set({
+    // TODO: check for unique username!
+
+    db.ref('users/' + this.state.username).set({
       displayName: this.state.displayName,
       username: this.state.username,
-      email: this.state.email
+      email: this.state.email,
+      uid: firebase.auth().currentUser.uid
     })
-    // later add profile picture
-    // store the rest of the data in the database
+
+    // add profile picture?
   }
 
   render() {
