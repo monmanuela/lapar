@@ -3,55 +3,46 @@ import { Text, View } from 'react-native';
 import firebase from 'react-native-firebase';
 
 class ProfileScreen extends React.Component {
-  state = { currentUser: null }
+  constructor() {
+    super()
+    this.state = { 
+      currentUser: null,
+      userData: {
+        displayName: '',
+        username: '',
+        email: '',
+        uid: ''
+      }
+    }
+  }
 
   componentDidMount() {
     const currentUser = firebase.auth().currentUser;
-    this.setState({ currentUser })
-  }
-
-  render() {
-    var currentUser = this.state.currentUser;
-
+    
     if (currentUser != null) {
       var db = firebase.database()
-      var name, username, email, uid, emailVerified;
 
-      db.ref("users").orderByKey().equalTo(currentUser.uid).on("value", function(snapshot) {
+      db.ref("users").orderByKey().equalTo(currentUser.uid).once("value").then(function(snapshot) {
         console.log("snapshot: " + JSON.stringify(snapshot))
         var key = currentUser.uid
         var userData = snapshot.val()[key]
-        name = userData.displayName;
-        username = userData.username;
-        email = userData.email
-        uid = userData.uid
-
-        console.log("inside func snapshot")
-        console.log("name inside: " + name)
-        console.log("username inside: " + username)
-        console.log("email inside: " + email)
-        console.log("uid inside: " + uid)
-        console.log("userData: " + JSON.stringify(userData))
-      })
-
-      console.log("name: " + name)
-      console.log("username: " + username)
-      console.log("email: " + email)
-      console.log("uid: " + currentUser.uid)
-      console.log("currentUser: " + JSON.stringify(currentUser))
-
+        return userData
+      }).then(userData => this.setUserData(userData))
     }
+  }
 
-    // WHY CANNOT SHOW THE DETAILS ON RETURN?
+  setUserData = userData => {
+    this.setState({ userData })
+  }
 
+  render() {
 		return (
 			<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Profile!</Text>
-        <Text>Hi {name} !</Text>
-        <Text>Email: {email}</Text>
-        <Text>photoUrl: {photoUrl}</Text>
-        <Text>emailVerified: {emailVerified}</Text>
-        <Text>uid: {uid}</Text>
+        <Text>Hi {this.state.userData.displayName} !</Text>
+        <Text>Username: {this.state.userData.username}</Text>
+        <Text>Email: {this.state.userData.email}</Text>
+        <Text>uid: {this.state.userData.uid}</Text>
 
       </View>
 		);
