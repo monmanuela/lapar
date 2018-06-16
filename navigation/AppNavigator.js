@@ -1,10 +1,6 @@
 import React from 'react';
 import { Platform, StatusBar } from 'react-native';
-import {
-  StackNavigator,
-  TabNavigator,
-  SwitchNavigator,
-} from 'react-navigation';
+import { createSwitchNavigator }  from 'react-navigation';
 import { FontAwesome } from 'react-native-vector-icons';
 import MainTabNavigator from './MainTabNavigator';
 import SignedOutNavigator from './SignedOutNavigator';
@@ -75,8 +71,8 @@ import Login from '../screens/LoginScreen';
 //   }
 // );
 
-export const createAppNavigator = (signedIn = false) => {
-  return SwitchNavigator(
+export default AppNavigator = (signedIn = false) => {
+  return createSwitchNavigator(
     {
       MainTabNavigator: {
         screen: MainTabNavigator

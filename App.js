@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 // import MainTabNavigator from './navigation/MainTabNavigator';
 import firebase from 'react-native-firebase';
-import { createAppNavigator } from "./navigation/AppNavigator";
+import AppNavigator from "./navigation/AppNavigator";
 import { isSignedIn } from "./auth";
 //import SignedIn from './screens/SignedIn' 
 
@@ -55,7 +55,7 @@ class App extends React.Component {
       return null;
     }
 
-    const Layout = createAppNavigator(signedIn);
+    const Layout = AppNavigator(signedIn);
     return <Layout />;
   }
 }

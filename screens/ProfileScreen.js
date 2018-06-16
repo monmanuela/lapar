@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import firebase from 'react-native-firebase';
 
-class ProfileScreen extends React.Component {
+export default class ProfileScreen extends React.Component {
   state = { currentUser: null }
 
   componentDidMount() {
@@ -37,5 +37,3 @@ class ProfileScreen extends React.Component {
 		);
 	}
 }
-
-export default ProfileScreen

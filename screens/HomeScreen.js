@@ -1,11 +1,13 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import ItemSwiper from '../components/ItemSwiper';
 import { SearchBar } from 'react-native-elements';
-import HorizontalItemList from '../components/HorizontalItemList';
 import firebase from 'react-native-firebase';
 
-class HomeScreen extends React.Component {
+import HorizontalItemsSwiper from '../components/HorizontalItemsSwiper';
+import HorizontalItemsList from '../components/HorizontalItemsList';
+import { recommendations, tops, locs } from '../constants/Test';
+
+export default class HomeScreen extends React.Component {
 	state = { currentUser: null }
 
   componentDidMount() {
@@ -15,22 +17,28 @@ class HomeScreen extends React.Component {
 
 	render() {
 		const { currentUser } = this.state
+
 		return (
+        
 			 <View style={{ flex: 1 }}> 
 			 	<SearchBar placeholder="Search..." clearIcon />
 			 	<Text>
           Hi {currentUser && currentUser.email}!
         </Text>
+        <Text>{'\n'}</Text>
+
 			 	<Text>Recommendations</Text>
-  			<ItemSwiper />
+        <HorizontalItemsSwiper items={recommendations} navigation={this.props.navigation} />
+        <Text>{'\n'}</Text>
+
   			<Text>Top 10</Text>
-  			<ItemSwiper />
+        <HorizontalItemsSwiper items={tops} navigation={this.props.navigation} />
+        <Text>{'\n'}</Text>
+
   			<Text>Locations</Text>
-  			<HorizontalItemList />
-  			<Text>...</Text>
+  			<HorizontalItemsList items={locs} navigation={this.props.navigation} />
+        <Text>{'\n'}</Text>
   		</View>
 		);
 	}
 }
-
-export default HomeScreen

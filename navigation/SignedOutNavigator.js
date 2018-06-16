@@ -1,19 +1,19 @@
 import React from 'react';
-import { StackNavigator } from 'react-navigation';
-import SignUp from '../screens/SignUpScreen';
-import Login from '../screens/LoginScreen';
+import { createStackNavigator } from 'react-navigation';
+import SignUpScreen from '../screens/SignUpScreen';
+import LoginScreen from '../screens/LoginScreen';
 
-export default SignedOutNavigator = StackNavigator({
-  SignUp: {
-    screen: SignUp,
-    navigationOptions: {
-      title: 'Sign Up',
-    }
-  },
+export default SignedOutNavigator = createStackNavigator({ 
   Login: {
-    screen: Login,
+    screen: LoginScreen,
     navigationOptions: {
       title: 'Login',
+    }
+  },
+  SignUp: {
+    screen: SignUpScreen,
+    navigationOptions: {
+      title: 'Sign Up',
     }
   }
 });

@@ -17,7 +17,7 @@ export default class Login extends React.Component {
       .then(() => this.props.navigation.navigate('Home'))
       .catch(error => this.setState({ errorMessage: error.message }))
 
-    // console.log('handleLogin')
+     console.log('handleLogin')
   }
 
   render() {
