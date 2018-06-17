@@ -16,12 +16,9 @@ export default class Login extends React.Component {
       .signInAndRetrieveDataWithEmailAndPassword(email, password)
       .then(() => this.props.navigation.navigate('Home'))
       .catch(error => this.setState({ errorMessage: error.message }))
-
-     console.log('handleLogin')
   }
 
   render() {
-    console.log("in render login")
     return (
       <View style={styles.container}>
         <Text>Login</Text>

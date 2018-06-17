@@ -10,26 +10,41 @@ export default class SignUp extends React.Component {
       username: '',
       email: '',
       password: '',
+      bio: '',
       errorMessage: null
     }
   }
 
   handleSignUp = async () => {
-    const db = firebase.database()
-
     await firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
-        db.ref('users/' + firebase.auth().currentUser.uid).set({
+        const user = firebase.auth().currentUser
+        user.updateProfile({
           displayName: this.state.displayName,
-          username: this.state.username,
-          email: this.state.email,
-          uid: firebase.auth().currentUser.uid
+          photoURL: "http://i.imgur.com/k5nwqtG.png",
         })
       })
       .then(() => this.props.navigation.navigate('Home'))
       .catch(error => this.setState({ errorMessage: error.message }))
+
+    // const db = firebase.database()
+
+    // await firebase
+    //   .auth()
+    //   .createUserWithEmailAndPassword(this.state.email, this.state.password)
+    //   .then(() => {
+    //     db.ref('users/' + firebase.auth().currentUser.uid).set({
+    //       displayName: this.state.displayName,
+    //       username: this.state.username,
+    //       email: this.state.email,
+    //       bio: '',
+    //       uid: firebase.auth().currentUser.uid
+    //     })
+    //   })
+    //   .then(() => this.props.navigation.navigate('Home'))
+    //   .catch(error => this.setState({ errorMessage: error.message }))
 
     // TODO: check for unique username! (or don't need username?)
     // add profile picture?

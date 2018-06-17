@@ -5,24 +5,20 @@ export default class ExploreModal extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			modalVisible: this.props.modalVisible,
+			modalVisible: false,//this.props.modalVisible,
 			filter = [],
 			sort = ''
 		}
-	}
-
-	onSearch = () => {
-		
 	}
 
 	render() {
 		return (
 			<Modal visible={this.state.modalVisible}>
 				<View>
-					<TouchableHighlight onPress={this.onSearch}>
+					<TouchableHighlight>
 						<Text>Search</Text>
 					</TouchableHighlight>
-					<TouchableHighlight onPress={this.onCancel}>
+					<TouchableHighlight>
 						<Text>Cancel</Text>
 					</TouchableHighlight>
 				</View>
