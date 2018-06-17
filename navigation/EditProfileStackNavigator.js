@@ -18,7 +18,7 @@ export default EditProfileStackNavigator = createStackNavigator({
       title: "Edit Profile",
       tabBarVisible: false, // doesn't work??
       headerRight: (
-        <TouchableWithoutFeedback onPress=  {() => alert('Saved changes!')}>
+        <TouchableWithoutFeedback onPress=  {navigation.getParam('handleSaveChanges')}>
           <Icon color="black" name="check" size={25} />
         </TouchableWithoutFeedback>
       )
