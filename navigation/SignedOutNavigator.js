@@ -7,13 +7,13 @@ export default SignedOutNavigator = createStackNavigator({
   Login: {
     screen: LoginScreen,
     navigationOptions: {
-      title: 'Login',
+      header: null
     }
   },
   SignUp: {
     screen: SignUpScreen,
     navigationOptions: {
-      title: 'Sign Up',
+      header: null
     }
   }
 });

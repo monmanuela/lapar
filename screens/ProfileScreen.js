@@ -15,7 +15,6 @@ export default class ProfileScreen extends React.Component {
       }
     }
   }
->>>>>>> 7fb357a14ade8feb052c77dab9b7e9634f118b67
 
   componentDidMount() {
     const currentUser = firebase.auth().currentUser;

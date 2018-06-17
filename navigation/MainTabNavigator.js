@@ -3,12 +3,13 @@ import { createBottomTabNavigator, NavigationActions } from 'react-navigation';
 import HomeScreen from '../screens/HomeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import SwiperStackNavigator from './SwiperStackNavigator';
+import HomeSwiperStackNavigator from './HomeSwiperStackNavigator';
+import ExploreSwiperStackNavigator from './ExploreSwiperStackNavigator';
 
 export default MainTabNavigator = createBottomTabNavigator(
   {
-    Home: SwiperStackNavigator,
-    Explore: ExploreScreen,
+    Home: HomeSwiperStackNavigator,
+    Explore: ExploreSwiperStackNavigator,
     Profile: ProfileScreen
   },
   {
