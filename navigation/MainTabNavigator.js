@@ -4,12 +4,15 @@ import HomeScreen from '../screens/HomeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import SwiperStackNavigator from './SwiperStackNavigator';
+import EditProfileStackNavigator from './EditProfileStackNavigator';
 
 export default MainTabNavigator = createBottomTabNavigator(
   {
     Home: SwiperStackNavigator,
     Explore: ExploreScreen,
-    Profile: ProfileScreen
+    Profile: {
+      screen: EditProfileStackNavigator,
+    }
   },
   {
     tabBarOptions: {

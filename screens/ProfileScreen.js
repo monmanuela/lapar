@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
 import firebase from 'react-native-firebase';
+import EditProfileScreen from './EditProfileScreen'
 
 export default class ProfileScreen extends React.Component {
   constructor() {
@@ -11,13 +12,14 @@ export default class ProfileScreen extends React.Component {
         displayName: '',
         username: '',
         email: '',
-        uid: ''
+        uid: '',
+        bio: '',
       }
     }
   }
->>>>>>> 7fb357a14ade8feb052c77dab9b7e9634f118b67
 
   componentDidMount() {
+    // show loading swirling logo
     const currentUser = firebase.auth().currentUser;
     
     if (currentUser != null) {
@@ -36,17 +38,42 @@ export default class ProfileScreen extends React.Component {
     this.setState({ userData })
   }
 
+  handleEditProfile = () => {
+    this.props.navigation.navigate('EditProfile', {currentUser: this.state.currentUser, userData: this.state.userData})
+  }
+
   render() {
 		return (
-			<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Profile!</Text>
-        <Text>Hi {this.state.userData.displayName} !</Text>
-        <Text>Username: {this.state.userData.username}</Text>
-        <Text>Email: {this.state.userData.email}</Text>
-        <Text>uid: {this.state.userData.uid}</Text>
+			<View style={{ flex: 1, alignItems: 'center' }}>
+        <Text>Photo Here</Text>
+        <Text>{this.state.userData.displayName}</Text>
+        <Text>Bio Here</Text>
+        <Text>{this.state.userData.bio}</Text>
+        <Button title="Edit Profile" onPress={this.handleEditProfile} />
+        {/* Bio, Badges, Last Activities/Previous Reviews*/}
+        {/* Store preferences in userData */}
+
+        {/*<Text>Username: {this.state.userData.username}</Text>*/}
+        {/*<Text>Email: {this.state.userData.email}</Text>*/}
+        {/*<Text>uid: {this.state.userData.uid}</Text>*/}
 
       </View>
 		);
 	}
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  textInput: {
+    height: 40,
+    width: '90%',
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginTop: 8
+  }
+})
 
