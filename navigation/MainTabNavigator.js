@@ -1,5 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator, NavigationActions } from 'react-navigation';
+
 import HomeSwiperStackNavigator from './HomeSwiperStackNavigator';
 import ExploreSwiperStackNavigator from './ExploreSwiperStackNavigator';
 import EditProfileStackNavigator from './EditProfileStackNavigator';

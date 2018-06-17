@@ -1,12 +1,15 @@
 import React from 'react';
 import { FlatList, Text } from 'react-native';
 import { Card } from 'react-native-elements';
+
 import Item from './Item';
 
 export default class VerticalItemsList extends React.Component {
   render() {
     let items = this.props.items;
-    let filteredItems = items.filter(item => item.name.includes(this.props.filter));
+    let filteredItems = items.filter(
+      item => item.name.includes(this.props.search) && 
+        this.props.filters.every(f => item.tags.includes(f)));
     return (
         <FlatList
           data={filteredItems}

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import Swiper from 'react-native-swiper';
+
 import Colors from '../constants/Colors';
-// import { StackNavigator } from 'react-navigation';
 import Item from './Item';
 
 export default class HorizontalItemsSwiper extends React.Component {
