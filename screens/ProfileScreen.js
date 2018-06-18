@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, TextInput, Button, StyleSheet, Image } from 'react-native';
 import firebase from 'react-native-firebase';
+import { Avatar } from 'react-native-elements'
 import EditProfileScreen from './EditProfileScreen'
 
 export default class ProfileScreen extends React.Component {
@@ -11,7 +12,6 @@ export default class ProfileScreen extends React.Component {
       userData: {
         displayName: '',
         username: '',
-        email: '',
         uid: '',
         bio: '',
       }
@@ -19,22 +19,25 @@ export default class ProfileScreen extends React.Component {
   }
 
   componentDidMount() {
+    console.log("in profile did mount")
     // show loading swirling logo
     const currentUser = firebase.auth().currentUser;
     console.log("currentUser: " + JSON.stringify(currentUser))
     
     if (currentUser != null) {
-      var db = firebase.database()
+      console.log("in did mount if")
+      const db = firebase.database()
       this.setCurrentUser(currentUser)
 
       db.ref("users").orderByKey().equalTo(currentUser.uid).once("value").then(function(snapshot) {
         console.log("snapshot: " + JSON.stringify(snapshot))
-        var key = currentUser.uid
-        var userData = snapshot.val()[key]
+        const key = currentUser.uid
+        const userData = snapshot.val()[key]
         return userData
       }).then(userData => {
         console.log("userData: " + JSON.stringify(userData))
-        this.setUserData(userData) })
+        this.setUserData(userData)
+      })
     }
   }
 
@@ -51,25 +54,27 @@ export default class ProfileScreen extends React.Component {
   }
 
   render() {
+    console.log("in render")
 		return (
 			<View style={{ flex: 1, alignItems: 'center' }}>
         {this.state.currentUser &&
-          <Image
-            style={{width: 150, height: 150}}
-            source={{uri: this.state.currentUser.photoURL}}
-          />
+          <View>
+            <Avatar
+              size="300"
+              rounded
+              source={{uri: this.state.currentUser.photoURL}}
+              onPress={() => alert("View enlarged picture")}
+              activeOpacity={0.7}
+            />
+          </View>
         }
 
         <Text>{this.state.currentUser && this.state.currentUser.displayName}</Text>
-        <Text>Bio Here</Text>
-        <Text>{this.state.userData && this.state.userData.bio}</Text>
+        <Text>Username: @{this.state.userData && this.state.userData.username}</Text>
+        <Text>Bio: {this.state.userData && this.state.userData.bio}</Text>
+        <Text>Preferences: {this.state.userData && this.state.userData.preferences}</Text>
         <Button title="Edit Profile" onPress={this.handleEditProfile} />
         {/* Bio, Badges, Last Activities/Previous Reviews*/}
-        {/* Store preferences in userData */}
-
-        {/*<Text>Username: {this.state.userData.username}</Text>*/}
-        {/*<Text>Email: {this.state.userData.email}</Text>*/}
-        {/*<Text>uid: {this.state.userData.uid}</Text>*/}
 
       </View>
 		);
