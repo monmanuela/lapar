@@ -57,6 +57,7 @@ export const items = [
     details: '...',
     recom: true,
     rank: 1,
+    price: 3,
     stall: 's1', 
     tags: ['halal']
   },
@@ -66,6 +67,7 @@ export const items = [
     details: '...',
     recom: false,
     rank: 2,
+    price: 9,
     stall: 's1',
     tags: ['vegetarian']
   },
@@ -75,6 +77,7 @@ export const items = [
     details: '...',
     recom: true,
     rank: 11,
+    price: 2.5,
     stall: 's2',
     tags: ['halal', 'vegetarian']
   },
@@ -84,6 +87,7 @@ export const items = [
     details: '...',
     recom: false,
     rank: 12,
+    price: 3.5,
     stall: 's3',
     tags: []
   },
@@ -93,6 +97,7 @@ export const items = [
     details: '...',
     recom: true,
     rank: 4,
+    price: 2,
     stall: 's5',
     tags: []    
   },
@@ -102,6 +107,7 @@ export const items = [
     details: '...',
     recom: false,
     rank: 3,
+    price: 5,
     stall: 's6',
     tags: []    
   }
