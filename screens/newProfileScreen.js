@@ -15,18 +15,21 @@ export default class newProfileScreen extends React.Component {
         username: '',
         uid: '',
         bio: '',
-        preferences: ''
+        preferences: '',
+        photoURL: null,
       },
       modalVisible: false,
       modalDisplayName: '',
       modalUsername: '',
       modalEmail: '',
       modalBio: '',
-      modalPreferences: ''
+      modalPreferences: '',
+      modalPhotoURL: null,
     }
   }
 
   componentDidMount() {
+    console.log("in did mount newProfileScreen")
     // show loading swirling logo
     const currentUser = firebase.auth().currentUser;
     
@@ -51,6 +54,7 @@ export default class newProfileScreen extends React.Component {
       userData: {
         displayName: this.state.currentUser && this.state.currentUser.displayName,
         email: this.state.currentUser && this.state.currentUser.email,
+        photoURL: this.state.currentUser && this.state.currentUser.photoURL,
         ...userData
       } 
     })
@@ -63,7 +67,8 @@ export default class newProfileScreen extends React.Component {
       modalEmail: this.state.userData && this.state.userData.email,
       modalUsername: this.state.userData && this.state.userData.username,
       modalBio: this.state.userData && this.state.userData.bio,
-      modalPreferences: this.state.userData && this.state.userData.preferences
+      modalPreferences: this.state.userData && this.state.userData.preferences,
+      modalPhotoURL: this.state.userData && this.state.userData.photoURL,
     });
   }
 
@@ -72,6 +77,7 @@ export default class newProfileScreen extends React.Component {
     
     user.updateProfile({
       displayName: this.state.modalDisplayName,
+      photoURL: this.state.modalPhotoURL,
     })
     .then(() => {
       user.updateEmail(this.state.modalEmail)
@@ -90,7 +96,8 @@ export default class newProfileScreen extends React.Component {
           email: this.state.modalEmail,
           username: this.state.modalUsername,
           bio: this.state.modalBio,
-          preferences: this.state.modalPreferences
+          preferences: this.state.modalPreferences,
+          photoURL: this.state.modalPhotoURL,
         },
         modalVisible: false 
       })
@@ -101,11 +108,11 @@ export default class newProfileScreen extends React.Component {
 		return (
 			<View style={{ flex: 1, alignItems: 'center' }}>
         <View>
-          { this.state.currentUser &&
+          { this.state.userData &&
             <Avatar
               size="300"
               rounded
-              source={{uri: this.state.currentUser.photoURL}}
+              source={{uri: this.state.userData.photoURL}}
               onPress={() => alert("View enlarged picture")}
               activeOpacity={0.7}
             /> 
@@ -125,11 +132,13 @@ export default class newProfileScreen extends React.Component {
           email={this.state.modalEmail}
           bio={this.state.modalBio}
           preferences={this.state.modalPreferences}
+          photoURL={this.state.modalPhotoURL}
           onChangeDisplayName={ modalDisplayName => this.setState({ modalDisplayName }) }
           onChangeEmail={ modalEmail => this.setState({ modalEmail }) }
           onChangeUsername={ modalUsername => this.setState({ modalUsername }) }
           onChangeBio={ modalBio => this.setState({ modalBio }) }
           onChangePreferences={ modalPreferences => this.setState({ modalPreferences }) }
+          onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
           handleSaveChanges={this.handleSaveChanges}
           handleClose={ () => this.setState({ modalVisible: false })} 
         />

@@ -1,12 +1,11 @@
 import React from 'react';
-import { Text, View, TextInput, Button, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { Text, View, TextInput, Button, StyleSheet, Keyboard, TouchableWithoutFeedback, ScrollView, Image } from 'react-native';
 import { Avatar } from 'react-native-elements'
 import firebase from 'react-native-firebase';
+// var ImagePicker = require('react-native-image-picker');
+import ImagePicker from 'react-native-image-picker'
 
 export default class EditProfileScreen extends React.Component {
-  // don't touch the old data passed down from profilescreen
-  // initial new data to old data, use as placeholder, change the new data
-  // upon submit, check if new data == old data, update accordingly
   constructor() {
     super()
     this.state = { 
@@ -22,6 +21,7 @@ export default class EditProfileScreen extends React.Component {
       newEmail: '',
       newBio: '',
       newPreferences: '',
+      photoSrc: null,
     }
   }
 
@@ -84,6 +84,34 @@ export default class EditProfileScreen extends React.Component {
 
   onChangePreferences = pref => {
     this.setState({ newPreferences: pref })
+  }
+
+  onChangePicturePress = () => {
+    const options = {
+      title: 'Select Avatar',
+      customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'},],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
+    }
+
+    ImagePicker.showImagePicker(options, response => {
+      console.log('response: ', response)
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker')
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error)
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton)
+      } else {
+        const src = { uri: response.uri }
+        console.log('src: ' + JSON.stringify(src))
+        this.setState({ photoSrc: src})
+        console.log('photoSrc: ' + JSON.stringify(this.state.photoSrc))
+      }
+    })
   }
 
   render() {
@@ -153,6 +181,9 @@ export default class EditProfileScreen extends React.Component {
               value={this.state.newPreferences}
             />
           </View>
+
+          <Button title="Change Picture" onPress={this.onChangePicturePress} />
+          <Image source={ this.state.photoSrc } />
         </View>
       </TouchableWithoutFeedback>
     )
