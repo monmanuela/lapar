@@ -1,12 +1,11 @@
 import React from 'react';
-import { Text, View, Modal, TouchableHighlight, FlatList, Picker, Button } from 'react-native';
+import { Text, View, TouchableHighlight } from 'react-native';
 import { SearchBar, CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import VerticalItemsList from '../components/VerticalItemsList';
 import { items } from '../constants/Test';
-
-const filterCriterias = ['halal', 'vegetarian'];
+import ExploreModal from '../components/ExploreModal'
 
 export default class ExploreScreen extends React.Component {
   constructor(props) {
@@ -14,7 +13,7 @@ export default class ExploreScreen extends React.Component {
   	this.state = {
   		search: '',
       modalVisible: false,
-      sort: '',
+      sort: 'rating',
       filters: []
   	}
   }
@@ -42,7 +41,6 @@ export default class ExploreScreen extends React.Component {
   }
 
   onSortChange = (value, index) => {
-    console.log("on sort change " + value)
     this.setState({ sort: value });
   }
 
@@ -53,36 +51,15 @@ export default class ExploreScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Modal animationType='fade' onRequestClose={() => alert("Search") } visible={this.state.modalVisible}>
-          <View>
-            <Text>Filter:</Text>
-            <FlatList
-              data={filterCriterias}
-              extraData={this.state}
-              renderItem={({item: criteria}) => (
-                <CheckBox
-                  title={criteria}
-                  onPress={() => this.onCheckFilter(criteria)}
-                  checked={this.state.filters.includes(criteria)}
-                />
-              )}
-              keyExtractor={(item, index) => index.toString() }
-            />
-
-            <Text>Sort by:</Text>
-            <Picker
-              selectedValue={this.state.sort}
-              onValueChange={this.onSortChange}
-            >
-              <Picker.Item label='Rating' value='rating' />
-              <Picker.Item label='Price' value='price' />
-            </Picker>
-
-            <Button title='Clear' onPress={this.onClear} />
-            <Text>{'\n'}</Text>
-            <Button title='Done' onPress={this.onCloseModal} />
-          </View>
-        </Modal>
+        <ExploreModal
+          modalVisible={this.state.modalVisible} 
+          sort={this.state.sort} 
+          filters={this.state.filters}
+          onCheckFilter={this.onCheckFilter}
+          onSortChange={this.onSortChange}
+          onClear={this.onClear}
+          onCloseModal={this.onCloseModal}
+        />
 
         <View>
         	<SearchBar onChangeText={this.handleSearch} placeholder="Search..." clearIcon />

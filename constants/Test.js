@@ -113,3 +113,4 @@ export const items = [
   }
 ]
 
+export const filterCriterias = ['halal', 'vegetarian'];
