@@ -60,7 +60,7 @@ export default class ProfileScreen extends React.Component {
         {this.state.currentUser &&
           <View>
             <Avatar
-              size="300"
+              size={300}
               rounded
               source={{uri: this.state.currentUser.photoURL}}
               onPress={() => alert("View enlarged picture")}
