@@ -78,7 +78,7 @@ export default class newProfileScreen extends React.Component {
 
       const db = firebase.database()
       db.ref("users/" + user.uid).update({
-        username: this.state.modalUsername
+        username: this.state.modalUsername,
         bio: this.state.modalBio,
         preferences: this.state.modalPreferences,
       })
