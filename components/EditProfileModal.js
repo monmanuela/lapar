@@ -25,8 +25,6 @@ export default class EditProfileModal extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton)
       } else {
-        // const src = { uri: response.uri }
-        // console.log('src: ' + JSON.stringify(src))
         this.props.onChangePhotoURL(response.uri)
       }
     })
@@ -48,7 +46,6 @@ export default class EditProfileModal extends React.Component {
                   title="Change Picture"
                 />
               }
-                  {/*source={this.props.currentUser && {uri: this.props.currentUser.photoURL}}*/}
             </View>
 
             <View style={{flexDirection: 'row'}}>
@@ -106,9 +103,6 @@ export default class EditProfileModal extends React.Component {
 
             <Button title='Save' onPress={this.props.handleSaveChanges} />
             <Button title='Close' onPress={this.props.handleClose} />
-            {/* <Button title='Change Picture' onPress={this.onChangePicturePress} /> */}
-            {/* <Text>{this.state.photoSrc}</Text> */}
-            {this.props.photoURL && <Image source={{uri: this.props.photoURL}} style={{width: 60, height: 60}} />}
 
           </View>
         </TouchableWithoutFeedback>
