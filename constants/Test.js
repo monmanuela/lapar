@@ -1,3 +1,37 @@
+// time in reviews: [minute, hour, date, month, year]
+export const reviews = 
+  {
+    'r1':
+    {
+      rating: 5,
+      userID: 'u3',
+      itemID: 'i3',
+      time: [25, 17, 20, 6, 2018],
+      content: 'Yong Tau Foo! the liao was nice, and the noodle so gud. wld come back again.',
+      photoURL: 'https://burpple-3.imgix.net/foods/2d941c36eb83782413a1608914_original.?w=645&dpr=2&fit=crop&q=80',
+    },
+
+    'r2':
+    {
+      rating: 4,
+      userID: 'u1',
+      itemID: 'i1',
+      time: [3, 18, 19, 6, 2018],
+      content: 'the beef bulgogi is a bit tough, but generally tastes nice',
+      photoURL: 'https://www.koreanbapsang.com/wp-content/uploads/2010/05/DSC_0893-e1426734907897.jpg',
+    },
+
+    'r3':
+    {
+      rating: 5,
+      userID: 'u3',
+      itemID: 'i5',
+      time: [5, 18, 19, 6, 2018],
+      content: '1st time trying black pepper beef bibimbap, good value for money!',
+      photoURL: 'https://thewoksoflife.com/wp-content/uploads/2017/05/bibimbap-recipe-3.jpg',
+    },
+  }
+
 export const locs = [
   {
     id: 'l1',

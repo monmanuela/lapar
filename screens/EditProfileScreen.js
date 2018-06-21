@@ -118,7 +118,6 @@ export default class EditProfileScreen extends React.Component {
     return(
       <TouchableWithoutFeedback onPress={ () => Keyboard.dismiss() }>
         <View>
-          {/* how? change photo here */}
           <View style={{alignItems: 'center'}}>
             <Avatar
               size="300"

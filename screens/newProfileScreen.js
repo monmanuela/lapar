@@ -1,8 +1,9 @@
 import React from 'react';
 import { Text, View, Button, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import firebase from 'react-native-firebase';
-import { Avatar } from 'react-native-elements'
+import { Avatar, Card } from 'react-native-elements'
 import EditProfileModal from '../components/EditProfileModal'
+import { reviews } from '../constants/Test'
 
 export default class newProfileScreen extends React.Component {
   constructor() {
@@ -26,12 +27,11 @@ export default class newProfileScreen extends React.Component {
       modalPreferences: '',
       modalPhotoURL: null,
       isLoading: true,
+      reviewIDs: ['r1', 'r3']
     }
   }
 
   componentDidMount() {
-    console.log("in did mount newProfileScreen")
-    // show loading swirling logo
     const currentUser = firebase.auth().currentUser;
     
     if (currentUser != null) {
@@ -106,12 +106,35 @@ export default class newProfileScreen extends React.Component {
   }
 
   render() {
+    let screen
+
     if (this.state.isLoading) {
-      return <View><ActivityIndicator size="large" color="#0000ff" /></View>
+      screen = <ActivityIndicator size="large" color="#0000ff" />
     } else {
-  		return (
-  			<View style={{ flex: 1, alignItems: 'center' }}>
-          <View>
+      const reviewCards = this.state.reviewIDs.map((reviewID, i) => {
+        const reviewArr = {reviews}.reviews
+        const url = reviews[reviewID].photoURL
+        console.log(url)
+        console.log(reviewArr[reviewID].content)
+        console.log(reviewArr[reviewID].itemID)
+        return(
+            <Card key={i}>
+              <Text>
+                {reviewArr[reviewID].itemID}
+              </Text>
+              <Text>
+                Rating: {reviewArr[reviewID].rating}
+              </Text>
+              <Text>
+                {reviewArr[reviewID].content}
+              </Text>
+            </Card>
+        )
+         // image={ require({url}) }
+      })
+
+  		screen =
+      <View style={{ alignItems: 'center' }}>
             { this.state.userData &&
               <Avatar
                 size="300"
@@ -121,13 +144,15 @@ export default class newProfileScreen extends React.Component {
                 activeOpacity={0.7}
               /> 
             }
-          </View>
           <Text>{this.state.userData && this.state.userData.displayName}</Text>
           <Text>Username: @{this.state.userData && this.state.userData.username}</Text>
           <Text>Bio: {this.state.userData && this.state.userData.bio}</Text>
           <Text>Preferences: {this.state.userData && this.state.userData.preferences}</Text>
           <Button title="Edit Profile" onPress={this.handleEditProfile} />
           {/* Bio, Badges, Last Activities/Previous Reviews*/}
+
+          { reviewCards }
+
           <EditProfileModal
             modalVisible={this.state.modalVisible} 
             currentUser={this.state.currentUser} 
@@ -146,10 +171,13 @@ export default class newProfileScreen extends React.Component {
             handleSaveChanges={this.handleSaveChanges}
             handleClose={ () => this.setState({ modalVisible: false })} 
           />
-        </View>
-  		);
-    }
-	}
+      </View>
+      } // end else
+
+      return (
+        <View style={{ flex: 1, alignItems: 'center' }}>{screen}</View>
+      );
+  }
 }
 
 const styles = StyleSheet.create({
