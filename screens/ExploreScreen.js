@@ -74,7 +74,3 @@ export default class ExploreScreen extends React.Component {
     );
   }
 }
-
-        // View>
-        //   <Icon name='navicon'/>
-        // </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Button, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import { Text, View, Button, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
 import firebase from 'react-native-firebase';
 import { Avatar, Card } from 'react-native-elements'
 import EditProfileModal from '../components/EditProfileModal'
@@ -114,11 +114,13 @@ export default class newProfileScreen extends React.Component {
       const reviewCards = this.state.reviewIDs.map((reviewID, i) => {
         const reviewArr = {reviews}.reviews
         const url = reviews[reviewID].photoURL
-        console.log(url)
-        console.log(reviewArr[reviewID].content)
-        console.log(reviewArr[reviewID].itemID)
         return(
             <Card key={i}>
+              <Image
+                style={styles.image}
+                resizeMode="cover"
+                source={{uri: url}}
+              />
               <Text>
                 {reviewArr[reviewID].itemID}
               </Text>
@@ -130,49 +132,49 @@ export default class newProfileScreen extends React.Component {
               </Text>
             </Card>
         )
-         // image={ require({url}) }
       })
 
   		screen =
-      <View style={{ alignItems: 'center' }}>
-            { this.state.userData &&
-              <Avatar
-                size="300"
-                rounded
-                source={{uri: this.state.userData.photoURL}}
-                onPress={() => alert("View enlarged picture")}
-                activeOpacity={0.7}
-              /> 
-            }
-          <Text>{this.state.userData && this.state.userData.displayName}</Text>
-          <Text>Username: @{this.state.userData && this.state.userData.username}</Text>
-          <Text>Bio: {this.state.userData && this.state.userData.bio}</Text>
-          <Text>Preferences: {this.state.userData && this.state.userData.preferences}</Text>
-          <Button title="Edit Profile" onPress={this.handleEditProfile} />
-          {/* Bio, Badges, Last Activities/Previous Reviews*/}
+      <ScrollView>
+      <View style={styles.container}>
+        { this.state.userData &&
+          <Avatar
+            size="300"
+            rounded
+            source={{uri: this.state.userData.photoURL}}
+            onPress={() => alert("View enlarged picture")}
+            activeOpacity={0.7}
+          /> 
+        }
+        <Text>{this.state.userData && this.state.userData.displayName}</Text>
+        <Text>Username: @{this.state.userData && this.state.userData.username}</Text>
+        <Text>Bio: {this.state.userData && this.state.userData.bio}</Text>
+        <Text>Preferences: {this.state.userData && this.state.userData.preferences}</Text>
+        <Button title="Edit Profile" onPress={this.handleEditProfile} />
 
-          { reviewCards }
+        { reviewCards } 
 
-          <EditProfileModal
-            modalVisible={this.state.modalVisible} 
-            currentUser={this.state.currentUser} 
-            displayName={this.state.modalDisplayName}
-            username={this.state.modalUsername}
-            email={this.state.modalEmail}
-            bio={this.state.modalBio}
-            preferences={this.state.modalPreferences}
-            photoURL={this.state.modalPhotoURL}
-            onChangeDisplayName={ modalDisplayName => this.setState({ modalDisplayName }) }
-            onChangeEmail={ modalEmail => this.setState({ modalEmail }) }
-            onChangeUsername={ modalUsername => this.setState({ modalUsername }) }
-            onChangeBio={ modalBio => this.setState({ modalBio }) }
-            onChangePreferences={ modalPreferences => this.setState({ modalPreferences }) }
-            onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
-            handleSaveChanges={this.handleSaveChanges}
-            handleClose={ () => this.setState({ modalVisible: false })} 
-          />
-      </View>
-      } // end else
+        <EditProfileModal
+          modalVisible={this.state.modalVisible} 
+          currentUser={this.state.currentUser} 
+          displayName={this.state.modalDisplayName}
+          username={this.state.modalUsername}
+          email={this.state.modalEmail}
+          bio={this.state.modalBio}
+          preferences={this.state.modalPreferences}
+          photoURL={this.state.modalPhotoURL}
+          onChangeDisplayName={ modalDisplayName => this.setState({ modalDisplayName }) }
+          onChangeEmail={ modalEmail => this.setState({ modalEmail }) }
+          onChangeUsername={ modalUsername => this.setState({ modalUsername }) }
+          onChangeBio={ modalBio => this.setState({ modalBio }) }
+          onChangePreferences={ modalPreferences => this.setState({ modalPreferences }) }
+          onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
+          handleSaveChanges={this.handleSaveChanges}
+          handleClose={ () => this.setState({ modalVisible: false })} 
+        />
+        </View>
+      </ScrollView>
+      }
 
       return (
         <View style={{ flex: 1, alignItems: 'center' }}>{screen}</View>
@@ -184,7 +186,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   textInput: {
     height: 40,
@@ -192,5 +194,9 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     marginTop: 8
+  },
+  image: {
+    height: 150,
+    width: 350
   }
 })
