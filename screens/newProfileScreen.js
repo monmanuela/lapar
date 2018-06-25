@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, View, Button, StyleSheet, Image } from 'react-native';
+import { Text, View, Button, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
 import firebase from 'react-native-firebase';
-import { Avatar } from 'react-native-elements'
+import { Avatar, Card } from 'react-native-elements'
 import EditProfileModal from '../components/EditProfileModal'
+import { reviews } from '../constants/Test'
 
 export default class newProfileScreen extends React.Component {
   constructor() {
@@ -25,12 +26,12 @@ export default class newProfileScreen extends React.Component {
       modalBio: '',
       modalPreferences: '',
       modalPhotoURL: null,
+      isLoading: true,
+      reviewIDs: ['r1', 'r3']
     }
   }
 
   componentDidMount() {
-    console.log("in did mount newProfileScreen")
-    // show loading swirling logo
     const currentUser = firebase.auth().currentUser;
     
     if (currentUser != null) {
@@ -41,7 +42,7 @@ export default class newProfileScreen extends React.Component {
         return snapshot.val()[currentUser.uid]
       }).then(userData => {
         this.setUserData(userData)
-      })
+      }).then(() => this.setState({ isLoading: false }))
     }
   }
 
@@ -105,9 +106,37 @@ export default class newProfileScreen extends React.Component {
   }
 
   render() {
-		return (
-			<View style={{ flex: 1, alignItems: 'center' }}>
-        <View>
+    let screen
+
+    if (this.state.isLoading) {
+      screen = <ActivityIndicator size="large" color="#0000ff" />
+    } else {
+      const reviewCards = this.state.reviewIDs.map((reviewID, i) => {
+        const reviewArr = {reviews}.reviews
+        const url = reviews[reviewID].photoURL
+        return(
+            <Card key={i}>
+              <Image
+                style={styles.image}
+                resizeMode="cover"
+                source={{uri: url}}
+              />
+              <Text>
+                {reviewArr[reviewID].itemID}
+              </Text>
+              <Text>
+                Rating: {reviewArr[reviewID].rating}
+              </Text>
+              <Text>
+                {reviewArr[reviewID].content}
+              </Text>
+            </Card>
+        )
+      })
+
+  		screen =
+      <ScrollView>
+        <View style={styles.container}>
           { this.state.userData &&
             <Avatar
               size="300"
@@ -117,41 +146,47 @@ export default class newProfileScreen extends React.Component {
               activeOpacity={0.7}
             /> 
           }
-        </View>
-        <Text>{this.state.userData && this.state.userData.displayName}</Text>
-        <Text>Username: @{this.state.userData && this.state.userData.username}</Text>
-        <Text>Bio: {this.state.userData && this.state.userData.bio}</Text>
-        <Text>Preferences: {this.state.userData && this.state.userData.preferences}</Text>
-        <Button title="Edit Profile" onPress={this.handleEditProfile} />
-        {/* Bio, Badges, Last Activities/Previous Reviews*/}
-        <EditProfileModal
-          modalVisible={this.state.modalVisible} 
-          currentUser={this.state.currentUser} 
-          displayName={this.state.modalDisplayName}
-          username={this.state.modalUsername}
-          email={this.state.modalEmail}
-          bio={this.state.modalBio}
-          preferences={this.state.modalPreferences}
-          photoURL={this.state.modalPhotoURL}
-          onChangeDisplayName={ modalDisplayName => this.setState({ modalDisplayName }) }
-          onChangeEmail={ modalEmail => this.setState({ modalEmail }) }
-          onChangeUsername={ modalUsername => this.setState({ modalUsername }) }
-          onChangeBio={ modalBio => this.setState({ modalBio }) }
-          onChangePreferences={ modalPreferences => this.setState({ modalPreferences }) }
-          onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
-          handleSaveChanges={this.handleSaveChanges}
-          handleClose={ () => this.setState({ modalVisible: false })} 
-        />
-      </View>
-		);
-	}
+          <Text>{this.state.userData && this.state.userData.displayName}</Text>
+          <Text>Username: @{this.state.userData && this.state.userData.username}</Text>
+          <Text>Bio: {this.state.userData && this.state.userData.bio}</Text>
+          <Text>Preferences: {this.state.userData && this.state.userData.preferences}</Text>
+          <Button title="Edit Profile" onPress={this.handleEditProfile} />
+
+          { reviewCards } 
+
+          <EditProfileModal
+            modalVisible={this.state.modalVisible} 
+            currentUser={this.state.currentUser} 
+            displayName={this.state.modalDisplayName}
+            username={this.state.modalUsername}
+            email={this.state.modalEmail}
+            bio={this.state.modalBio}
+            preferences={this.state.modalPreferences}
+            photoURL={this.state.modalPhotoURL}
+            onChangeDisplayName={ modalDisplayName => this.setState({ modalDisplayName }) }
+            onChangeEmail={ modalEmail => this.setState({ modalEmail }) }
+            onChangeUsername={ modalUsername => this.setState({ modalUsername }) }
+            onChangeBio={ modalBio => this.setState({ modalBio }) }
+            onChangePreferences={ modalPreferences => this.setState({ modalPreferences }) }
+            onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
+            handleSaveChanges={this.handleSaveChanges}
+            handleClose={ () => this.setState({ modalVisible: false })} 
+          />
+          </View>
+        </ScrollView>
+      }
+
+      return (
+        <View style={{ flex: 1, alignItems: 'center' }}>{screen}</View>
+      );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   textInput: {
     height: 40,
@@ -159,5 +194,9 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
     marginTop: 8
+  },
+  image: {
+    height: 150,
+    width: 350
   }
 })

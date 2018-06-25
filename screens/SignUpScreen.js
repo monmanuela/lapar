@@ -16,8 +16,14 @@ export default class SignUp extends React.Component {
   }
 
   handleSignUp = async () => {
+    let userID
     const db = firebase.database()
-    await firebase
+    await db
+    .ref('id/').orderByKey().equalTo("lastUserID").once('value').then(function(snapshot) {
+      userID = snapshot.val().lastUserID + 1
+    })
+    .then(() => {
+      firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
@@ -34,11 +40,17 @@ export default class SignUp extends React.Component {
           bio: '',
           preferences: '',
           uid: user.uid,
+          userID: 'u' + userID,
+        })
+        .then(() => {
+          db.ref('id/').update({
+            lastUserID: userID
+          })
         })
       })
       .then(() => this.props.navigation.navigate('Home'))
       .catch(error => this.setState({ errorMessage: error.message }))
-
+    })
     // TODO: check for unique username! (or don't need username?)
   }
 
