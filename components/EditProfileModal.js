@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Text, View, TextInput, Button, StyleSheet, Keyboard, TouchableWithoutFeedback, Image } from 'react-native';
+import { Modal, Text, View, TextInput, Button, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { Avatar } from 'react-native-elements'
 import ImagePicker from 'react-native-image-picker'
 
@@ -8,7 +8,7 @@ export default class EditProfileModal extends React.Component {
   onChangePicturePress = () => {
     const options = {
       title: 'Select Avatar',
-      customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'},],
+      // customButtons: [{name: 'fb', title: 'Choose Photo from Facebook'},],
       storageOptions: {
         skipBackup: true,
         path: 'images'
