@@ -23,4 +23,3 @@ export default MainTabNavigator = createBottomTabNavigator(
     swipeEnabled: false
   }
 );
-
