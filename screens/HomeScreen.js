@@ -4,7 +4,7 @@ import { SearchBar } from 'react-native-elements';
 import firebase from 'react-native-firebase';
 
 import HorizontalItemsSwiper from '../components/HorizontalItemsSwiper';
-import HorizontalItemsList from '../components/HorizontalItemsList';
+import HorizontalLocsList from '../components/HorizontalLocsList';
 import { locs, items } from '../constants/Test';
 
 export default class HomeScreen extends React.Component {
@@ -40,7 +40,7 @@ export default class HomeScreen extends React.Component {
         <Text>{'\n'}</Text>
 
   			<Text>Locations</Text>
-  			<HorizontalItemsList items={locs} navigation={this.props.navigation} />
+  			<HorizontalLocsList locs={locs} navigation={this.props.navigation} />
         <Text>{'\n'}</Text>
   		</View>
 		);

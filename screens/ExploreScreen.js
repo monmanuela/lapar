@@ -3,8 +3,8 @@ import { Text, View, TouchableHighlight } from 'react-native';
 import { SearchBar, CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import VerticalItemsList from '../components/VerticalItemsList';
-import { items } from '../constants/Test';
+import VerticalStallsList from '../components/VerticalStallsList';
+import { stalls } from '../constants/Test';
 import ExploreModal from '../components/ExploreModal'
 
 export default class ExploreScreen extends React.Component {
@@ -14,7 +14,8 @@ export default class ExploreScreen extends React.Component {
   		search: '',
       modalVisible: false,
       sort: 'rating',
-      filters: []
+      filters: [],
+      locations: [],
   	}
   }
 
@@ -40,12 +41,22 @@ export default class ExploreScreen extends React.Component {
     }
   }
 
+  onCheckLocation = criteria => {
+    const { locations } = this.state;
+
+    if (!locations.includes(criteria)) {
+      this.setState({ locations: [...locations, criteria] });
+    } else {
+      this.setState({ locations: locations.filter( loc => loc !== criteria) });
+    }
+  }
+
   onSortChange = (value, index) => {
     this.setState({ sort: value });
   }
 
   onClear = () => {
-    this.setState({ sort: 'rating', filters: [] })
+    this.setState({ sort: 'rating', filters: [], locations: [], loc: '' });
   }
 
   render() {
@@ -55,7 +66,9 @@ export default class ExploreScreen extends React.Component {
           modalVisible={this.state.modalVisible} 
           sort={this.state.sort} 
           filters={this.state.filters}
+          locations={this.state.locations}
           onCheckFilter={this.onCheckFilter}
+          onCheckLocation={this.onCheckLocation}
           onSortChange={this.onSortChange}
           onClear={this.onClear}
           onCloseModal={this.onCloseModal}
@@ -69,7 +82,7 @@ export default class ExploreScreen extends React.Component {
           <Text>Criteria</Text>
         </TouchableHighlight>
 
-        <VerticalItemsList sort={this.state.sort} filters={this.state.filters} search={this.state.search} items={items} navigation={this.props.navigation} />
+        <VerticalStallsList sort={this.state.sort} filters={this.state.filters} locations={this.state.locations} search={this.state.search} stalls={stalls} navigation={this.props.navigation} />
       </View>
     );
   }

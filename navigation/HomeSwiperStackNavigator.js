@@ -14,10 +14,4 @@ export default HomeSwiperStackNavigator = createStackNavigator({
 	Item: {
 		screen: ItemScreen,
 	},
-	// Explore: {
-	// 	screen: ExploreScreen,
-	// 	navigationOptions: {
-	// 		header: null
-	// 	}
-	// }
 })

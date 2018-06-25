@@ -1,7 +1,6 @@
 import React from 'react';
-import { FlatList, Text } from 'react-native';
+import { FlatList, Text, TouchableWithoutFeedback } from 'react-native';
 import { Card } from 'react-native-elements';
-import Item from './Item';
 
 export default class HorizontalItemsList extends React.Component {
   render() {
@@ -12,12 +11,16 @@ export default class HorizontalItemsList extends React.Component {
           data={this.props.items}
           renderItem={({ item: rowData }) => {
             return (
-              <Card
-                title={null}
-                containerStyle={{ padding: 0, width: 120 }}
-              >
-                <Item item={rowData} onPress={() => this.props.navigation.navigate('Item', {item: rowData})} />
-              </Card>
+              <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('Item', {item: rowData})}>
+                <Card
+                  title={null}
+                  containerStyle={{ padding: 0, width: 120, height: 120 }}
+                >
+                  <Text>{rowData.name}</Text>
+                  <Text>Rating: {rowData.rating}</Text>
+                  <Text>Price: ${rowData.price}</Text>
+                </Card>
+              </TouchableWithoutFeedback>
             );
           }}
           keyExtractor={(item, index) => index.toString() }
