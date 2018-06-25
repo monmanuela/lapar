@@ -136,44 +136,44 @@ export default class newProfileScreen extends React.Component {
 
   		screen =
       <ScrollView>
-      <View style={styles.container}>
-        { this.state.userData &&
-          <Avatar
-            size="300"
-            rounded
-            source={{uri: this.state.userData.photoURL}}
-            onPress={() => alert("View enlarged picture")}
-            activeOpacity={0.7}
-          /> 
-        }
-        <Text>{this.state.userData && this.state.userData.displayName}</Text>
-        <Text>Username: @{this.state.userData && this.state.userData.username}</Text>
-        <Text>Bio: {this.state.userData && this.state.userData.bio}</Text>
-        <Text>Preferences: {this.state.userData && this.state.userData.preferences}</Text>
-        <Button title="Edit Profile" onPress={this.handleEditProfile} />
+        <View style={styles.container}>
+          { this.state.userData &&
+            <Avatar
+              size="300"
+              rounded
+              source={{uri: this.state.userData.photoURL}}
+              onPress={() => alert("View enlarged picture")}
+              activeOpacity={0.7}
+            /> 
+          }
+          <Text>{this.state.userData && this.state.userData.displayName}</Text>
+          <Text>Username: @{this.state.userData && this.state.userData.username}</Text>
+          <Text>Bio: {this.state.userData && this.state.userData.bio}</Text>
+          <Text>Preferences: {this.state.userData && this.state.userData.preferences}</Text>
+          <Button title="Edit Profile" onPress={this.handleEditProfile} />
 
-        { reviewCards } 
+          { reviewCards } 
 
-        <EditProfileModal
-          modalVisible={this.state.modalVisible} 
-          currentUser={this.state.currentUser} 
-          displayName={this.state.modalDisplayName}
-          username={this.state.modalUsername}
-          email={this.state.modalEmail}
-          bio={this.state.modalBio}
-          preferences={this.state.modalPreferences}
-          photoURL={this.state.modalPhotoURL}
-          onChangeDisplayName={ modalDisplayName => this.setState({ modalDisplayName }) }
-          onChangeEmail={ modalEmail => this.setState({ modalEmail }) }
-          onChangeUsername={ modalUsername => this.setState({ modalUsername }) }
-          onChangeBio={ modalBio => this.setState({ modalBio }) }
-          onChangePreferences={ modalPreferences => this.setState({ modalPreferences }) }
-          onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
-          handleSaveChanges={this.handleSaveChanges}
-          handleClose={ () => this.setState({ modalVisible: false })} 
-        />
-        </View>
-      </ScrollView>
+          <EditProfileModal
+            modalVisible={this.state.modalVisible} 
+            currentUser={this.state.currentUser} 
+            displayName={this.state.modalDisplayName}
+            username={this.state.modalUsername}
+            email={this.state.modalEmail}
+            bio={this.state.modalBio}
+            preferences={this.state.modalPreferences}
+            photoURL={this.state.modalPhotoURL}
+            onChangeDisplayName={ modalDisplayName => this.setState({ modalDisplayName }) }
+            onChangeEmail={ modalEmail => this.setState({ modalEmail }) }
+            onChangeUsername={ modalUsername => this.setState({ modalUsername }) }
+            onChangeBio={ modalBio => this.setState({ modalBio }) }
+            onChangePreferences={ modalPreferences => this.setState({ modalPreferences }) }
+            onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
+            handleSaveChanges={this.handleSaveChanges}
+            handleClose={ () => this.setState({ modalVisible: false })} 
+          />
+          </View>
+        </ScrollView>
       }
 
       return (
