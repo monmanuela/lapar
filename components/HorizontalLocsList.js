@@ -11,7 +11,7 @@ export default class HorizontalItemsList extends React.Component {
         data={this.props.locs}
         renderItem={({ item: rowData }) => {
           return (
-            <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('Explore')}>
+            <TouchableWithoutFeedback onPress={ () => this.props.navigation.navigate('ExploreScreen', { locs: rowData.id }) }>
               <Card
                 title={null}
                 containerStyle={{ padding: 0, width: 120, height: 120 }}

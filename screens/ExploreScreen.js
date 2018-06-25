@@ -15,8 +15,18 @@ export default class ExploreScreen extends React.Component {
       modalVisible: false,
       sort: 'rating',
       filters: [],
-      locations: [],
+      locations: this.props.navigation.state.params === undefined ? [] : [this.props.navigation.state.params.locs],
+      locs: this.props.navigation.state.params === undefined ? '' : this.props.navigation.state.params.locs
   	}
+  }
+
+  handleNavigation = () => {
+    if (this.props.navigation.state.params !== undefined && this.props.navigation.state.params.locs !== this.state.locs) {
+      this.setState({
+        locs: this.props.navigation.state.params.locs,
+        locations: [this.props.navigation.state.params.locs]
+      })  
+    }
   }
 
   handleSearch = text => {
@@ -56,10 +66,12 @@ export default class ExploreScreen extends React.Component {
   }
 
   onClear = () => {
-    this.setState({ sort: 'rating', filters: [], locations: [], loc: '' });
+    this.setState({ sort: 'rating', filters: [], locations: [], locs: '' });
   }
 
   render() {
+    this.handleNavigation();  
+
     return (
       <View style={{ flex: 1 }}>
         <ExploreModal

@@ -4,7 +4,7 @@ import ExploreScreen from '../screens/ExploreScreen';
 import ItemScreen from '../screens/ItemScreen';
 
 export default ExploreSwiperStackNavigator = createStackNavigator({
-	Explore: {
+	ExploreScreen: {
 		screen: ExploreScreen,
 		navigationOptions: {
 			header: null
