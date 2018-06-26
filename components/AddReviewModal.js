@@ -97,7 +97,7 @@ export default class addReviewModal extends React.Component {
 					/>
 					<Text>{'\n'}</Text>
 					<Button
-						title="Add Food Picture"
+						title="Add Item Picture"
 						onPress= { this.onChangePicturePress }
 					/>
 					<Text>{'\n'}</Text>
