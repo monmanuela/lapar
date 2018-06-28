@@ -8,16 +8,11 @@ export default class HorizontalItemsSwiper extends React.Component {
 
   render() {
     let items = this.props.items;
-    let _SwiperItems;
-    if (this.props.context === 'recom') {
-      _SwiperItems = Object.values(items).filter(item => item.recommended)
-    } else if (this.props.context === 'top 10') {
-      _SwiperItems = Object.values(items).sort((item1, item2) => item2.rating - item1.rating).slice(0, 10)
-    } else {
-      _SwiperItems = Object.values(items);
-    }
+    let _SwiperItems = Object.values(items);
 
     const SwiperItems = _SwiperItems.map((item, index) => {
+      console.log("idx: " + index)
+      console.log("item: " + JSON.stringify(item))
       return (
         <View key={index} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.swiperBackground }}>
           <Text onPress={() => this.props.navigation.navigate('Item', {item: item})}>{item.name}</Text>

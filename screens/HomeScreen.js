@@ -8,14 +8,35 @@ import HorizontalLocsList from '../components/HorizontalLocsList';
 import { locs, items } from '../constants/Test';
 
 export default class HomeScreen extends React.Component {
-	state = { currentUser: null }
+	constructor() {
+    super()
+    this.state = {
+      currentUser: null,
+      recommendedItems: {},
+      top5: {},
+    }
+  }
 
-  componentDidMount() {
+  componentDidMount = () => {
     console.log("home screen did mount")
-  	const currentUser = firebase.auth().currentUser;
-   	this.setState({ currentUser })
-    console.log("currentUser: " + this.state.currentUser)
-    console.log("finish set state")
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({ currentUser: user })
+      } else {}
+    })
+
+    const db = firebase.database()
+    // fetch recommended items
+    db.ref("items").orderByChild("recommended").equalTo(true).once("value").then(snapshot => {
+      console.log("recom snapshot: " + JSON.stringify(snapshot.val()))
+      this.setState({ recommendedItems: snapshot.val() })
+    })
+
+    // fetch top 5 items
+    db.ref("items").orderByChild("ratings").limitToFirst(5).once("value").then(snapshot => {
+      console.log("top5 snapshot: " + JSON.stringify(snapshot.val()))
+      this.setState({ top5: snapshot.val() })
+    })
   }
 
 	render() {
@@ -27,18 +48,12 @@ export default class HomeScreen extends React.Component {
           </View>
         </TouchableWithoutFeedback>
 
-			 	{this.state.currentUser && 
-        <Text>
-          Hi {this.state.currentUser.email}!
-        </Text> }
-        <Text>{'\n'}</Text>
-
 			 	<Text>Recommendations</Text>
-        <HorizontalItemsSwiper context={'recom'} items={items} navigation={this.props.navigation} />
+        <HorizontalItemsSwiper context={'recom'} items={this.state.recommendedItems} navigation={this.props.navigation} />
         <Text>{'\n'}</Text>
 
   			<Text>Top 10</Text>
-        <HorizontalItemsSwiper context={'top 10'} items={items} navigation={this.props.navigation} />
+        <HorizontalItemsSwiper context={'top 5'} items={this.state.top5} navigation={this.props.navigation} />
         <Text>{'\n'}</Text>
 
   			<Text>Locations</Text>
