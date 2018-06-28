@@ -8,14 +8,35 @@ import HorizontalLocsList from '../components/HorizontalLocsList';
 import { locs, items } from '../constants/Test';
 
 export default class HomeScreen extends React.Component {
-	state = { currentUser: null }
+	constructor() {
+    super()
+    this.state = {
+      currentUser: null,
+      recommendedItems: {},
+      top5: {},
+    }
+  }
 
-  componentDidMount() {
+  componentDidMount = () => {
     console.log("home screen did mount")
-  	const currentUser = firebase.auth().currentUser;
-   	this.setState({ currentUser })
-    console.log("currentUser: " + this.state.currentUser)
-    console.log("finish set state")
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({ currentUser: user })
+      } else {}
+    })
+
+    const db = firebase.database()
+    // fetch recommended items
+    db.ref("items").orderByChild("recommended").equalTo(true).once("value").then(snapshot => {
+      console.log("recom snapshot: " + JSON.stringify(snapshot.val()))
+      this.setState({ recommendedItems: snapshot.val() })
+    })
+
+    // fetch top 5 items
+    db.ref("items").orderByChild("ratings").limitToFirst(5).once("value").then(snapshot => {
+      console.log("top5 snapshot: " + JSON.stringify(snapshot.val()))
+      this.setState({ top5: snapshot.val() })
+    })
   }
 
 	render() {
@@ -28,10 +49,10 @@ export default class HomeScreen extends React.Component {
         </TouchableWithoutFeedback>
 
 			 	<Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 5, fontSize: 18, color: 'black' }}>Recommendations</Text>
-        <HorizontalItemsSwiper context={'recom'} items={items} navigation={this.props.navigation} />
+        <HorizontalItemsSwiper items={this.state.recommendedItems} navigation={this.props.navigation} />
 
   			<Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 5, fontSize: 18, color: 'black' }}>Top 5</Text>
-        <HorizontalItemsSwiper context={'top 5'} items={items} navigation={this.props.navigation} />
+        <HorizontalItemsSwiper items={this.state.top5} navigation={this.props.navigation} />
 
   			<Text style={{ marginTop: 10, marginLeft: 10, fontSize: 18, color: 'black' }}>Locations</Text>
   			<HorizontalLocsList locs={locs} navigation={this.props.navigation} />

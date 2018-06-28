@@ -8,7 +8,9 @@ export default class ItemScreen extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			modalVisible: false
+			modalVisible: false,
+			item: null,
+			reviews: null, // store reviews in state so if user adds review, render is triggered
 		}
 	}
 
@@ -16,6 +18,10 @@ export default class ItemScreen extends React.Component {
 		this.setState({
 			modalVisible: false
 		})
+	}
+
+	componentDidMount = () => {
+
 	}
 
 	render() {
