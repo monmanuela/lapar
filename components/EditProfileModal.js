@@ -1,7 +1,18 @@
 import React from 'react';
-import { Modal, Text, View, TextInput, Button, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { 
+  Modal, 
+  Text, 
+  View, 
+  TextInput, 
+  Button, 
+  StyleSheet, 
+  Keyboard, 
+  TouchableWithoutFeedback, 
+  ActivityIndicator, 
+} from 'react-native';
 import { Avatar } from 'react-native-elements'
 import ImagePicker from 'react-native-image-picker'
+import firebase from 'react-native-firebase';
 
 export default class EditProfileModal extends React.Component {
 
@@ -25,7 +36,17 @@ export default class EditProfileModal extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton)
       } else {
-        this.props.onChangePhotoURL(response.uri)
+        console.log("response: " + JSON.stringify(response))
+        // how to make every filename unique?
+        const imageRef = firebase.storage().ref('avatar').child(`${this.props.userID}.jpg`)
+        let mime = 'image/jpg'
+        imageRef.put(response.uri, {contentType: mime})
+          .then(() => {
+            return imageRef.getDownloadURL()
+          })
+          .then(url => {
+            this.props.onChangePhotoURL(url)
+          })
       }
     })
   }

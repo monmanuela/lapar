@@ -11,13 +11,14 @@ export default class HomeScreen extends React.Component {
 	state = { currentUser: null }
 
   componentDidMount() {
-  	const { currentUser } = firebase.auth()
+    console.log("home screen did mount")
+  	const currentUser = firebase.auth().currentUser;
    	this.setState({ currentUser })
+    console.log("currentUser: " + this.state.currentUser)
+    console.log("finish set state")
   }
 
 	render() {
-		const { currentUser } = this.state
-
 		return ( 
 			<View style={{ flex: 1 }}> 
         <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('Explore')}>
@@ -26,9 +27,10 @@ export default class HomeScreen extends React.Component {
           </View>
         </TouchableWithoutFeedback>
 
-			 	<Text>
-          Hi {currentUser && currentUser.email}!
-        </Text>
+			 	{this.state.currentUser && 
+        <Text>
+          Hi {this.state.currentUser.email}!
+        </Text> }
         <Text>{'\n'}</Text>
 
 			 	<Text>Recommendations</Text>
