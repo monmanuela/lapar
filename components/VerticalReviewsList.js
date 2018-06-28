@@ -14,9 +14,6 @@ export default class VerticalReviewsList extends React.Component {
             source={{uri: reviews[reviewId].photoURL}}
           />
           <Text>
-            {reviews[reviewId].itemID}
-          </Text>
-          <Text>
             Rating: {reviews[reviewId].rating}
           </Text>
           <Text>

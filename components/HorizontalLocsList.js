@@ -8,13 +8,14 @@ export default class HorizontalItemsList extends React.Component {
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ marginLeft: 7 }}
         data={Object.values(this.props.locs)}
         renderItem={({ item: rowData }) => {
           return (
             <TouchableWithoutFeedback onPress={ () => this.props.navigation.navigate('ExploreScreen', { locs: rowData.id }) }>
               <Card
                 title={null}
-                containerStyle={{ padding: 0, width: 120, height: 120 }}
+                containerStyle={{ padding: 0, marginLeft: 7, marginRight: 7, width: 120, height: 200, marginBottom: 0, backgroundColor: 'red' }}
               >
                 <Text>{rowData.name}</Text>
               </Card>
