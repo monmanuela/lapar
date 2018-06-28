@@ -3,7 +3,7 @@ import { Text, View, Button, StyleSheet, Image, ActivityIndicator, ScrollView } 
 import firebase from 'react-native-firebase';
 import { Avatar, Card } from 'react-native-elements'
 import EditProfileModal from '../components/EditProfileModal'
-import { reviews } from '../constants/Test'
+import VerticalReviewsList from '../components/VerticalReviewsList'
 
 export default class newProfileScreen extends React.Component {
   constructor() {
@@ -111,29 +111,6 @@ export default class newProfileScreen extends React.Component {
     if (this.state.isLoading) {
       screen = <ActivityIndicator size="large" color="#0000ff" />
     } else {
-      const reviewCards = this.state.reviewIDs.map((reviewID, i) => {
-        const reviewArr = {reviews}.reviews
-        const url = reviews[reviewID].photoURL
-        return(
-            <Card key={i}>
-              <Image
-                style={styles.image}
-                resizeMode="cover"
-                source={{uri: url}}
-              />
-              <Text>
-                {reviewArr[reviewID].itemID}
-              </Text>
-              <Text>
-                Rating: {reviewArr[reviewID].rating}
-              </Text>
-              <Text>
-                {reviewArr[reviewID].content}
-              </Text>
-            </Card>
-        )
-      })
-
   		screen =
       <ScrollView>
         <View style={styles.container}>
@@ -152,7 +129,7 @@ export default class newProfileScreen extends React.Component {
           <Text>Preferences: {this.state.userData && this.state.userData.preferences}</Text>
           <Button title="Edit Profile" onPress={this.handleEditProfile} />
 
-          { reviewCards } 
+          <VerticalReviewsList reviews={this.state.reviewIDs} /> 
 
           <EditProfileModal
             modalVisible={this.state.modalVisible} 

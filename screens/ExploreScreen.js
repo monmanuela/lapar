@@ -66,7 +66,7 @@ export default class ExploreScreen extends React.Component {
   }
 
   onClear = () => {
-    this.setState({ sort: 'rating', filters: [], locations: [], locs: '' });
+    this.setState({ sort: 'rating', filters: [], locations: [] });
   }
 
   render() {

@@ -10,9 +10,9 @@ export default class HorizontalItemsSwiper extends React.Component {
     let items = this.props.items;
     let _SwiperItems;
     if (this.props.context === 'recom') {
-      _SwiperItems = Object.values(items).filter(item => item.recom)
+      _SwiperItems = Object.values(items).filter(item => item.recommended)
     } else if (this.props.context === 'top 10') {
-      _SwiperItems = Object.values(items).filter(item => item.rank <= 10)
+      _SwiperItems = Object.values(items).sort((item1, item2) => item2.rating - item1.rating).slice(0, 10)
     } else {
       _SwiperItems = Object.values(items);
     }

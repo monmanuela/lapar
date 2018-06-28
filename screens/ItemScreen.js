@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { ScrollView, Text, Button } from 'react-native';
 
 import AddReviewModal from '../components/AddReviewModal';
+import VerticalReviewsList from '../components/VerticalReviewsList';
 
 export default class ItemScreen extends React.Component {
 	constructor() {
@@ -21,11 +22,13 @@ export default class ItemScreen extends React.Component {
 		const item = this.props.navigation.state.params.item;
 
 		return (
-			<View>
-				<Text>{ item.name }</Text>
+			<ScrollView>
+				<Text>{item.name}</Text>
+				<Text>{item.details}</Text>
 				<Button title='Add Review' onPress={() => this.setState({ modalVisible: true })} />
-				<AddReviewModal modalVisible={this.state.modalVisible} onCloseAddReview={this.onCloseAddReview} itemID={ item.id } />
-			</View>
+				<AddReviewModal modalVisible={this.state.modalVisible} onCloseAddReview={this.onCloseAddReview} itemID={ item.id } />				
+				<VerticalReviewsList reviews={item.reviews} />
+			</ScrollView>
 		);
 	}
 }

@@ -1,7 +1,7 @@
 // time in reviews: [minute, hour, date, month, year]
 export const reviews = 
   {
-    'r1':
+    r1 :
     {
       rating: 5,
       userID: 'u3',
@@ -11,7 +11,7 @@ export const reviews =
       photoURL: 'https://burpple-3.imgix.net/foods/2d941c36eb83782413a1608914_original.?w=645&dpr=2&fit=crop&q=80',
     },
 
-    'r2':
+    r2 :
     {
       rating: 4,
       userID: 'u1',
@@ -21,7 +21,7 @@ export const reviews =
       photoURL: 'https://www.koreanbapsang.com/wp-content/uploads/2010/05/DSC_0893-e1426734907897.jpg',
     },
 
-    'r3':
+    r3 :
     {
       rating: 5,
       userID: 'u3',
@@ -32,164 +32,151 @@ export const reviews =
     },
   }
 
-export const locs = [
-  {
+export const locs = {
+  l1 : {
     id: 'l1',
     name: 'loc1',
     stalls: ['s1']
   },
-  {
+  l2 : {
     id: 'l2',
     name: 'loc2',
     stalls: ['s2']
   },
-  {
+  l3 : {
     id: 'l3',
     name: 'loc3',
     stalls: ['s3', 's4']
   },
-  {
+  l4 : {
     id: 'l4',
     name: 'loc4',
     stalls: ['s5', 's6']
   }
-];
+};
 
-export const stalls = [
-  {
-    id: 's1',
+export const stalls = {
+  s1 : {
     name: 'stall1',
-    loc: 'l1',
+    location : 'loc1',
     items: ['i1', 'i2', 'i7'],
     rating: 4.75,
-    price: 3
+    lowestPrice: 3
   },
-  {
-    id: 's2',
+  s2 : {
     name: 'stall2',
-    loc: 'l2',
+    location: 'loc22',
     items: ['i3'],
     rating: 1.5,
-    price: 2.5
+    lowestPrice: 2.5
   }, 
-  {
-    id: 's3',
+  s3 : {
     name: 'stall3',
-    loc: 'l3',
+    location: 'l3',
     items: ['i4'],
     rating: 1,
-    price: 3.5
+    lowestPrice: 3.5
   },
-  {
-    id: 's4',
+  s4 : {
     name: 'stall4',
-    loc: 'l3',
+    location: 'l3',
     items: [],
     rating: 0,
-    price: 0
+    lowestPrice: 0
   },
-  {
-    id: 's5',
+  s5 : {
     name: 'stall5',
-    loc: 'l4',
+    location: 'l4',
     items: ['i5'],
     rating: 3.5,
-    price: 2
+    lowestPrice: 2
   },
-  {
-    id: 's6',
+  s6 : {
     name: 'stall6',
-    loc: 'l4',
+    location: 'l4',
     items: ['i6'],
     rating: 4,
-    price: 5
+    lowestPrice: 5
   }
-];
+};
 
 export const items = {
   i1 : {
-    id: 'i1',
     name: 'item1',
     details: '...',
-    recom: true,
-    rank: 1,
+    recommended: true,
     rating: 5,
     price: 3,
-    stall: 's1',
-    loc: 'l1', 
-    tags: ['halal']
+    stallId: 's1',
+    locationId: 'l1', 
+    tags: ['halal'],
+    reviews: ['r2']
   },
   i2 : {
-    id: 'i2',
     name: 'item2',
     details: '...',
-    recom: false,
-    rank: 2,
+    recommended: false,
     rating: 4.5,
     price: 9,
-    stall: 's1',
-    loc: 'l1',
-    tags: ['vegetarian']
+    stallId: 's1',
+    locationId: 'l1',
+    tags: ['vegetarian'],
+    reviews: []
   },
   i3 : {
-    id: 'i3',
     name: 'item3',
     details: '...',
-    recom: true,
-    rank: 11,
+    recommended: true,
     rating: 1.5,
     price: 2.5,
-    stall: 's2',
-    loc: 'l2',
-    tags: ['halal', 'vegetarian']
+    stallId: 's2',
+    locationId: 'l2',
+    tags: ['halal', 'vegetarian'],
+    reviews: ['r1']
   },
   i4 : {
-    id: 'i4',
     name: 'item4',
     details: '...',
-    recom: false,
-    rank: 12,
+    recommended: false,
     rating: 1,
     price: 3.5,
-    stall: 's3',
-    loc: 'l3',
-    tags: []
+    stallId: 's3',
+    locationId: 'l3',
+    tags: [],
+    reviews: []
   },
   i5 : {
-    id: 'i5',
     name: 'item5',
     details: '...',
-    recom: true,
-    rank: 4,
+    recommended: true,
     rating: 3.5,
     price: 2,
-    stall: 's5',
-    loc: 'l4',
-    tags: []    
+    stallId: 's5',
+    locationId: 'l4',
+    tags: [],
+    reviews: ['r3'] 
   },
   i6 : {
-    id: 'i6',
     name: 'item6',
     details: '...',
-    recom: false,
-    rank: 3,
+    recommended: false,
     rating: 4,
     price: 5,
-    stall: 's6',
-    loc: 'l4',
-    tags: []    
+    stallId: 's6',
+    locationId: 'l4',
+    tags: [],
+    reviews: []    
   },
   i7: {
-    id: 'i7',
     name: 'item7',
     details: '...',
-    recom: true,
-    rank: 13,
+    recommended: true,
     rating: 1,
     price: 8,
-    stall: 's1',
-    loc: 'l1',
-    tags: ['halal']
+    stallId: 's1',
+    locationId: 'l1',
+    tags: ['halal'],
+    reviews: []
   }
 };
 

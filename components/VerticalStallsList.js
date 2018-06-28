@@ -8,7 +8,7 @@ import { items } from '../constants/Test';
 export default class VerticalStallsList extends React.Component {
   render() {
     const _items = items;
-    const stalls = this.props.stalls;
+    const stalls = Object.values(this.props.stalls);
     const filterCriteria = this.props.filters;
     const locationCriteria = this.props.locations; 
     const sortCriteria = this.props.sort;
@@ -24,7 +24,7 @@ export default class VerticalStallsList extends React.Component {
         const filteredItems = stall.items
           .filter(item => _items[item].name.includes(this.props.search) &&
             filterCriteria.every(criteria => _items[item].tags.includes(criteria)) &&
-            (locationCriteria.length === 0 || locationCriteria.includes(_items[item].loc)))
+            (locationCriteria.length === 0 || locationCriteria.includes(_items[item].locationId)))
           .map(item => _items[item])
           .sort(sortFunction);
 
@@ -33,7 +33,7 @@ export default class VerticalStallsList extends React.Component {
           <Card key={index}>
             <Text>{stall.name}</Text>
             <Text>Rating: {stall.rating}</Text>
-            <Text>Price: ${stall.price}</Text>
+            <Text>Price: ${stall.lowestPrice}</Text>
             <HorizontalItemsList items={filteredItems} navigation={this.props.navigation} />
           </Card>);
       });
