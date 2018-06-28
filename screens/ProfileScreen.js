@@ -34,7 +34,6 @@ export default class newProfileScreen extends React.Component {
 
   componentDidMount() {
     const currentUser = firebase.auth().currentUser;
-    console.log("currentUser in profile screen: " + currentUser)
     
     if (currentUser != null) {
       const db = firebase.database()
@@ -149,12 +148,7 @@ export default class newProfileScreen extends React.Component {
             onChangeUsername={ modalUsername => this.setState({ modalUsername }) }
             onChangeBio={ modalBio => this.setState({ modalBio }) }
             onChangePreferences={ modalPreferences => this.setState({ modalPreferences }) }
-            onChangePhotoURL={ modalPhotoURL => {
-                console.log("changing modalPhotoURL")
-                this.setState({ modalPhotoURL }) 
-                console.log("modalPhotoURL: " + modalPhotoURL)
-              }
-            }
+            onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
             handleSaveChanges={this.handleSaveChanges}
             handleClose={ () => this.setState({ modalVisible: false })} 
           />
