@@ -18,6 +18,7 @@ export default class newProfileScreen extends React.Component {
         bio: '',
         preferences: '',
         photoURL: null,
+        userID: '',
       },
       modalVisible: false,
       modalDisplayName: '',
@@ -33,6 +34,7 @@ export default class newProfileScreen extends React.Component {
 
   componentDidMount() {
     const currentUser = firebase.auth().currentUser;
+    console.log("currentUser in profile screen: " + currentUser)
     
     if (currentUser != null) {
       const db = firebase.database()
@@ -125,6 +127,7 @@ export default class newProfileScreen extends React.Component {
           }
           <Text>{this.state.userData && this.state.userData.displayName}</Text>
           <Text>Username: @{this.state.userData && this.state.userData.username}</Text>
+          <Text>userID: {this.state.userData && this.state.userData.userID}</Text>
           <Text>Bio: {this.state.userData && this.state.userData.bio}</Text>
           <Text>Preferences: {this.state.userData && this.state.userData.preferences}</Text>
           <Button title="Edit Profile" onPress={this.handleEditProfile} />
@@ -135,6 +138,7 @@ export default class newProfileScreen extends React.Component {
             modalVisible={this.state.modalVisible} 
             currentUser={this.state.currentUser} 
             displayName={this.state.modalDisplayName}
+            userID={this.state.userData.userID}
             username={this.state.modalUsername}
             email={this.state.modalEmail}
             bio={this.state.modalBio}
@@ -145,7 +149,12 @@ export default class newProfileScreen extends React.Component {
             onChangeUsername={ modalUsername => this.setState({ modalUsername }) }
             onChangeBio={ modalBio => this.setState({ modalBio }) }
             onChangePreferences={ modalPreferences => this.setState({ modalPreferences }) }
-            onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
+            onChangePhotoURL={ modalPhotoURL => {
+                console.log("changing modalPhotoURL")
+                this.setState({ modalPhotoURL }) 
+                console.log("modalPhotoURL: " + modalPhotoURL)
+              }
+            }
             handleSaveChanges={this.handleSaveChanges}
             handleClose={ () => this.setState({ modalVisible: false })} 
           />
