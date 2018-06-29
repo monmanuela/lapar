@@ -36,26 +36,28 @@ export default class newProfileScreen extends React.Component {
       modalPreferences: '',
       modalPhotoURL: null,
       isLoading: true,
-      reviewIDs: ['r1', 'r3'],
-      itemname: '',
-      itemprice: '',
-      itemrating: '',
-      itemrecommended: false,
+      reviewIds: [],
     }
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const currentUser = firebase.auth().currentUser;
     
     if (currentUser != null) {
       const db = firebase.database()
       this.setCurrentUser(currentUser)
 
-      db.ref("users").orderByKey().equalTo(currentUser.uid).once("value").then(function(snapshot) {
+      db.ref("users").orderByKey().equalTo(currentUser.uid).once("value").then(snapshot => {
         return snapshot.val()[currentUser.uid]
       }).then(userData => {
         this.setUserData(userData)
       }).then(() => this.setState({ isLoading: false }))
+
+      // fetch reviews
+      db.ref("users/" + currentUser.uid).orderByKey().equalTo("reviews").once("value").then(snapshot => {
+        console.log("reviews: " + JSON.stringify(Object.keys(snapshot.val().reviews)))
+        this.setState({reviewIds: Object.keys(snapshot.val().reviews)})
+      })
     }
   }
 
@@ -150,7 +152,7 @@ export default class newProfileScreen extends React.Component {
           <Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
         </View>
         
-        <VerticalReviewsList reviews={this.state.reviewIDs} /> 
+        <VerticalReviewsList reviews={this.state.reviewIds} /> 
 
         <Text>{'\n'}</Text>
 

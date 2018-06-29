@@ -59,9 +59,9 @@ export default class addReviewModal extends React.Component {
 		let reviewID
     const db = firebase.database()
     const newPostRef = db.ref('reviews/').push()
-    
+    const newPostRefKey = newPostRef.key
     newPostRef.update({
-      reviewId: newPostRef.key,
+      reviewId: newPostRefKey,
       rating: this.state.rating,
       userId: this.props.userId,
       itemId: this.props.itemId,
@@ -71,27 +71,36 @@ export default class addReviewModal extends React.Component {
     })
     .then(() => {
       // upload photo
-      const imageRef = firebase.storage().ref('reviewPhotos').child(`${newPostRef.key}.jpg`)
-      let mime = 'image/jpg'
-      imageRef
-        .put(this.state.photoURL, {contentType: mime})
-        .then(() => {
-          return imageRef.getDownloadURL()
-        })
-        .then(url => {
-          db.ref('reviews/' + newPostRef.key).update({
-            photoURL: url,
+      if (this.state.photoURL) {
+        console.log("wanna upload photo")
+        const imageRef = firebase.storage().ref('reviewPhotos').child(`${newPostRef.key}.jpg`)
+        let mime = 'image/jpg'
+        imageRef
+          .put(this.state.photoURL, {contentType: mime})
+          .then(() => {
+            return imageRef.getDownloadURL()
           })
-        })
+          .then(url => {
+            db.ref('reviews/' + newPostRefKey).update({
+              photoURL: url,
+            })
+          })
+      }
     })
     .then(() => {
+      console.log("wanna store in user")
       // store the review in the user, and in the item
+      const db = firebase.database()
+      var review = {}
+      review[newPostRefKey] = true
+      db.ref("users/" + this.props.userId + "/reviews").update(review)
+      db.ref("items/" + this.props.itemId + "/reviews").update(review)
     })
     .then(() => {
 			this.setState({ review: '', rating: null, photoURL: null });
       this.props.onCloseAddReview();
     })
-    .catch(error => this.setState({ errorMessage: error.message }))
+    .catch(error => console.log(error))
 	}
 
 	render() {

@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, FlatList, Text, Image } from 'react-native';
 import { Card } from 'react-native-elements'
-import { reviews } from '../constants/Test';
+// import { reviews } from '../constants/Test';
 import { Dimensions } from 'react-native';
+import firebase from 'react-native-firebase';
+
 
 const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
@@ -11,30 +13,61 @@ const guidelineBaseHeight = 680;
 const scale = size => width / guidelineBaseWidth * size;
 
 export default class VerticalReviewsList extends React.Component {
-  render() {
-    // const _reviews = this.props.reviews.map((reviewId, index) => {
-    const fakeArr = ["r1"]
-    const _reviews = fakeArr.map((reviewId, index) => {    
-      return(
-        <Card key={index}>
-          <Image
-            style={{ height: scale(120), width: scale(295) }}
-            resizeMode="cover"
-            source={{uri: reviews[reviewId].photoURL}}
-          />
-          <Text style={{ marginTop: scale(7), color: 'black', fontSize: 16}}>
-            Rating: {reviews[reviewId].rating}
-          </Text>
-          <Text>
-            {reviews[reviewId].content}
-          </Text>
-        </Card>
-        )
+  constructor(props) {
+    super(props)
+    this.state = {
+      reviewIds: [],
+      _reviews: [],
+    }
+  }
+
+  componentDidMount = () => {
+    this.setState({
+      reviewIds: this.props.reviews
     })
 
+    const _reviews = this.state.reviewIds.map((reviewId, index) => {
+      // with the reviewId, fetch the review object
+      let review
+      const db = firebase.database()
+      
+      db.ref("reviews/" + reviewId).once("value").then(snapshot => {
+        console.log("review: " + JSON.stringify(snapshot.val()))
+        review = snapshot.val()
+      })
+      .then(() => {
+        console.log("url: " + review.photoURL)
+        console.log("rating: " + review.rating)
+        console.log("content: " + review.content)
+        return(
+          <Card key={index}>
+            <Image
+              style={{ height: scale(120), width: scale(295) }}
+              resizeMode="cover"
+              source={{uri: review.photoURL}}
+            />
+            <Text style={{ marginTop: scale(7), color: 'black', fontSize: 16}}>
+              Rating: {review.rating}
+            </Text>
+            <Text>
+              {review.content}
+            </Text>
+          </Card>
+        )
+      })
+      .then(obj => {
+        console.log("obj: " + obj)
+        this.setState({ _reviews: obj })
+      })
+      .catch(error => console.log(error))
+    })
+
+  }
+
+  render() {
     return (
       <View>
-        {_reviews}
+        {this.state._reviews}
       </View>
     );
   }
