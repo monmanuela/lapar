@@ -26,7 +26,7 @@ export default class VerticalReviewsList extends React.Component {
       reviewIds: this.props.reviews
     })
 
-    const _reviews = this.state.reviewIds.map((reviewId, index) => {
+    const _reviews = Object.keys(this.props.reviews).map((reviewId, index) => {
       // with the reviewId, fetch the review object
       let review
       const db = firebase.database()
