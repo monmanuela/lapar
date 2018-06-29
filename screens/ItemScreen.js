@@ -51,7 +51,7 @@ export default class ItemScreen extends React.Component {
 				<AddReviewModal 
 					modalVisible={this.state.modalVisible} 
 					onCloseAddReview={this.onCloseAddReview} 
-					itemId={ item.id }
+					itemId={ item.itemId }
 					userId={this.props.navigation.state.params.userId}
 				/>				
 

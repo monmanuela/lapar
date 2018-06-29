@@ -27,7 +27,7 @@ export default AppNavigator = () => {
       },
       SignedOutNavigator: {
         screen: SignedOutNavigator
-      }
+      },
     },
     {
       initialRouteName: initialNavigator
