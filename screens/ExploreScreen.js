@@ -7,6 +7,14 @@ import VerticalStallsList from '../components/VerticalStallsList';
 import { stalls } from '../constants/Test';
 import ExploreModal from '../components/ExploreModal'
 
+import { Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
+const guidelineBaseWidth = 350;
+const guidelineBaseHeight = 680;
+
+const scale = size => width / guidelineBaseWidth * size;
+
 export default class ExploreScreen extends React.Component {
   constructor(props) {
   	super(props);
@@ -87,8 +95,8 @@ export default class ExploreScreen extends React.Component {
         />
 
         <View style={{ flexDirection: 'row' }}>
-          <Icon onPress={this.onOpenModal} name='md-menu' size={40} color={'white'} style={{ backgroundColor: 'red', paddingLeft: 10, paddingTop: 8, paddingRight: 5 }} />
-        	<SearchBar lightTheme inputStyle={{ backgroundColor: 'white' }} containerStyle={{ backgroundColor: 'red', width: 340, borderBottomColor: 'transparent', borderTopColor: 'transparent'}} onChangeText={this.handleSearch} placeholder="Search..." clearIcon />
+          <Icon onPress={this.onOpenModal} name='md-menu' size={scale(30)} color={'white'} style={{ backgroundColor: 'red', paddingLeft: scale(12), paddingTop: scale(10), paddingRight: scale(7) }} />
+        	<SearchBar lightTheme inputStyle={{ backgroundColor: 'white' }} containerStyle={{ backgroundColor: 'red', width: scale(310), borderBottomColor: 'transparent', borderTopColor: 'transparent'}} onChangeText={this.handleSearch} placeholder="Search..." clearIcon />
         </View>
 
         <VerticalStallsList sort={this.state.sort} filters={this.state.filters} locations={this.state.locations} search={this.state.search} stalls={stalls} navigation={this.props.navigation} />
