@@ -51,7 +51,7 @@ export default class HomeScreen extends React.Component {
 			<View style={{ flex: 1, backgroundColor: 'white' }}> 
         <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('Explore')}>
           <View>
-            <SearchBar inputStyle={{ backgroundColor: 'white' }} containerStyle={{ backgroundColor: 'red' }} placeholder="Search..." clearIcon />
+            <SearchBar inputStyle={{ backgroundColor: 'white' }} containerStyle={{ backgroundColor: 'red', borderBottomColor: 'transparent', borderTopColor: 'transparent' }} placeholder="Search..." clearIcon />
           </View>
         </TouchableWithoutFeedback>
 

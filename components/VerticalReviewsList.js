@@ -11,11 +11,11 @@ export default class VerticalReviewsList extends React.Component {
       return(
         <Card key={index}>
           <Image
-            style={{ height: 150, width: 350 }}
+            style={{ height: 150, width: 320 }}
             resizeMode="cover"
             source={{uri: reviews[reviewId].photoURL}}
           />
-          <Text>
+          <Text style={{ marginTop: 7, color: 'black', fontSize: 16}}>
             Rating: {reviews[reviewId].rating}
           </Text>
           <Text>
