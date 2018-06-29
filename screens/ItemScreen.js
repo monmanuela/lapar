@@ -16,12 +16,13 @@ export default class ItemScreen extends React.Component {
 
 	onCloseAddReview = () => {
 		this.setState({
-			modalVisible: false
+			modalVisible: false,
 		})
 	}
 
 	componentDidMount = () => {
-
+		console.log("uid: " + this.props.navigation.state.params.userId)
+		console.log("item: " + JSON.stringify(this.props.navigation.state.params.item))
 	}
 
 	render() {
@@ -31,8 +32,15 @@ export default class ItemScreen extends React.Component {
 			<ScrollView>
 				<Text>{item.name}</Text>
 				<Text>{item.details}</Text>
+				<Text>${item.price}</Text>
+				<Text>Rating: {item.rating}</Text>
 				<Button title='Add Review' onPress={() => this.setState({ modalVisible: true })} />
-				<AddReviewModal modalVisible={this.state.modalVisible} onCloseAddReview={this.onCloseAddReview} itemId={ item.id } />				
+				<AddReviewModal 
+					modalVisible={this.state.modalVisible} 
+					onCloseAddReview={this.onCloseAddReview} 
+					itemId={item.itemId} 
+					userId={this.props.navigation.state.params.userId}
+				/>				
 				<VerticalReviewsList reviews={item.reviews} />
 			</ScrollView>
 		);

@@ -110,6 +110,10 @@ export default class newProfileScreen extends React.Component {
     })
   }
 
+  handleSignOut = () => {
+
+  }
+
   render() {
     let screen
 
@@ -134,6 +138,12 @@ export default class newProfileScreen extends React.Component {
           <Text>Bio: {this.state.userData && this.state.userData.bio}</Text>
           <Text>Preferences: {this.state.userData && this.state.userData.preferences}</Text>
           <Button title="Edit Profile" onPress={this.handleEditProfile} />
+          <Button title="Sign Out" onPress={() => {
+            firebase.auth().signOut()
+            this.props.navigation.navigate('Login') 
+          }}
+          />
+
 
           <VerticalReviewsList reviews={this.state.reviewIDs} /> 
 

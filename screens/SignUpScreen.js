@@ -18,40 +18,26 @@ export default class SignUp extends React.Component {
   handleSignUp = async () => {
     let userID
     const db = firebase.database()
-    await db
-    .ref('id/').orderByKey().equalTo("lastUserID").once('value').then(function(snapshot) {
-      userID = snapshot.val().lastUserID + 1
-    })
-    .then(() => {
-      firebase
+    firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
         const user = firebase.auth().currentUser
         user.updateProfile({
           displayName: this.state.displayName,
-          photoURL: "http://i.imgur.com/k5nwqtG.png",
+          photoURL: "https://firebasestorage.googleapis.com/v0/b/newlapar-19607.appspot.com/o/avatar%2Fhappy.png?alt=media&token=51fa7ac1-bab9-4078-9f44-2db77f0f04bd",
         })
         return user
       })
       .then(user => {
         db.ref('users/' + user.uid).set({
-          username: this.state.username,
           bio: '',
           preferences: '',
-          uid: user.uid,
-          userID: 'u' + userID,
-        })
-        .then(() => {
-          db.ref('id/').update({
-            lastUserID: userID
-          })
+          userId: user.uid,
         })
       })
       .then(() => this.props.navigation.navigate('Home'))
       .catch(error => this.setState({ errorMessage: error.message }))
-    })
-    // TODO: check for unique username! (or don't need username?)
   }
 
   render() {
