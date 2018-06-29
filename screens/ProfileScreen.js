@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Button, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
+import { Text, View, Button, StyleSheet, Image, ActivityIndicator, ScrollView, TextInput } from 'react-native';
 import firebase from 'react-native-firebase';
 import { Avatar, Card } from 'react-native-elements'
 import EditProfileModal from '../components/EditProfileModal'
@@ -28,7 +28,11 @@ export default class newProfileScreen extends React.Component {
       modalPreferences: '',
       modalPhotoURL: null,
       isLoading: true,
-      reviewIDs: ['r1', 'r3']
+      reviewIDs: ['r1', 'r3'],
+      itemname: '',
+      itemprice: '',
+      itemrating: '',
+      itemrecommended: false,
     }
   }
 

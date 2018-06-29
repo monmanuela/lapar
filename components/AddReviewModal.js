@@ -33,6 +33,7 @@ export default class addReviewModal extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton)
       } else {
+        // change this to follow avatar!
         this.setState({photoURL: response.uri})
       }
     })
@@ -60,22 +61,32 @@ export default class addReviewModal extends React.Component {
       reviewID = snapshot.val().lastReviewID + 1
     })
     .then(() => {
-      db
-      .ref('reviews/' + 'r' + reviewID).set({
+      // db
+      // .ref('reviews/' + 'r' + reviewID).set({
+      //   rating: this.state.rating,
+      //   userID: 'u1',
+      //   itemID: this.props.itemID,
+      //   time: new Date(),
+      //   content: this.state.review,
+      //   photoURL: this.state.photoURL,
+      // })
+      // .then(() => {
+      //   db.ref('id/').update({
+      //     lastReviewID: reviewID
+      //   })
+      // })
+      const newPostRef = db.ref('reviews/').push({
         rating: this.state.rating,
-        userID: 'u1', // how?? get current user here??
+        userID: 'u1',
         itemID: this.props.itemID,
-        time: [25, 17, 20, 6, 2018], // how??
+        time: new Date().toLocaleString(),
         content: this.state.review,
         photoURL: this.state.photoURL,
       })
+      newPostRef
       .then(() => {
-        db.ref('id/').update({
-          lastReviewID: reviewID
-        })
-      })
-      .then(() => {
-				this.setState({ review: '', rating: 0, photoURL: null });
+        console.log("newref key: " + newPostRef.key)
+				this.setState({ review: '', rating: null, photoURL: null });
 				this.props.onCloseAddReview();
       })
       .catch(error => this.setState({ errorMessage: error.message }))

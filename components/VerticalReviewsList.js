@@ -5,7 +5,9 @@ import { reviews } from '../constants/Test';
 
 export default class VerticalReviewsList extends React.Component {
   render() {
-    const _reviews = this.props.reviews.map((reviewId, index) => {
+    // const _reviews = this.props.reviews.map((reviewId, index) => {
+    const fakeArr = ["r1"]
+    const _reviews = fakeArr.map((reviewId, index) => {    
       return(
         <Card key={index}>
           <Image
