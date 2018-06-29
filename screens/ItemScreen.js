@@ -26,7 +26,9 @@ export default class ItemScreen extends React.Component {
 	}
 
 	render() {
+		console.log("rendering item screen")
 		const item = this.props.navigation.state.params.item;
+		console.log("item reviews: " + JSON.stringify(item.reviews))
 		const itemTags = item.tags.map((tag, index) => {
 			return (
 				<Text key={index} style={{ color: 'white', backgroundColor: 'red', marginRight: 5, marginTop: 5, borderRadius: 10, padding: 7 }}>{tag}</Text>

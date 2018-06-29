@@ -8,6 +8,7 @@ import { stalls } from '../constants/Test';
 import ExploreModal from '../components/ExploreModal'
 
 import { Dimensions } from 'react-native';
+import firebase from 'react-native-firebase';
 
 const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
@@ -24,8 +25,30 @@ export default class ExploreScreen extends React.Component {
       sort: 'rating',
       filters: [],
       locations: this.props.navigation.state.params === undefined ? [] : [this.props.navigation.state.params.locs],
-      locs: this.props.navigation.state.params === undefined ? '' : this.props.navigation.state.params.locs
+      locs: this.props.navigation.state.params === undefined ? '' : this.props.navigation.state.params.locs,
+      locationObj: null,
+      locationNames: null, // array of location names ["Fine Food", "Techno Edge", ...]
+      stallObj: null,
   	}
+  }
+
+  componentDidMount = () => {
+    // fetch location names
+    const db = firebase.database()
+    db.ref("locations").once("value").then(snapshot => {
+      this.setState({ locationObj: snapshot.val() })
+      let locationIds = Object.keys(this.state.locationObj)
+      const locNameArr = locationIds.map((key, idx) => {
+        return this.state.locationObj[key].name
+      })
+      this.setState({ locationNames: locNameArr })
+    })
+
+    // fetch stalls
+    db.ref("stalls").once("value").then(snapshot => {
+      this.setState({ stallObj: snapshot.val() })
+      console.log("stall obj: " + JSON.stringify(this.state.stallObj))
+    })
   }
 
   handleNavigation = () => {

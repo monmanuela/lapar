@@ -25,43 +25,43 @@ export default class VerticalReviewsList extends React.Component {
     this.setState({
       reviewIds: this.props.reviews
     })
-
-    const _reviews = Object.keys(this.props.reviews).map((reviewId, index) => {
-      // with the reviewId, fetch the review object
-      let review
-      const db = firebase.database()
-      
-      db.ref("reviews/" + reviewId).once("value").then(snapshot => {
-        console.log("review: " + JSON.stringify(snapshot.val()))
-        review = snapshot.val()
+    if (this.props.reviews) {
+      Object.keys(this.props.reviews).map((reviewId, index) => {
+        // with the reviewId, fetch the review object
+        let review
+        const db = firebase.database()
+        
+        db.ref("reviews/" + reviewId).once("value").then(snapshot => {
+          console.log("review: " + JSON.stringify(snapshot.val()))
+          review = snapshot.val()
+        })
+        .then(() => {
+          console.log("url: " + review.photoURL)
+          console.log("rating: " + review.rating)
+          console.log("content: " + review.content)
+          return(
+            <Card key={index}>
+              <Image
+                style={{ height: scale(120), width: scale(295) }}
+                resizeMode="cover"
+                source={{uri: review.photoURL}}
+              />
+              <Text style={{ marginTop: scale(7), color: 'black', fontSize: 16}}>
+                Rating: {review.rating}
+              </Text>
+              <Text>
+                {review.content}
+              </Text>
+            </Card>
+          )
+        })
+        .then(obj => {
+          console.log("obj: " + obj)
+          this.setState({ _reviews: obj })
+        })
+        .catch(error => console.log(error))
       })
-      .then(() => {
-        console.log("url: " + review.photoURL)
-        console.log("rating: " + review.rating)
-        console.log("content: " + review.content)
-        return(
-          <Card key={index}>
-            <Image
-              style={{ height: scale(120), width: scale(295) }}
-              resizeMode="cover"
-              source={{uri: review.photoURL}}
-            />
-            <Text style={{ marginTop: scale(7), color: 'black', fontSize: 16}}>
-              Rating: {review.rating}
-            </Text>
-            <Text>
-              {review.content}
-            </Text>
-          </Card>
-        )
-      })
-      .then(obj => {
-        console.log("obj: " + obj)
-        this.setState({ _reviews: obj })
-      })
-      .catch(error => console.log(error))
-    })
-
+    }
   }
 
   render() {
