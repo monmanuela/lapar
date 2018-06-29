@@ -2,9 +2,16 @@ import React from 'react';
 import { Text, View, Button, StyleSheet, Image, ActivityIndicator, ScrollView, TextInput } from 'react-native';
 import firebase from 'react-native-firebase';
 import { Avatar, Card } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon from 'react-native-vector-icons/Octicons'
 import EditProfileModal from '../components/EditProfileModal'
 import VerticalReviewsList from '../components/VerticalReviewsList'
+import { Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
+const guidelineBaseWidth = 350;
+const guidelineBaseHeight = 680;
+
+const scale = size => width / guidelineBaseWidth * size;
 
 export default class newProfileScreen extends React.Component {
   constructor() {
@@ -125,8 +132,8 @@ export default class newProfileScreen extends React.Component {
   		screen =
       <ScrollView style={{ backgroundColor: 'white' }}>
         <View style={{ flexDirection: 'row' }}>
-          <Text style={{ width: 340, backgroundColor: 'red', color: 'white', paddingLeft: 20, paddingTop: 13, paddingBottom: 13, fontSize: 22, fontWeight: 'bold' }}>Profile</Text>
-          <Icon onPress={this.handleSignOut} name='dots-vertical' size={30} color={'white'} style={{ backgroundColor: 'red', paddingLeft: 10, paddingTop: 10, paddingRight: 5 }} />
+          <Text style={{ width: scale(310), backgroundColor: 'red', color: 'white', paddingLeft: scale(20), paddingTop: scale(13), paddingBottom: scale(13), fontSize: 22, fontWeight: 'bold' }}>Profile</Text>
+          <Icon onPress={this.handleSignOut} name='sign-out' size={scale(25)} color={'white'} style={{ backgroundColor: 'red', paddingLeft: scale(10), paddingTop: scale(15), paddingRight: scale(5) }} />
         </View>
         <View style={styles.container}>
           { this.state.userData &&
