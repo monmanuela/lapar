@@ -32,7 +32,7 @@ export default class ItemScreen extends React.Component {
 				<Text>{item.name}</Text>
 				<Text>{item.details}</Text>
 				<Button title='Add Review' onPress={() => this.setState({ modalVisible: true })} />
-				<AddReviewModal modalVisible={this.state.modalVisible} onCloseAddReview={this.onCloseAddReview} itemID={ item.id } />				
+				<AddReviewModal modalVisible={this.state.modalVisible} onCloseAddReview={this.onCloseAddReview} itemId={ item.id } />				
 				<VerticalReviewsList reviews={item.reviews} />
 			</ScrollView>
 		);

@@ -14,6 +14,7 @@ export default class HomeScreen extends React.Component {
       currentUser: null,
       recommendedItems: {},
       top5: {},
+      locations: {},
     }
   }
 
@@ -37,6 +38,12 @@ export default class HomeScreen extends React.Component {
       console.log("top5 snapshot: " + JSON.stringify(snapshot.val()))
       this.setState({ top5: snapshot.val() })
     })
+
+    // fetch locations
+    db.ref("locations").orderByChild("name").once("value").then(snapshot => {
+      console.log("locations snapshot: " + JSON.stringify(snapshot.val()))
+      this.setState({ locations: snapshot.val() })
+    })
   }
 
 	render() {
@@ -55,7 +62,7 @@ export default class HomeScreen extends React.Component {
         <HorizontalItemsSwiper items={this.state.top5} navigation={this.props.navigation} />
 
   			<Text style={{ marginTop: 10, marginLeft: 10, fontSize: 18, color: 'black' }}>Locations</Text>
-  			<HorizontalLocsList locs={locs} navigation={this.props.navigation} />
+  			<HorizontalLocsList locs={this.state.locations} navigation={this.props.navigation} />
         <Text>{'\n'}</Text>
   		</View>
 		);

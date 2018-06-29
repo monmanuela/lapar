@@ -33,7 +33,6 @@ export default class addReviewModal extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton)
       } else {
-        // change this to follow avatar!
         this.setState({photoURL: response.uri})
       }
     })
@@ -54,43 +53,39 @@ export default class addReviewModal extends React.Component {
 
 	handleSubmitReview = async () => {
 		console.log("rating: " + this.state.rating + ", review: " + this.state.review)
+    // need to fetch userId, itemId
 		let reviewID
     const db = firebase.database()
-    await db
-    .ref('id/').orderByKey().equalTo("lastReviewID").once('value').then(function(snapshot) {
-      reviewID = snapshot.val().lastReviewID + 1
+    const newPostRef = db.ref('reviews/').push({
+      rating: this.state.rating,
+      userId: 'u1',
+      itemId: this.props.itemID,
+      time: new Date().toLocaleString(),
+      content: this.state.review,
+      photoURL: this.state.photoURL,
+    })
+    
+    newPostRef.then(() => {
+      // upload photo
+      const imageRef = firebase.storage().ref('reviewPhotos').child(`${newPostRef.key}.jpg`)
+      let mime = 'image/jpg'
+      imageRef
+        .put(this.state.photoURL, {contentType: mime})
+        .then(() => {
+          return imageRef.getDownloadURL()
+        })
+        .then(url => {
+          console.log("photo review url: " + url)
+          db.ref('reviews/' + newPostRef.key).update({
+            photoURL: url,
+          })
+        })
     })
     .then(() => {
-      // db
-      // .ref('reviews/' + 'r' + reviewID).set({
-      //   rating: this.state.rating,
-      //   userID: 'u1',
-      //   itemID: this.props.itemID,
-      //   time: new Date(),
-      //   content: this.state.review,
-      //   photoURL: this.state.photoURL,
-      // })
-      // .then(() => {
-      //   db.ref('id/').update({
-      //     lastReviewID: reviewID
-      //   })
-      // })
-      const newPostRef = db.ref('reviews/').push({
-        rating: this.state.rating,
-        userID: 'u1',
-        itemID: this.props.itemID,
-        time: new Date().toLocaleString(),
-        content: this.state.review,
-        photoURL: this.state.photoURL,
-      })
-      newPostRef
-      .then(() => {
-        console.log("newref key: " + newPostRef.key)
-				this.setState({ review: '', rating: null, photoURL: null });
-				this.props.onCloseAddReview();
-      })
-      .catch(error => this.setState({ errorMessage: error.message }))
+			this.setState({ review: '', rating: null, photoURL: null });
+      this.props.onCloseAddReview();
     })
+    .catch(error => this.setState({ errorMessage: error.message }))
 	}
 
 	render() {

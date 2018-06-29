@@ -8,8 +8,6 @@ export default class HorizontalItemsSwiper extends React.Component {
 
   render() {
     const SwiperItems = Object.values(this.props.items).map((item, index) => {
-      console.log("idx: " + index)
-      console.log("item: " + JSON.stringify(item))
       return (
         <View key={index} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey' }}>
           <ImageBackground style={{opacity: 0.6, width: 400, height: 150, flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}} source={{uri: item.photoURL}}>

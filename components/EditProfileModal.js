@@ -37,7 +37,7 @@ export default class EditProfileModal extends React.Component {
         console.log('User tapped custom button: ', response.customButton)
       } else {
         console.log("response: " + JSON.stringify(response))
-        // use userId for filename, so every user can only have one avatar at a time
+        // change to uid? or push user data?
         const imageRef = firebase.storage().ref('avatar').child(`${this.props.userID}.jpg`)
         let mime = 'image/jpg'
         imageRef.put(response.uri, {contentType: mime})
