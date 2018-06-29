@@ -1,8 +1,16 @@
 import React from 'react';
-import { Modal, Button, View, Text, TextInput, Image, StyleSheet } from 'react-native';
+import { Modal, View, Text, TextInput, Image, StyleSheet } from 'react-native';
+import { Button } from 'react-native-elements'
 import { AirbnbRating } from 'react-native-ratings';
 import firebase from 'react-native-firebase';
 import ImagePicker from 'react-native-image-picker';
+import { Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
+const guidelineBaseWidth = 350;
+const guidelineBaseHeight = 680;
+
+const scale = size => width / guidelineBaseWidth * size;
 
 export default class addReviewModal extends React.Component {
 	constructor() {
@@ -97,36 +105,49 @@ export default class addReviewModal extends React.Component {
 	render() {
 		return (
 			<Modal animationType='fade' onRequestClose={() => alert("Add") } visible={this.props.modalVisible}>
-				<View>
-					<Text>Rating</Text>
+				<View style={{ backgroundColor: 'white' }}>
+					<Text style={{ color: 'black', fontSize: 20, marginLeft: 20, marginTop: 30 }}>Rating</Text>
 					<AirbnbRating
 					  count={5}
 					  reviews={[]}
 					  defaultRating={0}
-					  imageSize={40}
+					  imageSize={30}
 					  onFinishRating={rating => this.handleRating(rating)}
-					  style={{ paddingVertical: 10 }}
+            style={{ marginBottom: 20 }}
 					/>
-					<Text>{'\n'}</Text>
+
 					<Button
-						title="Add Item Picture"
+						title="ADD PICTURE"
 						onPress= { this.onChangePicturePress }
+            textStyle={{ fontWeight: 'bold', fontSize: 16 }}
+            buttonStyle={{ backgroundColor: 'red', width: scale(200), borderRadius: 2 }}
 					/>
-					<Text>{'\n'}</Text>
+
 					<Image
             style={styles.image}
             resizeMode="cover"
             source={{uri: this.state.photoURL}}
           />
-					<Text>{'\n'}</Text>
-					<TextInput 
-						style={{height: 40, borderColor: 'gray', borderWidth: 1}} 
+
+          <Text style={{ color: 'black', fontSize: 20, marginLeft: 20, marginTop: 30 }}>Review</Text>
+					
+          <TextInput 
+						style={{height: 150, width: '80%', borderColor: 'gray', borderWidth: 1}} 
 						onChangeText={this.handleReview} 
 						value={this.state.review}
 					/>
-					<Text>{'\n'}</Text>
-					<Button title='Submit Review' onPress={this.handleSubmitReview} />
-					<Button title='Close' onPress={this.handleClose} />
+
+					<Button 
+            title='SUBMIT' 
+            textStyle={{ fontWeight: 'bold', fontSize: 16 }} 
+            buttonStyle={{ backgroundColor: 'red', width: scale(120), borderRadius: 2 }} 
+            onPress={this.handleSubmitReview} />
+
+					<Button 
+            title='CLOSE' 
+            textStyle={{ fontWeight: 'bold', fontSize: 16 }} 
+            buttonStyle={{ backgroundColor: 'red', width: scale(120), borderRadius: 2 }} 
+            onPress={this.handleClose} />
 				</View>
 			</Modal>
 		);

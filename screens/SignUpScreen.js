@@ -1,6 +1,16 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native'
+import { StyleSheet, Text, TextInput, View, Image } from 'react-native'
+import { Button } from 'react-native-elements'
 import firebase from 'react-native-firebase'
+
+import { Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
+const guidelineBaseWidth = 350;
+const guidelineBaseHeight = 680;
+
+const scale = size => width / guidelineBaseWidth * size;
+const verticalScale = size => height / guidelineBaseHeight * size;
 
 export default class SignUp extends React.Component {
   constructor() {
@@ -43,7 +53,7 @@ export default class SignUp extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Sign Up</Text>
+        <Image source={require('../assets/images/logo.png')} style={{ width: scale(100), height: verticalScale(150) }}/>
 
         {this.state.errorMessage &&
           <Text style={{ color: 'red' }}>
@@ -58,7 +68,7 @@ export default class SignUp extends React.Component {
           value={this.state.displayName}
         />
 
-        {/* Username */}
+        {/* Username 
         <TextInput
           placeholder="Username"
           autoCapitalize="none"
@@ -66,7 +76,7 @@ export default class SignUp extends React.Component {
           onChangeText={username => this.setState({ username })}
           value={this.state.username}
         />
-
+        */}
         {/* Email */}
         <TextInput
           placeholder="Email"
@@ -87,12 +97,17 @@ export default class SignUp extends React.Component {
         />
 
         <Button 
-          title="Sign Up"
-          onPress={this.handleSignUp}  
-        />
+          title="Create Account"
+          textStyle={{ fontWeight: 'bold' }}
+          buttonStyle={{ marginTop: 20, marginBottom: 10, backgroundColor: 'red', width: scale(120), borderRadius: 40 }} 
+          onPress={this.handleSignUp} />
+
+        <Text>- OR -</Text>
 
         <Button
-          title="Already have an account? Login"
+          title="Login"
+          textStyle={{ color: 'red' }}
+          buttonStyle={{ marginTop: 10, backgroundColor: 'white', width: scale(120), borderRadius: 40, borderColor: 'red', borderWidth: 1 }}
           onPress={() => this.props.navigation.navigate('Login')}
         />
       </View>
@@ -104,13 +119,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'white'
   },
   textInput: {
     height: 40,
-    width: '90%',
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginTop: 8
+    width: '80%',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
+    marginTop: 8,
+    marginBottom: 10
   }
 })
