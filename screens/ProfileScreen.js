@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, Button, StyleSheet, Image, ActivityIndicator, ScrollView, TextInput } from 'react-native';
 import firebase from 'react-native-firebase';
 import { Avatar, Card } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/Ionicons'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import EditProfileModal from '../components/EditProfileModal'
 import VerticalReviewsList from '../components/VerticalReviewsList'
 
@@ -111,6 +111,11 @@ export default class newProfileScreen extends React.Component {
     })
   }
 
+  handleSignOut = () => {
+    firebase.auth().signOut()
+    this.props.navigation.navigate('Login') 
+  }
+
   render() {
     let screen
 
@@ -119,7 +124,10 @@ export default class newProfileScreen extends React.Component {
     } else {
   		screen =
       <ScrollView style={{ backgroundColor: 'white' }}>
-        <Text style={{ backgroundColor: 'red', color: 'white', paddingLeft: 20, paddingTop: 13, paddingBottom: 13, fontSize: 22, fontWeight: 'bold' }}>Profile</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={{ width: 340, backgroundColor: 'red', color: 'white', paddingLeft: 20, paddingTop: 13, paddingBottom: 13, fontSize: 22, fontWeight: 'bold' }}>Profile</Text>
+          <Icon onPress={this.handleSignOut} name='dots-vertical' size={30} color={'white'} style={{ backgroundColor: 'red', paddingLeft: 10, paddingTop: 10, paddingRight: 5 }} />
+        </View>
         <View style={styles.container}>
           { this.state.userData &&
             <Avatar
@@ -131,11 +139,13 @@ export default class newProfileScreen extends React.Component {
             /> 
           }
           <Text style={{ fontSize: 20, color: 'black' }}>{this.state.userData && this.state.userData.displayName}</Text>
-          <Text style={{ color: 'gray', marginBottom: 10 }}>{this.state.userData && this.state.userData.bio}</Text>
+          <Text style={{ color: 'gray', marginBottom: 10, marginLeft: 20, marginRight: 20 }}>{this.state.userData && this.state.userData.bio}</Text>
           <Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
         </View>
         
         <VerticalReviewsList reviews={this.state.reviewIDs} /> 
+
+        <Text>{'\n'}</Text>
 
         <EditProfileModal
           modalVisible={this.state.modalVisible} 

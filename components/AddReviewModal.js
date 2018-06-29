@@ -53,19 +53,23 @@ export default class addReviewModal extends React.Component {
 
 	handleSubmitReview = async () => {
 		console.log("rating: " + this.state.rating + ", review: " + this.state.review)
+    console.log("itemId: " + this.props.itemId)
     // need to fetch userId, itemId
+    // and add this reviewId to items/reviews
 		let reviewID
     const db = firebase.database()
-    const newPostRef = db.ref('reviews/').push({
+    const newPostRef = db.ref('reviews/').push()
+    
+    newPostRef.update({
+      reviewId: newPostRef.key,
       rating: this.state.rating,
-      userId: 'u1',
-      itemId: this.props.itemID,
+      userId: this.props.userId,
+      itemId: this.props.itemId,
       time: new Date().toLocaleString(),
       content: this.state.review,
       photoURL: this.state.photoURL,
     })
-    
-    newPostRef.then(() => {
+    .then(() => {
       // upload photo
       const imageRef = firebase.storage().ref('reviewPhotos').child(`${newPostRef.key}.jpg`)
       let mime = 'image/jpg'
@@ -75,11 +79,13 @@ export default class addReviewModal extends React.Component {
           return imageRef.getDownloadURL()
         })
         .then(url => {
-          console.log("photo review url: " + url)
           db.ref('reviews/' + newPostRef.key).update({
             photoURL: url,
           })
         })
+    })
+    .then(() => {
+      // store the review in the user, and in the item
     })
     .then(() => {
 			this.setState({ review: '', rating: null, photoURL: null });

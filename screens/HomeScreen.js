@@ -23,25 +23,25 @@ export default class HomeScreen extends React.Component {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({ currentUser: user })
-      } else {}
+        console.log("currentUser: " + JSON.stringify(this.state.currentUser))
+      } else {
+        console.log("sed")
+      }
     })
 
     const db = firebase.database()
     // fetch recommended items
     db.ref("items").orderByChild("recommended").equalTo(true).once("value").then(snapshot => {
-      console.log("recom snapshot: " + JSON.stringify(snapshot.val()))
       this.setState({ recommendedItems: snapshot.val() })
     })
 
     // fetch top 5 items
     db.ref("items").orderByChild("ratings").limitToFirst(5).once("value").then(snapshot => {
-      console.log("top5 snapshot: " + JSON.stringify(snapshot.val()))
       this.setState({ top5: snapshot.val() })
     })
 
     // fetch locations
     db.ref("locations").orderByChild("name").once("value").then(snapshot => {
-      console.log("locations snapshot: " + JSON.stringify(snapshot.val()))
       this.setState({ locations: snapshot.val() })
     })
   }
@@ -56,13 +56,23 @@ export default class HomeScreen extends React.Component {
         </TouchableWithoutFeedback>
 
 			 	<Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 5, fontSize: 18, color: 'black' }}>Recommendations</Text>
-        <HorizontalItemsSwiper items={this.state.recommendedItems} navigation={this.props.navigation} />
+        
+        {this.state.currentUser &&
+        <HorizontalItemsSwiper items={this.state.recommendedItems} userId={this.state.currentUser.uid} navigation={this.props.navigation} />
+        }
 
   			<Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 5, fontSize: 18, color: 'black' }}>Top 5</Text>
-        <HorizontalItemsSwiper items={this.state.top5} navigation={this.props.navigation} />
-
+        
+        {this.state.currentUser &&
+        <HorizontalItemsSwiper items={this.state.top5} userId={this.state.currentUser.uid} navigation={this.props.navigation} />
+        }
+        
   			<Text style={{ marginTop: 10, marginLeft: 10, fontSize: 18, color: 'black' }}>Locations</Text>
-  			<HorizontalLocsList locs={this.state.locations} navigation={this.props.navigation} />
+  			
+        {this.state.currentUser &&
+        <HorizontalLocsList locs={this.state.locations} userId={this.state.currentUser.uid} navigation={this.props.navigation} />
+        }
+
         <Text>{'\n'}</Text>
   		</View>
 		);

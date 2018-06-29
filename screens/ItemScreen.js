@@ -16,8 +16,13 @@ export default class ItemScreen extends React.Component {
 
 	onCloseAddReview = () => {
 		this.setState({
-			modalVisible: false
+			modalVisible: false,
 		})
+	}
+
+	componentDidMount = () => {
+		console.log("uid: " + this.props.navigation.state.params.userId)
+		console.log("item: " + JSON.stringify(this.props.navigation.state.params.item))
 	}
 
 	render() {
@@ -30,21 +35,29 @@ export default class ItemScreen extends React.Component {
 
 		return (
 			<ScrollView style={{ backgroundColor: 'white' }}>
-				<View style={{ borderBottomColor: '#d9dce0', borderBottomWidth: 1, paddingTop: 10, paddingBottom: 10, paddingLeft: 20, marginBottom: 10 }}>
-					<Image source={{ uri: item.photoURL }} style={{ height: 100, width: 320 }} />
-					<Text style={{ color: 'black', fontSize: 28 }}>{item.name}</Text>
-					<Text style={{ fontSize: 16 }}>Rating: {item.rating}</Text>
-					<Text style={{ fontSize: 16 }}>Price: {item.price}</Text>
+				<View style={{ borderBottomColor: '#d9dce0', borderBottomWidth: 1, paddingBottom: 10, marginBottom: 10 }}>
+					<Image source={{ uri: item.photoURL }} style={{ height: 150, width: 400 }} />
+					<Text style={{ color: 'black', fontSize: 28, paddingLeft: 20 }}>{item.name}</Text>
+					<Text style={{ fontSize: 16, paddingLeft: 20 }}>Rating: {item.rating}</Text>
+					<Text style={{ fontSize: 16, paddingLeft: 20 }}>Price: ${item.price}</Text>
 					
-					<View style={{ flexDirection: 'row' }}>
+					<View style={{ flexDirection: 'row', paddingLeft: 20 }}>
 						{ itemTags }
 					</View>
 				</View>
 				<View style={{ justifyContent: 'center', alignItems: 'center' }}>
 					<Button title='Add Review' color={'red'} onPress={() => this.setState({ modalVisible: true })} />
 				</View>
-				<AddReviewModal modalVisible={this.state.modalVisible} onCloseAddReview={this.onCloseAddReview} itemId={ item.id } />				
+				<AddReviewModal 
+					modalVisible={this.state.modalVisible} 
+					onCloseAddReview={this.onCloseAddReview} 
+					itemId={ item.id }
+					userId={this.props.navigation.state.params.userId}
+				/>				
+
 				<VerticalReviewsList reviews={item.reviews} />
+
+				<Text>{'\n'}</Text>
 			</ScrollView>
 		);
 	}
