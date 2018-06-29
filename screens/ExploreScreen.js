@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, TouchableHighlight } from 'react-native';
 import { SearchBar, CheckBox } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import VerticalStallsList from '../components/VerticalStallsList';
 import { stalls } from '../constants/Test';
@@ -73,7 +73,7 @@ export default class ExploreScreen extends React.Component {
     this.handleNavigation();  
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <ExploreModal
           modalVisible={this.state.modalVisible} 
           sort={this.state.sort} 
@@ -86,13 +86,10 @@ export default class ExploreScreen extends React.Component {
           onCloseModal={this.onCloseModal}
         />
 
-        <View>
-        	<SearchBar onChangeText={this.handleSearch} placeholder="Search..." clearIcon />
+        <View style={{ flexDirection: 'row' }}>
+          <Icon onPress={this.onOpenModal} name='md-menu' size={40} color={'white'} style={{ backgroundColor: 'red', paddingLeft: 10, paddingTop: 8, paddingRight: 5 }} />
+        	<SearchBar lightTheme inputStyle={{ backgroundColor: 'white' }} containerStyle={{ backgroundColor: 'red', width: 340, borderBottomColor: 'transparent', borderTopColor: 'transparent'}} onChangeText={this.handleSearch} placeholder="Search..." clearIcon />
         </View>
-
-        <TouchableHighlight onPress={this.onOpenModal}>
-          <Text>Criteria</Text>
-        </TouchableHighlight>
 
         <VerticalStallsList sort={this.state.sort} filters={this.state.filters} locations={this.state.locations} search={this.state.search} stalls={stalls} navigation={this.props.navigation} />
       </View>

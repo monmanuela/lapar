@@ -56,10 +56,11 @@ export default class EditProfileModal extends React.Component {
       <Modal animationType='fade' onRequestClose={() => alert("Edit") } visible={this.props.modalVisible}>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View>
-            <View style={{alignItems: 'center'}}>
+            <Text style={{ backgroundColor: 'red', color: 'white', paddingLeft: 20, paddingTop: 13, paddingBottom: 13, fontSize: 22, fontWeight: 'bold' }}>Edit Profile</Text>
+            <View style={{alignItems: 'center', marginTop: 20, marginBottom: 20 }}>
               { this.props.photoURL &&
                 <Avatar
-                  size="300"
+                  large
                   rounded
                   source={{uri: this.props.photoURL}}
                   onPress={this.onChangePicturePress}
@@ -67,10 +68,11 @@ export default class EditProfileModal extends React.Component {
                   title="Change Picture"
                 />
               }
+              <Text style={{ marginTop: 10 }} onPress={this.onChangePicturePress}>Change Avatar</Text>
             </View>
 
-            <View style={{flexDirection: 'row'}}>
-              <Text>Name: </Text>
+            <View>
+              <Text style={{ marginLeft: 20 }}>Name: </Text>
               <TextInput
                 style={styles.textInput}
                 placeholder = { this.props.displayName }
@@ -78,7 +80,7 @@ export default class EditProfileModal extends React.Component {
                 value = { this.props.displayName === '' ? this.props.displayName : this.props.displayName }
               />
             </View>
-
+            {/*
             <View style={{flexDirection: 'row'}}>
               <Text>Username: </Text>
               <TextInput
@@ -99,9 +101,9 @@ export default class EditProfileModal extends React.Component {
                 value = { this.props.email }
               />
             </View>
-
-            <View style={{flexDirection: 'row'}}>
-              <Text>Bio: </Text>
+            */}
+            <View>
+              <Text style={{ marginLeft: 20, marginTop: 30 }}>Bio: </Text>
               <TextInput
                 style={styles.textInput}
                 autoCapitalize="none"
@@ -110,7 +112,7 @@ export default class EditProfileModal extends React.Component {
                 value={this.props.bio}
               />
             </View>
-
+            {/*
             <View style={{flexDirection: 'row'}}>
               <Text>Preferences: </Text>
               <TextInput
@@ -121,10 +123,13 @@ export default class EditProfileModal extends React.Component {
                 value={this.props.preferences}
               />
             </View>
-
-            <Button title='Save' onPress={this.props.handleSaveChanges} />
-            <Button title='Close' onPress={this.props.handleClose} />
-
+            */}
+            <View style={{ marginTop: 40, marginBottom: 20, justifyContent: 'center', alignItems: 'center' }}>
+              <Button title='     Save      ' color={'red'} onPress={this.props.handleSaveChanges} />
+            </View>
+            <View style={{ marginBottom: 20, justifyContent: 'center', alignItems: 'center' }}>
+              <Button title='    Close    ' color={'red'} onPress={this.props.handleClose} />
+            </View>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
@@ -140,9 +145,10 @@ const styles = StyleSheet.create({
   },
   textInput: {
     height: 40,
-    width: '70%',
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginTop: 8
+    width: '90%',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
+    marginLeft: 20,
+    paddingLeft: 0
   }
 })
