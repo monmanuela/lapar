@@ -18,7 +18,7 @@ export default class VerticalReviewsList extends React.Component {
       return(
         <Card key={index}>
           <Image
-            style={{ height: scale(120), width: scale(290) }}
+            style={{ height: scale(120), width: scale(295) }}
             resizeMode="cover"
             source={{uri: reviews[reviewId].photoURL}}
           />
