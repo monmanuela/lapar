@@ -128,38 +128,41 @@ export default class addReviewModal extends React.Component {
             style={{ marginBottom: 20 }}
 					/>
 
-					<Button
-						title="ADD PICTURE"
-						onPress= { this.onChangePicturePress }
-            textStyle={{ fontWeight: 'bold', fontSize: 16 }}
-            buttonStyle={{ backgroundColor: 'red', width: scale(200), borderRadius: 2 }}
-					/>
-
-					<Image
-            style={styles.image}
-            resizeMode="cover"
-            source={{uri: this.state.photoURL}}
-          />
-
           <Text style={{ color: 'black', fontSize: 20, marginLeft: 20, marginTop: 30 }}>Review</Text>
 					
-          <TextInput 
-						style={{height: 150, width: '80%', borderColor: 'gray', borderWidth: 1}} 
-						onChangeText={this.handleReview} 
-						value={this.state.review}
-					/>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Button
+              title="ADD PICTURE"
+              onPress= { this.onChangePicturePress }
+              textStyle={{ fontWeight: 'bold', fontSize: 14 }}
+              buttonStyle={{ backgroundColor: 'red', width: scale(100), borderRadius: 2, marginTop: 10, marginBottom: 10, padding: 5 }}
+            />
 
-					<Button 
-            title='SUBMIT' 
-            textStyle={{ fontWeight: 'bold', fontSize: 16 }} 
-            buttonStyle={{ backgroundColor: 'red', width: scale(120), borderRadius: 2 }} 
-            onPress={this.handleSubmitReview} />
+            <Image
+              style={styles.image}
+              resizeMode="cover"
+              source={{uri: this.state.photoURL}}
+            />
 
-					<Button 
-            title='CLOSE' 
-            textStyle={{ fontWeight: 'bold', fontSize: 16 }} 
-            buttonStyle={{ backgroundColor: 'red', width: scale(120), borderRadius: 2 }} 
-            onPress={this.handleClose} />
+            <TextInput
+              multiline={true} 
+  						style={{ textAlignVertical: 'top', height: 150, width: '90%', borderColor: 'gray', borderWidth: 1, paddingLeft: 8, paddingRight: 8 }} 
+  						onChangeText={this.handleReview} 
+  						value={this.state.review}
+  					/>
+
+  					<Button 
+              title='SUBMIT' 
+              textStyle={{ fontWeight: 'bold', fontSize: 14 }} 
+              buttonStyle={{ backgroundColor: 'red', width: scale(70), borderRadius: 2, marginTop: 20, padding: 5 }} 
+              onPress={this.handleSubmitReview} />
+
+  					<Button 
+              title='CLOSE' 
+              textStyle={{ fontWeight: 'bold', fontSize: 14 }} 
+              buttonStyle={{ backgroundColor: 'red', width: scale(70), borderRadius: 2, marginTop: 20, padding: 5 }} 
+              onPress={this.handleClose} />
+          </View>
 				</View>
 			</Modal>
 		);
