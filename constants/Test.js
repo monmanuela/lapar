@@ -181,5 +181,5 @@ export const items = {
 };
 
 export const filterCriterias = ['halal', 'vegetarian'];
-export const locationCriterias = ['l1', 'l2', 'l3', 'l4'];
+export const locationCriterias = ['Fine Food', 'The Deck', 'Techno Edge'];
 export const sortCriterias = ['rating', 'price'];

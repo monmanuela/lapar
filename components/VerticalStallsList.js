@@ -31,15 +31,16 @@ export default class VerticalStallsList extends React.Component {
         const filteredItems = itemsPerStall
           .filter(item => item.name.includes(this.props.search) &&
             filterCriteria.every(criteria => item.tags.includes(criteria)) &&
-            (locationCriteria.length === 0 || locationCriteria.includes(item.locationId)))
+            (locationCriteria.length === 0 || locationCriteria.includes(item.location)))
           .sort(sortFunction);
 
         if (filteredItems.length === 0) { return; }
         return (
           <Card key={index}>
-            <Text>{stall.name}</Text>
-            <Text>Rating: {stall.rating}</Text>
-            <Text>Price: ${stall.lowestPrice}</Text>
+            <Text style={{ color: 'red', fontSize: 22 }}>{stall.name}</Text>
+            <Text style={{ color: 'black', fontSize: 16 }}>Rating: {stall.rating}</Text>
+            <Text style={{ fontSize: 16 }}>Price: ${stall.lowestPrice}</Text>
+            <Text style={{ fontSize: 16 }}>Location: {stall.location}</Text>
             <HorizontalItemsList items={filteredItems} navigation={this.props.navigation} />
           </Card>);
       });
@@ -47,6 +48,7 @@ export default class VerticalStallsList extends React.Component {
     return (
       <ScrollView>
         { filteredSortedStalls }
+        <Text>{'\n'}</Text>
       </ScrollView>
     );
   }

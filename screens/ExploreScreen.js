@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, TouchableHighlight } from 'react-native';
+import { Text, View, ScrollView, TouchableHighlight } from 'react-native';
 import { SearchBar, CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -62,6 +62,7 @@ export default class ExploreScreen extends React.Component {
   }
 
   handleNavigation = () => {
+    console.log("handleNavigation")
     if (this.props.navigation.state.params !== undefined && this.props.navigation.state.params.locs !== this.state.locs) {
       this.setState({
         locs: this.props.navigation.state.params.locs,

@@ -1,6 +1,15 @@
 import React from 'react';
-import { FlatList, Text, TouchableWithoutFeedback } from 'react-native';
+import { FlatList, Text, TouchableWithoutFeedback, Image, View } from 'react-native';
 import { Card } from 'react-native-elements';
+
+import { Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
+const guidelineBaseWidth = 350;
+const guidelineBaseHeight = 680;
+
+const scale = size => width / guidelineBaseWidth * size;
+const verticalScale = size => height / guidelineBaseHeight * size;
 
 export default class HorizontalItemsList extends React.Component {
   render() {
@@ -14,11 +23,14 @@ export default class HorizontalItemsList extends React.Component {
               <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('Item', {item: rowData})}>
                 <Card
                   title={null}
-                  containerStyle={{ padding: 0, width: 120, height: 120 }}
+                  containerStyle={{ backgroundColor: 'red', padding: 0, width: scale(120), height: verticalScale(200), marginLeft: scale(5), marginRight: scale(5) }}
                 >
-                  <Text>{rowData.name}</Text>
-                  <Text>Rating: {rowData.rating}</Text>
-                  <Text>Price: ${rowData.price}</Text>
+                  <Image source={{ uri: rowData.photoURL }} style={{ width: scale(120), height: verticalScale(100)}} />
+                    <View style={{ paddingLeft: scale(5) }}>
+                      <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>{rowData.name}</Text>
+                      <Text style={{ color: 'white' }}>Rating: {rowData.rating}</Text>
+                      <Text style={{ color: 'white' }}>Price: ${rowData.price}</Text>
+                    </View>
                 </Card>
               </TouchableWithoutFeedback>
             );

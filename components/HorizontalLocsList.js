@@ -12,7 +12,7 @@ export default class HorizontalItemsList extends React.Component {
         data={Object.values(this.props.locs)}
         renderItem={({ item: rowData }) => {
           return (
-            <TouchableWithoutFeedback onPress={ () => this.props.navigation.navigate('ExploreScreen', { locs: rowData.id }) }>
+            <TouchableWithoutFeedback onPress={ () => this.props.navigation.navigate('ExploreScreen', { locs: rowData.name }) }>
               <Card
                 title={rowData.name}
                 titleStyle={{ opacity: 0.7, marginTop: 0, marginBottom: 0, color: 'white', backgroundColor: 'red' }}
