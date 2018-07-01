@@ -40,7 +40,7 @@ export default class ItemScreen extends React.Component {
 
 	render() {
 		console.log("rendering item screen")
-		const item = this.state.item ? this.state.item : this.props.navigation.state.params.item;
+		const item = this.state.item || this.props.navigation.state.params.item
 		console.log("item reviews: " + JSON.stringify(item.reviews))
 		const itemTags = item.tags.map((tag, index) => {
 			return (
