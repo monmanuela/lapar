@@ -26,7 +26,7 @@ export default class HorizontalItemsList extends React.Component {
                   containerStyle={{ backgroundColor: 'red', padding: 0, width: scale(120), height: verticalScale(200), marginLeft: scale(5), marginRight: scale(5) }}
                 >
                   <Image source={{ uri: rowData.photoURL }} style={{ width: scale(120), height: verticalScale(100)}} />
-                    <View style={{ paddingLeft: scale(5) }}>
+                    <View style={{ paddingLeft: scale(5), opacity: 0.7 }}>
                       <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>{rowData.name}</Text>
                       <Text style={{ color: 'white' }}>Rating: {rowData.rating}</Text>
                       <Text style={{ color: 'white' }}>Price: ${rowData.price}</Text>

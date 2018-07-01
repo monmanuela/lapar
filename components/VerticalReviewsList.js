@@ -15,7 +15,6 @@ export default class VerticalReviewsList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      // reviewIds: [],
       reviews: [],
     }
   }
@@ -54,7 +53,7 @@ export default class VerticalReviewsList extends React.Component {
       })
       .then(obj => {
         console.log("obj: " + obj)
-        this.setState({ _reviews: obj })
+        this.setState({ reviews: [...this.state.reviews, obj] })
       })
       .catch(error => console.log(error))
     })
@@ -63,7 +62,7 @@ export default class VerticalReviewsList extends React.Component {
   render() {
     return (
       <View>
-        {this.state._reviews}
+        {this.state.reviews}
       </View>
     );
   }
