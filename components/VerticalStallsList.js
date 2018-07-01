@@ -3,11 +3,12 @@ import { FlatList, Text, ScrollView } from 'react-native';
 import { Card } from 'react-native-elements';
 
 import HorizontalItemsList from './HorizontalItemsList';
-import { items } from '../constants/Test';
+// import { items } from '../constants/Test';
 
 export default class VerticalStallsList extends React.Component {
   render() {
-    const _items = items;
+    // const _items = items;
+    const _items = this.props.items
     const stalls = Object.values(this.props.stalls);
     const filterCriteria = this.props.filters;
     const locationCriteria = this.props.locations; 
@@ -21,11 +22,16 @@ export default class VerticalStallsList extends React.Component {
 
     const filteredSortedStalls = stalls.sort(sortFunction)
       .map((stall, index) => {
-        const filteredItems = stall.items
-          .filter(item => _items[item].name.includes(this.props.search) &&
-            filterCriteria.every(criteria => _items[item].tags.includes(criteria)) &&
-            (locationCriteria.length === 0 || locationCriteria.includes(_items[item].locationId)))
-          .map(item => _items[item])
+        const stallId = stall.stallId
+        const itemIds = Object.keys(stall.items)
+        const itemsPerStall = itemIds.map((id, index) => {
+          return _items[id]
+        })
+
+        const filteredItems = itemsPerStall
+          .filter(item => item.name.includes(this.props.search) &&
+            filterCriteria.every(criteria => item.tags.includes(criteria)) &&
+            (locationCriteria.length === 0 || locationCriteria.includes(item.locationId)))
           .sort(sortFunction);
 
         if (filteredItems.length === 0) { return; }
