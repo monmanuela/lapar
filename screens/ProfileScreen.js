@@ -41,6 +41,7 @@ export default class newProfileScreen extends React.Component {
   }
 
   componentDidMount = () => {
+    console.log("in profilescreen didmount")
     const currentUser = firebase.auth().currentUser;
     
     if (currentUser != null) {
@@ -55,8 +56,8 @@ export default class newProfileScreen extends React.Component {
 
       // fetch reviews
       db.ref("users/" + currentUser.uid).orderByKey().equalTo("reviews").once("value").then(snapshot => {
-        console.log("reviews: " + JSON.stringify(Object.keys(snapshot.val().reviews)))
-        this.setState({reviewIds: Object.keys(snapshot.val().reviews)})
+        console.log("reviews: " + JSON.stringify(snapshot.val().reviews))
+        this.setState({ reviewIds: snapshot.val().reviews })
       })
     }
   }
@@ -126,9 +127,10 @@ export default class newProfileScreen extends React.Component {
   }
 
   render() {
+    console.log("in profile " + JSON.stringify(this.state.reviewIds))
     let screen
 
-    if (this.state.isLoading) {
+    if (this.state.isLoading || this.state.reviewIds.length === 0) {
       screen = <ActivityIndicator size="large" color="#0000ff" />
     } else {
   		screen =

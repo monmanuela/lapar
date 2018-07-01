@@ -5,7 +5,6 @@ import { Card } from 'react-native-elements'
 import { Dimensions } from 'react-native';
 import firebase from 'react-native-firebase';
 
-
 const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
 const guidelineBaseHeight = 680;
@@ -16,16 +15,14 @@ export default class VerticalReviewsList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      reviewIds: [],
-      _reviews: [],
+      // reviewIds: [],
+      reviews: [],
     }
   }
 
   componentDidMount = () => {
-    this.setState({
-      reviewIds: this.props.reviews
-    })
-
+    console.log("in vertrevlist didmount " + JSON.stringify(this.props.reviews))
+    if (this.props.reviews === undefined) { return; }
     const _reviews = Object.keys(this.props.reviews).map((reviewId, index) => {
       // with the reviewId, fetch the review object
       let review
@@ -61,7 +58,6 @@ export default class VerticalReviewsList extends React.Component {
       })
       .catch(error => console.log(error))
     })
-
   }
 
   render() {

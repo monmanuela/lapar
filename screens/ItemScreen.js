@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, Text, Button, View, Image } from 'react-native';
+import firebase from 'react-native-firebase';
 
 import AddReviewModal from '../components/AddReviewModal';
 import VerticalReviewsList from '../components/VerticalReviewsList';
@@ -21,6 +22,7 @@ export default class ItemScreen extends React.Component {
 	}
 
 	componentDidMount = () => {
+		console.log("did mount itemscreen")
 		console.log("uid: " + this.props.navigation.state.params.userId)
 		console.log("item: " + JSON.stringify(this.props.navigation.state.params.item))
 	}
