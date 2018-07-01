@@ -25,11 +25,22 @@ export default class ItemScreen extends React.Component {
 		console.log("did mount itemscreen")
 		console.log("uid: " + this.props.navigation.state.params.userId)
 		console.log("item: " + JSON.stringify(this.props.navigation.state.params.item))
+    const db = firebase.database()
+		
+		db.ref("items/" + this.props.navigation.state.params.item.itemId + "/reviews/").on("child_added", snapshot => {
+      console.log("\nGOT ADDED CHILD\n")
+      // fetch item reviews again, set as state to trigger re render
+      db.ref("items/" + this.props.navigation.state.params.item.itemId).once("value").then(snapshot => {
+      	console.log("refetched item\n")
+      	console.log("new item: " + JSON.stringify(snapshot.val()))
+      	this.setState({ item: snapshot.val() })
+      })
+    })
 	}
 
 	render() {
 		console.log("rendering item screen")
-		const item = this.props.navigation.state.params.item;
+		const item = this.state.item ? this.state.item : this.props.navigation.state.params.item;
 		console.log("item reviews: " + JSON.stringify(item.reviews))
 		const itemTags = item.tags.map((tag, index) => {
 			return (
