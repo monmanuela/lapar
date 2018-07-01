@@ -98,6 +98,9 @@ export default class addReviewModal extends React.Component {
     .then(() => {
       console.log("wanna store in user")
       // store the review in the user, and in the item
+      console.log("userId: " + this.props.userId)
+      console.log("itemId: " + this.props.itemId)
+
       const db = firebase.database()
       var review = {}
       review[newPostRefKey] = true

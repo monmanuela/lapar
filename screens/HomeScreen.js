@@ -24,8 +24,10 @@ export default class HomeScreen extends React.Component {
       if (user) {
         this.setState({ currentUser: user })
         console.log("currentUser: " + JSON.stringify(this.state.currentUser))
+        // console.log("current user uid: " + this.state.currentUser.uid)
       } else {
-        console.log("sed")
+        // this.setState({ currentUser: null })
+        console.log("NO CURRENT USER?")
       }
     })
 

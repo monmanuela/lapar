@@ -12,17 +12,20 @@ import firebase from 'react-native-firebase'
 export default AppNavigator = () => {
   let initialNavigator
 
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      initialNavigator = 'MainTabNavigator'
-    } else {
-      initialNavigator = 'SignedOutNavigator'
-    }
-  })
+  firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log("setting nav to main")
+        initialNavigator = 'MainTabNavigator'
+      } else {
+        console.log("setting nav to sign out")
+        initialNavigator = 'SignedOutNavigator'
+      }
+    })
 
   return createSwitchNavigator(
     {
       MainTabNavigator: {
+        // screen: SignedOutNavigator
         screen: MainTabNavigator
       },
       SignedOutNavigator: {

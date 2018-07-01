@@ -22,9 +22,9 @@ export default class ItemScreen extends React.Component {
 	}
 
 	componentDidMount = () => {
-		console.log("did mount itemscreen")
-		console.log("uid: " + this.props.navigation.state.params.userId)
-		console.log("item: " + JSON.stringify(this.props.navigation.state.params.item))
+		// console.log("did mount itemscreen")
+		console.log("item screen's did mount uid: " + this.props.navigation.state.params.userId)
+		// console.log("item: " + JSON.stringify(this.props.navigation.state.params.item))
     const db = firebase.database()
 		
 		db.ref("items/" + this.props.navigation.state.params.item.itemId + "/reviews/").on("child_added", snapshot => {
@@ -40,8 +40,9 @@ export default class ItemScreen extends React.Component {
 
 	render() {
 		console.log("rendering item screen")
+		console.log("item screen's render uid: " + this.props.navigation.state.params.userId)
 		const item = this.state.item || this.props.navigation.state.params.item
-		console.log("item reviews: " + JSON.stringify(item.reviews))
+		// console.log("item reviews: " + JSON.stringify(item.reviews))
 		const itemTags = item.tags.map((tag, index) => {
 			return (
 				<Text key={index} style={{ color: 'white', backgroundColor: 'red', marginRight: 5, marginTop: 5, borderRadius: 10, padding: 7 }}>{tag}</Text>

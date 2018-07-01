@@ -34,8 +34,8 @@ export default class ExploreScreen extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log("state locations: " + this.state.locations)
-    console.log("state locs: " + this.state.locs)
+    // console.log("state locations: " + this.state.locations)
+    // console.log("state locs: " + this.state.locs)
 
     // fetch location names
     const db = firebase.database()
@@ -51,13 +51,13 @@ export default class ExploreScreen extends React.Component {
     // fetch stalls
     db.ref("stalls").once("value").then(snapshot => {
       this.setState({ stallObj: snapshot.val() })
-      console.log("stall obj: " + JSON.stringify(this.state.stallObj))
+      // console.log("stall obj: " + JSON.stringify(this.state.stallObj))
     })
 
     // fetch items
     db.ref("items").once("value").then(snapshot => {
       this.setState({ itemObj: snapshot.val() })
-      console.log("item obj: " + JSON.stringify(this.state.itemObj))
+      // console.log("item obj: " + JSON.stringify(this.state.itemObj))
     })
   }
 

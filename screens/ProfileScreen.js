@@ -43,9 +43,9 @@ export default class newProfileScreen extends React.Component {
   componentDidMount = () => {
     console.log("in profilescreen didmount")
     const currentUser = firebase.auth().currentUser;
+    const db = firebase.database()
     
     if (currentUser != null) {
-      const db = firebase.database()
       this.setCurrentUser(currentUser)
 
       db.ref("users").orderByKey().equalTo(currentUser.uid).once("value").then(snapshot => {
@@ -56,8 +56,20 @@ export default class newProfileScreen extends React.Component {
 
       // fetch reviews
       db.ref("users/" + currentUser.uid).orderByKey().equalTo("reviews").once("value").then(snapshot => {
-        console.log("reviews: " + JSON.stringify(snapshot.val().reviews))
-        this.setState({ reviewIds: snapshot.val().reviews })
+        if (snapshot.val() !== null) {
+          console.log("reviews: " + JSON.stringify(snapshot.val().reviews))
+          this.setState({ reviewIds: snapshot.val().reviews })
+        }
+      })
+
+      // add listener for added review
+      db.ref("users/" + currentUser.uid + "/reviews/").on("child_added", snapshot => {
+        console.log("\nGOT ADDED CHILD IN PROFILE SCREEN\n")
+        // fetch user reviewIds again, set as state to trigger re render
+        db.ref("users/" + currentUser.uid).orderByKey().equalTo("reviews").once("value").then(snapshot => {
+          console.log("re fetched reviews: " + JSON.stringify(snapshot.val().reviews))
+          this.setState({ reviewIds: snapshot.val().reviews })
+        })
       })
     }
   }
@@ -126,11 +138,23 @@ export default class newProfileScreen extends React.Component {
     this.props.navigation.navigate('Login') 
   }
 
+  changePassword = (email, oldPassword, newPassword) => {
+    const user = firebase.auth().currentUser;
+    const credential = firebase.auth.EmailAuthProvider.credential(email, oldPassword)
+
+    user.reauthenticateAndRetrieveDataWithCredential(credential).then(() => {
+      firebase.auth().currentUser.updatePassword(newPassword).then(() => {
+        "successfully changed pw"
+      }).catch(e => console.log(e))
+    }).catch(e => console.log(e))
+  }
+
   render() {
     console.log("in profile " + JSON.stringify(this.state.reviewIds))
     let screen
-
     if (this.state.isLoading || this.state.reviewIds.length === 0) {
+
+    // if (this.state.isLoading) {
       screen = <ActivityIndicator size="large" color="#0000ff" />
     } else {
   		screen =
