@@ -7,25 +7,26 @@ import SignedOutNavigator from './SignedOutNavigator';
 import SignUp from '../screens/SignUpScreen';
 import Login from '../screens/LoginScreen';
 import firebase from 'react-native-firebase'
-
+// import { createStore, combineReducers } from 'redux';
+// import { connect } from 'react-redux';
 
 export default AppNavigator = () => {
   let initialNavigator
 
   firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        console.log("setting nav to main")
-        initialNavigator = 'MainTabNavigator'
-      } else {
-        console.log("setting nav to sign out")
-        initialNavigator = 'SignedOutNavigator'
-      }
-    })
+    initialNavigator = 'SignedOutNavigator'
+    if (user) {
+      console.log("setting nav to main")
+      initialNavigator = 'MainTabNavigator'
+    } else {
+      console.log("setting nav to sign out")
+      initialNavigator = 'SignedOutNavigator'
+    }
+  })
 
   return createSwitchNavigator(
     {
       MainTabNavigator: {
-        // screen: SignedOutNavigator
         screen: MainTabNavigator
       },
       SignedOutNavigator: {
