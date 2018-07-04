@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, ScrollView, View, TouchableWithoutFeedback } from 'react-native';
+import { Text, ScrollView, View, TouchableWithoutFeedback, Button } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import firebase from 'react-native-firebase';
 
@@ -7,7 +7,13 @@ import HorizontalItemsSwiper from '../components/HorizontalItemsSwiper';
 import HorizontalLocsList from '../components/HorizontalLocsList';
 import { locs, items } from '../constants/Test';
 
-export default class HomeScreen extends React.Component {
+// redux
+import {connect} from 'react-redux'
+import {addCount} from '../redux/actions'
+import store from '../redux/store'
+
+
+class HomeScreen extends React.Component {
 	constructor() {
     super()
     this.state = {
@@ -48,6 +54,9 @@ export default class HomeScreen extends React.Component {
     })
   }
 
+  // this.props.addCount(2)
+  // store.dispatch(addCount(5))
+
 	render() {
 		return ( 
 			<View style={{ flex: 1, backgroundColor: 'white' }}> 
@@ -56,6 +65,10 @@ export default class HomeScreen extends React.Component {
             <SearchBar inputStyle={{ backgroundColor: 'white' }} containerStyle={{ backgroundColor: 'red', borderBottomColor: 'transparent', borderTopColor: 'transparent' }} placeholder="Search..." clearIcon />
           </View>
         </TouchableWithoutFeedback>
+
+        <Text>Counts: </Text>
+        <Text>{this.props.counts}</Text>
+        <Button title='ADD' onPress={() => this.props.addCount(2)}/>
 
 			 	<Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 5, fontSize: 18, color: 'black' }}>Recommendations</Text>
         
@@ -80,3 +93,13 @@ export default class HomeScreen extends React.Component {
 		);
 	}
 }
+
+const mapStateToProps = state => ({
+  counts: state.counts,
+})
+
+const mapDispatchToProps = {
+  addCount: addCount
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)

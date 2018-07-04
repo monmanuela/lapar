@@ -13,24 +13,19 @@ export default AppNavigator = () => {
   let initialNavigator
 
   firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        console.log("setting nav to main")
-        initialNavigator = 'MainTabNavigator'
-      } else {
-        console.log("setting nav to sign out")
-        initialNavigator = 'SignedOutNavigator'
-      }
-    })
+    if (user) {
+      console.log("setting nav to main")
+      initialNavigator = 'MainTabNavigator'
+    } else {
+      console.log("setting nav to sign out")
+      initialNavigator = 'SignedOutNavigator'
+    }
+  })
 
   return createSwitchNavigator(
     {
-      MainTabNavigator: {
-        // screen: SignedOutNavigator
-        screen: MainTabNavigator
-      },
-      SignedOutNavigator: {
-        screen: SignedOutNavigator
-      },
+      MainTabNavigator: MainTabNavigator,
+      SignedOutNavigator: SignedOutNavigator,
     },
     {
       initialRouteName: initialNavigator

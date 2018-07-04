@@ -8,13 +8,22 @@ import {
 import AppNavigator from "./navigation/AppNavigator";
 import firebase from 'react-native-firebase';
 
+import store from './redux/store'
+import {Provider} from 'react-redux'
+
+
 class App extends React.Component {
   render() {
     const Layout = AppNavigator();
-    return <Layout />;
+    // return <Layout />;
+    
+    return (
+      <Provider store={store}>
+        <Layout />
+      </Provider>
+    )
   }
 }
-
 
 export default App
 
