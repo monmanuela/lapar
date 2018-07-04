@@ -6,8 +6,7 @@ import MainTabNavigator from './MainTabNavigator';
 import SignedOutNavigator from './SignedOutNavigator';
 import SignUp from '../screens/SignUpScreen';
 import Login from '../screens/LoginScreen';
-import firebase from 'react-native-firebase'
-
+import firebase from 'react-native-firebase';
 
 export default AppNavigator = () => {
   let initialNavigator
