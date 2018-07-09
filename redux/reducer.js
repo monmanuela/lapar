@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux'
 // import store from './store'
-import {ADD_COUNT} from './actions'
+import {ADD_COUNT, UPDATE_LOCATION} from './actions'
 
 const merge = (prev, next) => Object.assign({}, prev, next)
 
@@ -28,11 +28,20 @@ const countsReducer = (state = {}, action) => {
   }
 }
 
+const locationReducer = (state = {}, action) => {
+  switch (action.type) {
+    case UPDATE_LOCATION:
+      return action.payload
+  }
+  return state
+}
+
 console.log(countsReducer)
 
 const reducer = combineReducers({
   contact: contactReducer,
   counts: countsReducer,
+  locationCriterias: locationReducer
 })
 
 export default reducer

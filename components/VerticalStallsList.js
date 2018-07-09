@@ -4,14 +4,15 @@ import { Card } from 'react-native-elements';
 
 import HorizontalItemsList from './HorizontalItemsList';
 // import { items } from '../constants/Test';
+import {connect} from 'react-redux'
 
-export default class VerticalStallsList extends React.Component {
+class VerticalStallsList extends React.Component {
   render() {
     // const _items = items;
     const _items = this.props.items
     const stalls = Object.values(this.props.stalls);
-    const filterCriteria = this.props.filters;
-    const locationCriteria = this.props.locations; 
+    const filterCriterias = this.props.filters;
+    const locationCriterias = this.props.locationCriterias; 
     const sortCriteria = this.props.sort;
 
     const sortFunction = (s1, s2) => {
@@ -30,8 +31,8 @@ export default class VerticalStallsList extends React.Component {
 
         const filteredItems = itemsPerStall
           .filter(item => item.name.includes(this.props.search) &&
-            filterCriteria.every(criteria => item.tags.includes(criteria)) &&
-            (locationCriteria.length === 0 || locationCriteria.includes(item.location)))
+            filterCriterias.every(criteria => item.tags.includes(criteria)) &&
+            (locationCriterias.length === 0 || locationCriterias.includes(item.location)))
           .sort(sortFunction);
 
         if (filteredItems.length === 0) { return; }
@@ -53,3 +54,9 @@ export default class VerticalStallsList extends React.Component {
     );
   }
 } 
+
+const mapStateToProps = state => ({
+  locationCriterias: state.locationCriterias
+})
+
+export default connect(mapStateToProps)(VerticalStallsList)

@@ -5,6 +5,10 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 
 import { filterCriterias, locationCriterias, sortCriterias } from '../constants/Test';
 
+import {connect} from 'react-redux'
+import {updateLocation} from '../redux/actions'
+import store from '../redux/store'
+
 import { Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -13,7 +17,7 @@ const guidelineBaseHeight = 680;
 
 const scale = size => width / guidelineBaseWidth * size;
 
-export default class ExploreModal extends React.Component {
+class ExploreModal extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -26,7 +30,14 @@ export default class ExploreModal extends React.Component {
   }
 
   onCheckLocation = criteria => {
-    this.props.onCheckLocation(criteria);
+    // this.props.onCheckLocation(criteria);
+    const locations = this.props.locationCriterias
+
+    if (!locations.includes(criteria)) {
+      this.props.updateLocation([...locations, criteria])
+    } else {
+      this.props.updateLocation(locations.filter( loc => loc !== criteria))
+    }
   }
 
   onSortChange = (value, index) => {
@@ -74,7 +85,7 @@ export default class ExploreModal extends React.Component {
                 title={criteria}
                 textStyle={{ fontWeight: 'normal' }}
                 onPress={() => this.onCheckLocation(criteria)}
-                checked={this.props.locations.includes(criteria)}
+                checked={this.props.locationCriterias.includes(criteria)}
                 containerStyle={{ backgroundColor: 'white', borderColor: 'transparent', width: scale(150), paddingTop: 0, paddingBottom: 0 }}
               />
             )}
@@ -107,3 +118,13 @@ export default class ExploreModal extends React.Component {
 		);
 	}
 }
+
+const mapStateToProps = state => ({
+  locationCriterias: state.locationCriterias,
+})
+
+const mapDispatchToProps = {
+  updateLocation: updateLocation
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExploreModal)

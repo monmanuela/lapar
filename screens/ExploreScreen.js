@@ -24,8 +24,8 @@ export default class ExploreScreen extends React.Component {
       modalVisible: false,
       sort: 'rating',
       filters: [],
-      locations: this.props.navigation.state.params === undefined ? [] : [this.props.navigation.state.params.locs],
-      locs: this.props.navigation.state.params === undefined ? '' : this.props.navigation.state.params.locs,
+      // locations: this.props.navigation.state.params === undefined ? [] : [this.props.navigation.state.params.locs],
+      // locs: this.props.navigation.state.params === undefined ? '' : this.props.navigation.state.params.locs,
       locationObj: {},
       locationNames: null, // array of location names ["Fine Food", "Techno Edge", ...]
       stallObj: null,
@@ -93,15 +93,15 @@ export default class ExploreScreen extends React.Component {
     }
   }
 
-  onCheckLocation = criteria => {
-    const { locations } = this.state;
+  // onCheckLocation = criteria => {
+  //   const { locations } = this.state;
 
-    if (!locations.includes(criteria)) {
-      this.setState({ locations: [...locations, criteria] });
-    } else {
-      this.setState({ locations: locations.filter( loc => loc !== criteria) });
-    }
-  }
+  //   if (!locations.includes(criteria)) {
+  //     this.setState({ locations: [...locations, criteria] });
+  //   } else {
+  //     this.setState({ locations: locations.filter( loc => loc !== criteria) });
+  //   }
+  // }
 
   onSortChange = (value, index) => {
     this.setState({ sort: value });
@@ -120,7 +120,7 @@ export default class ExploreScreen extends React.Component {
           modalVisible={this.state.modalVisible} 
           sort={this.state.sort} 
           filters={this.state.filters}
-          locations={this.state.locations}
+          // locations={this.state.locations}
           onCheckFilter={this.onCheckFilter}
           onCheckLocation={this.onCheckLocation}
           onSortChange={this.onSortChange}
@@ -135,7 +135,7 @@ export default class ExploreScreen extends React.Component {
 
         {/*<VerticalStallsList sort={this.state.sort} filters={this.state.filters} locations={this.state.locations} search={this.state.search} stalls={stalls} navigation={this.props.navigation} />*/}
         { this.state.itemObj && this.state.stallObj &&
-        <VerticalStallsList sort={this.state.sort} filters={this.state.filters} locations={this.state.locations} search={this.state.search} stalls={this.state.stallObj} items={this.state.itemObj} navigation={this.props.navigation} /> 
+        <VerticalStallsList sort={this.state.sort} filters={this.state.filters} search={this.state.search} stalls={this.state.stallObj} items={this.state.itemObj} navigation={this.props.navigation} /> 
         }
       </View>
     );

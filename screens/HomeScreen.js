@@ -65,11 +65,11 @@ class HomeScreen extends React.Component {
             <SearchBar inputStyle={{ backgroundColor: 'white' }} containerStyle={{ backgroundColor: 'red', borderBottomColor: 'transparent', borderTopColor: 'transparent' }} placeholder="Search..." clearIcon />
           </View>
         </TouchableWithoutFeedback>
-
+        {/*
         <Text>Counts: </Text>
         <Text>{this.props.counts}</Text>
         <Button title='ADD' onPress={() => this.props.addCount(2)}/>
-
+        */}
 			 	<Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 5, fontSize: 18, color: 'black' }}>Recommendations</Text>
         
         {this.state.currentUser &&
