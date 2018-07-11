@@ -17,7 +17,7 @@ class HomeScreen extends React.Component {
 	constructor() {
     super()
     this.state = {
-      currentUser: null,
+      // currentUser: null,
       recommendedItems: {},
       top5: {},
       locations: {},
@@ -25,17 +25,17 @@ class HomeScreen extends React.Component {
   }
 
   componentDidMount = () => {
-    console.log("home screen did mount")
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.setState({ currentUser: user })
-        console.log("currentUser: " + JSON.stringify(this.state.currentUser))
-        // console.log("current user uid: " + this.state.currentUser.uid)
-      } else {
-        // this.setState({ currentUser: null })
-        console.log("NO CURRENT USER?")
-      }
-    })
+    // console.log("home screen did mount")
+    // firebase.auth().onAuthStateChanged(user => {
+    //   if (user) {
+    //     this.setState({ currentUser: user })
+    //     console.log("currentUser: " + JSON.stringify(this.state.currentUser))
+    //     // console.log("current user uid: " + this.state.currentUser.uid)
+    //   } else {
+    //     // this.setState({ currentUser: null })
+    //     console.log("NO CURRENT USER?")
+    //   }
+    // })
 
     const db = firebase.database()
     // fetch recommended items
@@ -54,9 +54,6 @@ class HomeScreen extends React.Component {
     })
   }
 
-  // this.props.addCount(2)
-  // store.dispatch(addCount(5))
-
 	render() {
 		return ( 
 			<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -69,20 +66,20 @@ class HomeScreen extends React.Component {
          
   			 	<Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 5, fontSize: 18, color: 'black' }}>Recommendations</Text>
           
-          {this.state.currentUser &&
-          <HorizontalItemsSwiper items={this.state.recommendedItems} userId={this.state.currentUser.uid} navigation={this.props.navigation} />
+          {this.props.currentUser &&
+          <HorizontalItemsSwiper items={this.state.recommendedItems} userId={this.props.currentUser.uid} navigation={this.props.navigation} />
           }
 
     			<Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 5, fontSize: 18, color: 'black' }}>Top 5</Text>
           
-          {this.state.currentUser &&
-          <HorizontalItemsSwiper items={this.state.top5} userId={this.state.currentUser.uid} navigation={this.props.navigation} />
+          {this.props.currentUser &&
+          <HorizontalItemsSwiper items={this.state.top5} userId={this.props.currentUser.uid} navigation={this.props.navigation} />
           }
           
     			<Text style={{ marginTop: 10, marginLeft: 10, fontSize: 18, color: 'black' }}>Locations</Text>
     			
-          {this.state.currentUser &&
-          <HorizontalLocsList locs={this.state.locations} userId={this.state.currentUser.uid} navigation={this.props.navigation} />
+          {this.props.currentUser &&
+          <HorizontalLocsList locs={this.state.locations} userId={this.props.currentUser.uid} navigation={this.props.navigation} />
           }
 
           <Text>{'\n'}</Text>
@@ -93,7 +90,7 @@ class HomeScreen extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  counts: state.counts,
+  currentUser: state.user.currentUser,
 })
 
 const mapDispatchToProps = {
