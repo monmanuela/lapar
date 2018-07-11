@@ -5,6 +5,8 @@ import { AirbnbRating } from 'react-native-ratings';
 import firebase from 'react-native-firebase';
 import ImagePicker from 'react-native-image-picker';
 import { Dimensions } from 'react-native';
+import {connect} from 'react-redux'
+import store from '../redux/store'
 
 const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
@@ -12,7 +14,7 @@ const guidelineBaseHeight = 680;
 
 const scale = size => width / guidelineBaseWidth * size;
 
-export default class addReviewModal extends React.Component {
+class AddReviewModal extends React.Component {
 	constructor() {
 		super();
 		this.state = {
@@ -71,7 +73,7 @@ export default class addReviewModal extends React.Component {
     newPostRef.update({
       reviewId: newPostRefKey,
       rating: this.state.rating,
-      userId: this.props.userId,
+      userId: this.props.currentUser.uid,
       itemId: this.props.itemId,
       time: new Date().toLocaleString(),
       content: this.state.review,
@@ -97,14 +99,11 @@ export default class addReviewModal extends React.Component {
     })
     .then(() => {
       console.log("wanna store in user")
-      // store the review in the user, and in the item
-      console.log("userId: " + this.props.userId)
-      console.log("itemId: " + this.props.itemId)
 
       const db = firebase.database()
       var review = {}
       review[newPostRefKey] = true
-      db.ref("users/" + this.props.userId + "/reviews").update(review)
+      db.ref("users/" + this.props.currentUser.uid + "/reviews").update(review)
       db.ref("items/" + this.props.itemId + "/reviews").update(review)
     })
     .then(() => {
@@ -115,6 +114,8 @@ export default class addReviewModal extends React.Component {
 	}
 
 	render() {
+    console.log("current state store in render: \n" + JSON.stringify(store.getState()))
+
 		return (
 			<Modal animationType='fade' onRequestClose={() => alert("Add") } visible={this.props.modalVisible}>
 				<View style={{ backgroundColor: 'white' }}>
@@ -168,6 +169,12 @@ export default class addReviewModal extends React.Component {
 		);
 	}
 }
+
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser,
+})
+
+export default connect(mapStateToProps, null)(AddReviewModal)
 
 const styles = StyleSheet.create({
   image: {

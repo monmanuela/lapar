@@ -8,7 +8,6 @@ import { Dimensions } from 'react-native';
 
 import {connect} from 'react-redux'
 
-
 const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
 const guidelineBaseHeight = 680;
