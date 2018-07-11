@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, ScrollView, View, TouchableWithoutFeedback, Button } from 'react-native';
+import { Text, ScrollView, View, TouchableWithoutFeedback, Button, Keyboard } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import firebase from 'react-native-firebase';
 
@@ -59,37 +59,35 @@ class HomeScreen extends React.Component {
 
 	render() {
 		return ( 
-			<View style={{ flex: 1, backgroundColor: 'white' }}> 
-        <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('Explore')}>
-          <View>
-            <SearchBar inputStyle={{ backgroundColor: 'white' }} containerStyle={{ backgroundColor: 'red', borderBottomColor: 'transparent', borderTopColor: 'transparent' }} placeholder="Search..." clearIcon />
-          </View>
-        </TouchableWithoutFeedback>
-        {/*
-        <Text>Counts: </Text>
-        <Text>{this.props.counts}</Text>
-        <Button title='ADD' onPress={() => this.props.addCount(2)}/>
-        */}
-			 	<Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 5, fontSize: 18, color: 'black' }}>Recommendations</Text>
-        
-        {this.state.currentUser &&
-        <HorizontalItemsSwiper items={this.state.recommendedItems} userId={this.state.currentUser.uid} navigation={this.props.navigation} />
-        }
+			<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}> 
+          <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('Explore')}>
+            <View>
+              <SearchBar inputStyle={{ backgroundColor: 'white' }} containerStyle={{ backgroundColor: 'red', borderBottomColor: 'transparent', borderTopColor: 'transparent' }} placeholder="Search..." clearIcon />
+            </View>
+          </TouchableWithoutFeedback>
+         
+  			 	<Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 5, fontSize: 18, color: 'black' }}>Recommendations</Text>
+          
+          {this.state.currentUser &&
+          <HorizontalItemsSwiper items={this.state.recommendedItems} userId={this.state.currentUser.uid} navigation={this.props.navigation} />
+          }
 
-  			<Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 5, fontSize: 18, color: 'black' }}>Top 5</Text>
-        
-        {this.state.currentUser &&
-        <HorizontalItemsSwiper items={this.state.top5} userId={this.state.currentUser.uid} navigation={this.props.navigation} />
-        }
-        
-  			<Text style={{ marginTop: 10, marginLeft: 10, fontSize: 18, color: 'black' }}>Locations</Text>
-  			
-        {this.state.currentUser &&
-        <HorizontalLocsList locs={this.state.locations} userId={this.state.currentUser.uid} navigation={this.props.navigation} />
-        }
+    			<Text style={{ marginTop: 10, marginLeft: 10, marginBottom: 5, fontSize: 18, color: 'black' }}>Top 5</Text>
+          
+          {this.state.currentUser &&
+          <HorizontalItemsSwiper items={this.state.top5} userId={this.state.currentUser.uid} navigation={this.props.navigation} />
+          }
+          
+    			<Text style={{ marginTop: 10, marginLeft: 10, fontSize: 18, color: 'black' }}>Locations</Text>
+    			
+          {this.state.currentUser &&
+          <HorizontalLocsList locs={this.state.locations} userId={this.state.currentUser.uid} navigation={this.props.navigation} />
+          }
 
-        <Text>{'\n'}</Text>
-  		</View>
+          <Text>{'\n'}</Text>
+  		  </View>
+      </TouchableWithoutFeedback>
 		);
 	}
 }

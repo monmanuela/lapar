@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import HomeSwiperStackNavigator from './HomeSwiperStackNavigator';
 import ExploreSwiperStackNavigator from './ExploreSwiperStackNavigator';
 import ProfileScreen from '../screens/ProfileScreen';
+import StallOwnerScreen from '../screens/StallOwnerScreen';
 
 export default MainTabNavigator = createBottomTabNavigator(
   {
@@ -26,6 +27,14 @@ export default MainTabNavigator = createBottomTabNavigator(
     },
     Profile: {
       screen: ProfileScreen,
+      navigationOptions: {
+        tabBarIcon: ({tintColor}) => (
+          <Icon name='md-person' size={30} color={tintColor} />
+        )
+      },
+    },
+    StallOwnerScreen: {
+      screen: StallOwnerScreen,
       navigationOptions: {
         tabBarIcon: ({tintColor}) => (
           <Icon name='md-person' size={30} color={tintColor} />

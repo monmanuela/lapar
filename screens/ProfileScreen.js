@@ -13,7 +13,7 @@ const guidelineBaseHeight = 680;
 
 const scale = size => width / guidelineBaseWidth * size;
 
-export default class newProfileScreen extends React.Component {
+export default class ProfileScreen extends React.Component {
   constructor() {
     super()
     this.state = { 
