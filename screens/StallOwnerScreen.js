@@ -33,7 +33,7 @@ export default class StallOwnerScreen extends React.Component {
 			photoURL: '../assets/images/food.jpg',
 			name: stall.name,
 			location: stall.location,
-			items: stal.items,
+			items: stall.items,
 			modalPhotoURL: '',
 			modalName: '',
 			modalLocation: '',
@@ -71,7 +71,7 @@ export default class StallOwnerScreen extends React.Component {
         	<Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
         </View>
 
-        <VerticalItemsList items={this.state.items} />
+        {/*<VerticalItemsList items={this.state.items} />*/}
 
         <Text>{'\n'}</Text>
 
