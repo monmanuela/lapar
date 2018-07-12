@@ -9,6 +9,7 @@ import { Dimensions } from 'react-native';
 
 import {logOutUser} from '../redux/actions'
 import {connect} from 'react-redux'
+import store from '../redux/store'
 
 const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
@@ -48,11 +49,12 @@ class ProfileScreen extends React.Component {
     const currentUser = firebase.auth().currentUser;
     const db = firebase.database()
     
-    if (currentUser != null) {
+    if (this.props.currentUser != null) {
       this.setCurrentUser(currentUser)
 
+      // fetch user data from database
       db.ref("users").orderByKey().equalTo(currentUser.uid).once("value").then(snapshot => {
-        return snapshot.val()[currentUser.uid]
+        // return snapshot.val()[currentUser.uid]
       }).then(userData => {
         this.setUserData(userData)
       }).then(() => this.setState({ isLoading: false }))
@@ -154,7 +156,9 @@ class ProfileScreen extends React.Component {
   }
 
   render() {
-    console.log("in profile " + JSON.stringify(this.state.reviewIds))
+    console.log("store state at profile: " + JSON.stringify(store.getState()))
+
+    // console.log("in profile " + JSON.stringify(this.state.reviewIds))
     let screen
     if (this.state.isLoading || this.state.reviewIds.length === 0) {
 

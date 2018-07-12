@@ -22,7 +22,9 @@ class LoginScreen extends React.Component {
 
   componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
-    if (this.props.currentUser !== prevProps.currentUser) {
+    if (this.props.currentUser !== prevProps.currentUser
+        && this.props.userData !== prevProps.userData) {
+      console.log("comp did update, userData: " + JSON.stringify(this.props.userData))
       this.props.navigation.navigate('Home')
     }
   }
@@ -79,6 +81,7 @@ class LoginScreen extends React.Component {
 const mapStateToProps = state => ({
   errMessage: state.user.errMessage,
   currentUser: state.user.currentUser,
+  userData: state.user.userData
 })
 
 export default connect(mapStateToProps, {logInUser})(LoginScreen)

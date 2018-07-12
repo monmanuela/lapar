@@ -9,7 +9,6 @@ import { locs, items } from '../constants/Test';
 // redux
 import {connect} from 'react-redux'
 import {addCount} from '../redux/actions'
-import store from '../redux/store'
 
 class HomeScreen extends React.Component {
 	constructor() {
@@ -41,7 +40,6 @@ class HomeScreen extends React.Component {
   }
 
 	render() {
-    console.log("store state at home: " + JSON.stringify(store.getState()))
 		return ( 
 			<TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={{ flex: 1, backgroundColor: 'white' }}> 

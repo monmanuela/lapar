@@ -9,6 +9,7 @@ export const SIGN_UP_START = 'SIGN_UP_START'
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS'
 export const SIGN_UP_FAIL = 'SIGN_UP_FAIL'
 export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS'
+export const FETCH_USER_DATA_SUCCESS = 'FETCH_USER_DATA_SUCCESS'
 export const UPDATE_USER_FROM_FIREBASE_LISTENER = 'UPDATE_USER_FROM_FIREBASE_LISTENER'
 
 // action creators
@@ -32,7 +33,28 @@ export const logOutUser = () => {
   })
 }
 
+fetchUserData = async userId => {
+  const userData = await firebase.database().ref("users").orderByKey()
+    .equalTo(userId).once("value")
+    .then(snapshot => {
+      return snapshot.val()[userId]
+    })
+  console.log("user data inside fetchUserData: " + JSON.stringify(userData))
+  return userData
+}
+
 // async action creators
+export const updateUserIfLoggedIn = user => async dispatch => {
+  try {
+    dispatch(updateUserFromFirebaseListener(user))
+    const userData = await fetchUserData(user.uid)
+    console.log("user data inside updateUserFromFirebaseListener: " + JSON.stringify(userData))
+    dispatch({type: FETCH_USER_DATA_SUCCESS, payload: userData})
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 export const logInUser = (email, password) => async dispatch => {
   if (email.length === 0 || password.length === 0) {
     dispatch({type: LOG_IN_FAIL, payload: {errCode: 404, errMessage: "Email or password cannot be empty"}})
@@ -41,8 +63,14 @@ export const logInUser = (email, password) => async dispatch => {
   dispatch({type: LOG_IN_START})
   try {
     const result = await firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password)
-    console.log("log in user: " + JSON.stringify(result.user))
-    dispatch({type: LOG_IN_SUCCESS, payload: result.user})
+    const currentUser = result.user
+    console.log("log in user: " + JSON.stringify(currentUser))
+    dispatch({type: LOG_IN_SUCCESS, payload: currentUser})
+
+    const userData = await fetchUserData(currentUser.uid)
+    console.log("user data inside logInUser: " + JSON.stringify(userData))
+    dispatch({type: FETCH_USER_DATA_SUCCESS, payload: userData})
+
   } catch (err) {
     dispatch({type: LOG_IN_FAIL, payload: {errCode: err.code, errMessage: err.message}})
   }
@@ -56,6 +84,7 @@ export const signUpUser = (email, password) => async dispatch => {
   dispatch({type: SIGN_UP_START})
   try {
     const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
+    // upload user data too
     console.log("sign up user: " + JSON.stringify(user.user))
     dispatch({type: SIGN_UP_SUCCESS, payload: user.user})
   } catch (err) {
