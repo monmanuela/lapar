@@ -40,43 +40,49 @@ class ProfileScreen extends React.Component {
       modalPreferences: '',
       modalPhotoURL: null,
       isLoading: true,
-      reviewIds: [],
+      reviewIds: {},
     }
   }
 
   componentDidMount = () => {
     console.log("in profilescreen didmount")
-    const currentUser = firebase.auth().currentUser;
+    const currentUser = this.props.currentUser
+    const userData = this.props.userData
+    this.setCurrentUser(currentUser)
+    this.setUserData(userData)
+
+    // const currentUser = firebase.auth().currentUser;
     const db = firebase.database()
     
-    if (this.props.currentUser != null) {
-      this.setCurrentUser(currentUser)
+    // if (this.props.currentUser != null) {
+    //   this.setCurrentUser(currentUser)
 
-      // fetch user data from database
-      db.ref("users").orderByKey().equalTo(currentUser.uid).once("value").then(snapshot => {
-        // return snapshot.val()[currentUser.uid]
-      }).then(userData => {
-        this.setUserData(userData)
-      }).then(() => this.setState({ isLoading: false }))
+    //   // fetch user data from database
+    //   db.ref("users").orderByKey().equalTo(currentUser.uid).once("value").then(snapshot => {
+    //     return snapshot.val()[currentUser.uid]
+    //   }).then(userData => {
+    //     this.setUserData(userData)
+    //   }).then(() => this.setState({ isLoading: false }))
 
-      // fetch reviews
+    // fetch reviews
+    db.ref("users/" + currentUser.uid).orderByKey().equalTo("reviews").once("value")
+    .then(snapshot => {
+      if (snapshot.val() !== null) {
+        console.log("reviews: " + JSON.stringify(snapshot.val().reviews))
+        this.setState({ reviewIds: snapshot.val().reviews })
+      }
+    })
+    .then(() => this.setState({ isLoading: false }))
+
+    // add listener for added review
+    db.ref("users/" + currentUser.uid + "/reviews/").on("child_added", snapshot => {
+      console.log("\nGOT ADDED CHILD IN PROFILE SCREEN\n")
+      // fetch user reviewIds again, set as state to trigger re render
       db.ref("users/" + currentUser.uid).orderByKey().equalTo("reviews").once("value").then(snapshot => {
-        if (snapshot.val() !== null) {
-          console.log("reviews: " + JSON.stringify(snapshot.val().reviews))
-          this.setState({ reviewIds: snapshot.val().reviews })
-        }
+        console.log("re fetched reviews: " + JSON.stringify(snapshot.val().reviews))
+        this.setState({ reviewIds: snapshot.val().reviews })
       })
-
-      // add listener for added review
-      db.ref("users/" + currentUser.uid + "/reviews/").on("child_added", snapshot => {
-        console.log("\nGOT ADDED CHILD IN PROFILE SCREEN\n")
-        // fetch user reviewIds again, set as state to trigger re render
-        db.ref("users/" + currentUser.uid).orderByKey().equalTo("reviews").once("value").then(snapshot => {
-          console.log("re fetched reviews: " + JSON.stringify(snapshot.val().reviews))
-          this.setState({ reviewIds: snapshot.val().reviews })
-        })
-      })
-    }
+    })
   }
 
   setCurrentUser = currentUser => {
@@ -86,25 +92,48 @@ class ProfileScreen extends React.Component {
   setUserData = userData => {
     this.setState({ 
       userData: {
-        displayName: this.state.currentUser && this.state.currentUser.displayName,
-        email: this.state.currentUser && this.state.currentUser.email,
-        photoURL: this.state.currentUser && this.state.currentUser.photoURL,
+        displayName: this.props.currentUser.displayName,
+        email: this.props.currentUser.email,
+        photoURL: this.props.currentUser.photoURL,
         ...userData
       } 
     })
   }
 
+  // setUserData = userData => {
+  //   this.setState({ 
+  //     userData: {
+  //       displayName: this.state.currentUser && this.state.currentUser.displayName,
+  //       email: this.state.currentUser && this.state.currentUser.email,
+  //       photoURL: this.state.currentUser && this.state.currentUser.photoURL,
+  //       ...userData
+  //     } 
+  //   })
+  // }
+
   handleEditProfile = () => {
     this.setState({ 
       modalVisible: true,
-      modalDisplayName: this.state.userData && this.state.userData.displayName,
-      modalEmail: this.state.userData && this.state.userData.email,
-      modalUsername: this.state.userData && this.state.userData.username,
-      modalBio: this.state.userData && this.state.userData.bio,
-      modalPreferences: this.state.userData && this.state.userData.preferences,
-      modalPhotoURL: this.state.userData && this.state.userData.photoURL,
+      modalDisplayName: this.state.userData.displayName,
+      modalEmail: this.state.userData.email,
+      modalUsername: this.state.userData.username,
+      modalBio: this.state.userData.bio,
+      modalPreferences: this.state.userData.preferences,
+      modalPhotoURL: this.state.userData.photoURL,
     });
   }
+
+  // handleEditProfile = () => {
+  //   this.setState({ 
+  //     modalVisible: true,
+  //     modalDisplayName: this.state.userData && this.state.userData.displayName,
+  //     modalEmail: this.state.userData && this.state.userData.email,
+  //     modalUsername: this.state.userData && this.state.userData.username,
+  //     modalBio: this.state.userData && this.state.userData.bio,
+  //     modalPreferences: this.state.userData && this.state.userData.preferences,
+  //     modalPhotoURL: this.state.userData && this.state.userData.photoURL,
+  //   });
+  // }
 
   handleSaveChanges = () => {
     const user = this.state.currentUser
@@ -185,7 +214,7 @@ class ProfileScreen extends React.Component {
           <Text style={{ color: 'gray', marginBottom: 10, marginLeft: 20, marginRight: 20 }}>{this.state.userData && this.state.userData.bio}</Text>
           <Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
         </View>
-        
+        <Text>reviews: {JSON.stringify(this.state.reviewIds)}</Text>
         <VerticalReviewsList reviews={this.state.reviewIds} /> 
 
         <Text>{'\n'}</Text>
@@ -221,6 +250,7 @@ class ProfileScreen extends React.Component {
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
+  userData: state.user.userData
 })
 
 export default connect(mapStateToProps, {logOutUser})(ProfileScreen)
