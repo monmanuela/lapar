@@ -1,47 +1,49 @@
 import {combineReducers} from 'redux'
-// import store from './store'
-import {ADD_COUNT, UPDATE_LOCATION} from './actions'
+import {
+  UPDATE_LOCATION, 
+  LOG_IN_START, LOG_IN_SUCCESS, LOG_IN_FAIL, 
+  LOG_OUT_SUCCESS,
+  UPDATE_USER_FROM_FIREBASE_LISTENER,
+  FETCH_USER_DATA_SUCCESS,
+} from './actions'
 
 const merge = (prev, next) => Object.assign({}, prev, next)
 
-const contactReducer = (state = [], action) => {
-  // if (action.type === UPDATE_CONTACT) return [...state, action.payload]
-  // return state
-  return state
-}
+const initialState = {}
 
-const countsReducer = (state = {}, action) => {
-  // console.log("store in reducer: " + store.getState())
-  console.log("state: " + JSON.stringify(state))
-  
+const locationReducer = (state = initialState, action) => {
   switch (action.type) {
-    // case UPDATE_USER:
-    //   return merge(state, action.payload)
-    // case UPDATE_CONTACT:
-    //   return merge(state, {prevContact: action.payload})
-    case ADD_COUNT:
+    case UPDATE_LOCATION:
       return action.payload
-      // console.log("result aft reducer: " + JSON.stringify(merge(state, {counts: action.payload})))
-      // return merge(state, {counts: action.payload})
     default:
       return state
   }
 }
 
-const locationReducer = (state = {}, action) => {
+const userReducer = (state = initialState, action) => {
+  console.log(action.type)
+
   switch (action.type) {
-    case UPDATE_LOCATION:
-      return action.payload
+    case LOG_IN_START:
+      return state
+    case LOG_IN_SUCCESS:
+      return merge(state, {currentUser: action.payload})
+    case LOG_IN_FAIL:
+      return merge(state, {errCode: action.payload.errCode, errMessage: action.payload.errMessage})
+    case LOG_OUT_SUCCESS:
+      return merge(state, {currentUser: null})
+    case UPDATE_USER_FROM_FIREBASE_LISTENER:
+      return merge(state, {currentUser: action.payload})
+    case FETCH_USER_DATA_SUCCESS:
+      return merge(state, {userData: action.payload})
+    default:
+      return state
   }
-  return state
 }
 
-console.log(countsReducer)
-
 const reducer = combineReducers({
-  contact: contactReducer,
-  counts: countsReducer,
-  locationCriterias: locationReducer
+  locationCriterias: locationReducer,
+  user: userReducer,
 })
 
 export default reducer

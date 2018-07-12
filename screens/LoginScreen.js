@@ -1,9 +1,11 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, Image } from 'react-native'
+import { StyleSheet, Text, TextInput, View, Image, Dimensions } from 'react-native'
 import { Button } from 'react-native-elements'
 import firebase from 'react-native-firebase'
 
-import { Dimensions } from 'react-native';
+import {logInUser} from '../redux/actions'
+import {connect} from 'react-redux'
+import store from '../redux/store'
 
 const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
@@ -12,29 +14,31 @@ const guidelineBaseHeight = 680;
 const scale = size => width / guidelineBaseWidth * size;
 const verticalScale = size => height / guidelineBaseHeight * size;
 
-export default class Login extends React.Component {
+class LoginScreen extends React.Component {
   state = {
     email: '',
     password: '',
-    errorMessage: null
+  }
+
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.currentUser !== prevProps.currentUser
+        && this.props.userData !== prevProps.userData) {
+      console.log("comp did update, userData: " + JSON.stringify(this.props.userData))
+      this.props.navigation.navigate('Home')
+    }
   }
 
   handleLogin = () => {
-    const { email, password } = this.state
-
-    firebase
-      .auth()
-      .signInAndRetrieveDataWithEmailAndPassword(email, password)
-      .then(() => this.props.navigation.navigate('Home'))
-      .catch(error => this.setState({ errorMessage: error.code + " " + error.message }))
+    this.props.logInUser(this.state.email, this.state.password)
   }
 
   render() {
     return (
       <View style={styles.container}>
-        {this.state.errorMessage &&
+        {this.props.errMessage &&
           <Text style={{ color: 'red' }}>
-            {this.state.errorMessage}
+            {this.props.errMessage}
           </Text>}
         <Image source={require('../assets/images/logo.png')} style={{ width: scale(100), height: verticalScale(150) }}/>
         
@@ -73,6 +77,14 @@ export default class Login extends React.Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  errMessage: state.user.errMessage,
+  currentUser: state.user.currentUser,
+  userData: state.user.userData
+})
+
+export default connect(mapStateToProps, {logInUser})(LoginScreen)
 
 const styles = StyleSheet.create({
   container: {

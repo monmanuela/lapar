@@ -3,10 +3,17 @@ import React from 'react'
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native'
 import firebase from 'react-native-firebase'
 
-export default class LoadingScreen extends React.Component {
+import {updateUserIfLoggedIn} from '../redux/actions'
+import {connect} from 'react-redux'
+
+
+class LoadingScreen extends React.Component {
   componentDidMount = () => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
+        console.log("user in listener: " + JSON.stringify(user))
+        this.props.updateUserIfLoggedIn(user)
+        
         this.props.navigation.navigate('MainTabNavigator')
       } else {
         this.props.navigation.navigate('SignedOutNavigator')
@@ -23,6 +30,8 @@ export default class LoadingScreen extends React.Component {
     )
   }
 }
+
+export default connect(null, {updateUserIfLoggedIn})(LoadingScreen)
 
 const styles = StyleSheet.create({
   container: {

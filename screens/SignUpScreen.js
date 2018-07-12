@@ -4,6 +4,8 @@ import { Button } from 'react-native-elements'
 import firebase from 'react-native-firebase'
 
 import { Dimensions } from 'react-native';
+import {signUpUser} from '../redux/actions'
+import {connect} from 'react-redux'
 
 const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
@@ -12,7 +14,7 @@ const guidelineBaseHeight = 680;
 const scale = size => width / guidelineBaseWidth * size;
 const verticalScale = size => height / guidelineBaseHeight * size;
 
-export default class SignUp extends React.Component {
+class SignUpScreen extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -68,15 +70,6 @@ export default class SignUp extends React.Component {
           value={this.state.displayName}
         />
 
-        {/* Username 
-        <TextInput
-          placeholder="Username"
-          autoCapitalize="none"
-          style={styles.textInput}
-          onChangeText={username => this.setState({ username })}
-          value={this.state.username}
-        />
-        */}
         {/* Email */}
         <TextInput
           placeholder="Email"
@@ -114,6 +107,13 @@ export default class SignUp extends React.Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  errMessage: state.user.errMessage,
+  currentUser: state.user.currentUser,
+})
+
+export default connect(mapStateToProps, {signUpUser})(SignUpScreen)
 
 const styles = StyleSheet.create({
   container: {
