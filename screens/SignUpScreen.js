@@ -70,15 +70,6 @@ class SignUpScreen extends React.Component {
           value={this.state.displayName}
         />
 
-        {/* Username 
-        <TextInput
-          placeholder="Username"
-          autoCapitalize="none"
-          style={styles.textInput}
-          onChangeText={username => this.setState({ username })}
-          value={this.state.username}
-        />
-        */}
         {/* Email */}
         <TextInput
           placeholder="Email"

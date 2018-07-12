@@ -1,7 +1,6 @@
 import firebase from 'react-native-firebase'
 
 // action types
-export const ADD_COUNT = 'ADD_COUNT'
 export const UPDATE_LOCATION = 'UPDATE_LOCATION'
 export const LOG_IN_START = 'LOG_IN_START'
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS'
@@ -9,19 +8,10 @@ export const LOG_IN_FAIL = 'LOG_IN_FAIL'
 export const SIGN_UP_START = 'SIGN_UP_START'
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS'
 export const SIGN_UP_FAIL = 'SIGN_UP_FAIL'
-export const LOG_OUT_START = 'LOG_OUT_START'
 export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS'
-export const LOG_OUT_FAIL = 'LOG_OUT_FAIL'
+export const UPDATE_USER_FROM_FIREBASE_LISTENER = 'UPDATE_USER_FROM_FIREBASE_LISTENER'
 
 // action creators
-export const addCount = increment => {
-  console.log("calling add count w incr: " + increment)  
-  return ({
-    type: ADD_COUNT,
-    payload: increment,
-  })
-}
-
 export const updateLocation = locations => {
 	return({
 		type: UPDATE_LOCATION,
@@ -29,23 +19,20 @@ export const updateLocation = locations => {
 	})
 }
 
-// async action creators
+export const updateUserFromFirebaseListener = user => {
+  return({
+    type: UPDATE_USER_FROM_FIREBASE_LISTENER,
+    payload: user
+  })
+}
 
 export const logOutUser = () => {
   return({
     type: LOG_OUT_SUCCESS,
   })
-  // dispatch({type: LOG_OUT_START})
-  // try {
-  //   await firebase.auth().signOut()
-  //   dispatch({type: LOG_OUT_SUCCESS})
-  // } catch (err) {
-  //   dispatch({type: LOG_OUT_FAIL})
-  //   throw new Error(err.message)
-  // }
-
 }
 
+// async action creators
 export const logInUser = (email, password) => async dispatch => {
   if (email.length === 0 || password.length === 0) {
     dispatch({type: LOG_IN_FAIL, payload: {errCode: 404, errMessage: "Email or password cannot be empty"}})

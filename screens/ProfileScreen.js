@@ -139,15 +139,7 @@ class ProfileScreen extends React.Component {
   handleSignOut = () => {
     firebase.auth().signOut()
     this.props.logOutUser()
-    this.props.navigation.navigate('Login')    
-
-    // why for this, if offline logout, it will navigate to home screen?
-    // try {
-    //   this.props.logOutUser()
-    //   this.props.navigation.navigate('Login')    
-    // } catch (err) {
-    //   alert(err.message)
-    // }
+    this.props.navigation.navigate('Login')
   }
 
   changePassword = (email, oldPassword, newPassword) => {

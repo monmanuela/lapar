@@ -1,12 +1,11 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, Image } from 'react-native'
+import { StyleSheet, Text, TextInput, View, Image, Dimensions } from 'react-native'
 import { Button } from 'react-native-elements'
 import firebase from 'react-native-firebase'
+
 import {logInUser} from '../redux/actions'
-
-import { Dimensions } from 'react-native';
-
 import {connect} from 'react-redux'
+import store from '../redux/store'
 
 const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
@@ -19,7 +18,6 @@ class LoginScreen extends React.Component {
   state = {
     email: '',
     password: '',
-    // errorMessage: null
   }
 
   componentDidUpdate(prevProps) {
@@ -31,11 +29,6 @@ class LoginScreen extends React.Component {
 
   handleLogin = () => {
     this.props.logInUser(this.state.email, this.state.password)
-    // firebase
-    //   .auth()
-    //   .signInAndRetrieveDataWithEmailAndPassword(email, password)
-    //   .then(() => this.props.navigation.navigate('Home'))
-    //   .catch(error => this.setState({ errorMessage: error.code + " " + error.message }))
   }
 
   render() {
