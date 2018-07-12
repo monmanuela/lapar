@@ -1,6 +1,9 @@
 import React from 'react'
 import { ScrollView, View, Text, Button, StyleSheet, Image } from 'react-native'
 
+import EditStallProfileModal from '../components/EditStallProfileModal'
+import VerticalItemsList from '../components/VerticalItemsList'
+
 import { Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -30,14 +33,25 @@ export default class StallOwnerScreen extends React.Component {
 			photoURL: '../assets/images/food.jpg',
 			name: stall.name,
 			location: stall.location,
+			items: stal.items,
+			modalPhotoURL: '',
+			modalName: '',
+			modalLocation: '',
 			modalVisible: false
 		}
 	}
 
 	handleEditProfile = () => {
 		this.setState({
+			modalPhotoURL: this.state.photoURL,
+			modalName: this.state.name,
+			modalLocation: this.state.location,
 			modalVisible: true
 		})
+	}
+
+	handleSaveChanges = () => {
+
 	}
 
 	render() {
@@ -56,9 +70,22 @@ export default class StallOwnerScreen extends React.Component {
         <View style={styles.buttonContainer}>
         	<Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
         </View>
+
+        <VerticalItemsList items={this.state.items} />
+
         <Text>{'\n'}</Text>
 
-        <EditStallProfileModal modalVisible={this.state.modalVisible} />
+        <EditStallProfileModal
+ 					modalVisible={this.state.modalVisible} 
+          photoURL={this.state.modalPhotoURL}
+          name={this.state.modalName}
+          location={this.state.modalLocation}
+          onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
+          onChangeName={ modalName => this.setState({ modalName }) }
+          onChangeLocation={ modalLocation => this.setState({ modalLocation })}
+          handleSaveChanges={this.handleSaveChanges}
+          handleClose={ () => this.setState({ modalVisible: false })}
+        />
       </ScrollView>
 		);
 	}

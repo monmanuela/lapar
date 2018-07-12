@@ -77,7 +77,7 @@ export default class EditProfileModal extends React.Component {
                 style={styles.textInput}
                 placeholder = { this.props.displayName }
                 onChangeText = { displayName => this.props.onChangeDisplayName(displayName) }
-                value = { this.props.displayName === '' ? this.props.displayName : this.props.displayName }
+                value = { this.props.displayName }
               />
             </View>
             {/*
