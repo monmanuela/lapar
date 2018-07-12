@@ -11,7 +11,7 @@ export default class ItemScreen extends React.Component {
 		this.state = {
 			modalVisible: false,
 			item: null,
-			reviews: null, // store reviews in state so if user adds review, render is triggered
+			reviewIds: {}, // store reviews in state so if user adds review, render is triggered
 		}
 	}
 
@@ -22,15 +22,16 @@ export default class ItemScreen extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.setState({reviewIds: this.props.navigation.state.params.item.reviews})
     const db = firebase.database()
 		
 		db.ref("items/" + this.props.navigation.state.params.item.itemId + "/reviews/").on("child_added", snapshot => {
-      console.log("\nGOT ADDED CHILD\n")
+      console.log("\nGOT ADDED CHILD IN ITEM SCREEN\n")
       // fetch item reviews again, set as state to trigger re render
       db.ref("items/" + this.props.navigation.state.params.item.itemId).once("value").then(snapshot => {
-      	console.log("refetched item\n")
-      	console.log("new item: " + JSON.stringify(snapshot.val()))
+      	console.log("refetched item: " + JSON.stringify(snapshot.val()))
       	this.setState({ item: snapshot.val() })
+      	this.setState({ reviewIds: snapshot.val().reviews })
       })
     })
 	}
@@ -63,9 +64,10 @@ export default class ItemScreen extends React.Component {
 					onCloseAddReview={this.onCloseAddReview} 
 					itemId={ item.itemId }
 					userId={this.props.navigation.state.params.userId}
-				/>				
+				/>
 
-				<VerticalReviewsList reviews={item.reviews} />
+        <Text>reviews: {JSON.stringify(this.state.reviewIds)}</Text>
+				<VerticalReviewsList reviews={this.state.reviewIds} />
 
 				<Text>{'\n'}</Text>
 			</ScrollView>
