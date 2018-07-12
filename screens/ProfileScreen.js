@@ -7,13 +7,16 @@ import EditProfileModal from '../components/EditProfileModal'
 import VerticalReviewsList from '../components/VerticalReviewsList'
 import { Dimensions } from 'react-native';
 
+import {logOutUser} from '../redux/actions'
+import {connect} from 'react-redux'
+
 const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
 const guidelineBaseHeight = 680;
 
 const scale = size => width / guidelineBaseWidth * size;
 
-export default class ProfileScreen extends React.Component {
+class ProfileScreen extends React.Component {
   constructor() {
     super()
     this.state = { 
@@ -135,7 +138,16 @@ export default class ProfileScreen extends React.Component {
 
   handleSignOut = () => {
     firebase.auth().signOut()
-    this.props.navigation.navigate('Login') 
+    this.props.logOutUser()
+    this.props.navigation.navigate('Login')    
+
+    // why for this, if offline logout, it will navigate to home screen?
+    // try {
+    //   this.props.logOutUser()
+    //   this.props.navigation.navigate('Login')    
+    // } catch (err) {
+    //   alert(err.message)
+    // }
   }
 
   changePassword = (email, oldPassword, newPassword) => {
@@ -210,6 +222,12 @@ export default class ProfileScreen extends React.Component {
       );
   }
 }
+
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser,
+})
+
+export default connect(mapStateToProps, {logOutUser})(ProfileScreen)
 
 const styles = StyleSheet.create({
   container: {

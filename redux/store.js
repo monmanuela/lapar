@@ -8,9 +8,7 @@ const INITIAL_STATE = {
 	locationCriterias: []
 }
 
-const store = createStore(reducer, applyMiddleware(thunk))
-// const store = createStore(reducer, INITIAL_STATE)
-
+const store = createStore(reducer, INITIAL_STATE, applyMiddleware(thunk))
 console.log(store.getState())
 
 export default store

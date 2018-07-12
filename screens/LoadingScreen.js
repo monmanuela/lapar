@@ -7,6 +7,7 @@ export default class LoadingScreen extends React.Component {
   componentDidMount = () => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
+        console.log("user in listener: " + JSON.stringify(user))
         this.props.navigation.navigate('MainTabNavigator')
       } else {
         this.props.navigation.navigate('SignedOutNavigator')
