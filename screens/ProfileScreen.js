@@ -47,19 +47,10 @@ class ProfileScreen extends React.Component {
   componentDidMount = () => {
     const currentUser = this.props.currentUser
     const userData = this.props.userData
-    this.setCurrentUser(currentUser)
+    this.setState(currentUser)
     this.setUserData(userData)
     this.setState({ isLoading: false })
     const db = firebase.database()
-
-    // db.ref("users/" + currentUser.uid).orderByKey().equalTo("reviews").once("value")
-    // .then(snapshot => {
-    //   if (snapshot.val() !== null) {
-    //     console.log("reviews: " + JSON.stringify(snapshot.val().reviews))
-    //     this.setState({ reviewIds: snapshot.val().reviews })
-    //   }
-    // })
-    // .then(() => this.setState({ isLoading: false }))
 
     let reviewIds
 
@@ -87,10 +78,6 @@ class ProfileScreen extends React.Component {
     })
   }
 
-  setCurrentUser = currentUser => {
-    this.setState({ currentUser })
-  }
-
   setUserData = userData => {
     this.setState({ 
       userData: {
@@ -101,17 +88,6 @@ class ProfileScreen extends React.Component {
       } 
     })
   }
-
-  // setUserData = userData => {
-  //   this.setState({ 
-  //     userData: {
-  //       displayName: this.state.currentUser && this.state.currentUser.displayName,
-  //       email: this.state.currentUser && this.state.currentUser.email,
-  //       photoURL: this.state.currentUser && this.state.currentUser.photoURL,
-  //       ...userData
-  //     } 
-  //   })
-  // }
 
   handleEditProfile = () => {
     this.setState({ 
@@ -125,20 +101,8 @@ class ProfileScreen extends React.Component {
     });
   }
 
-  // handleEditProfile = () => {
-  //   this.setState({ 
-  //     modalVisible: true,
-  //     modalDisplayName: this.state.userData && this.state.userData.displayName,
-  //     modalEmail: this.state.userData && this.state.userData.email,
-  //     modalUsername: this.state.userData && this.state.userData.username,
-  //     modalBio: this.state.userData && this.state.userData.bio,
-  //     modalPreferences: this.state.userData && this.state.userData.preferences,
-  //     modalPhotoURL: this.state.userData && this.state.userData.photoURL,
-  //   });
-  // }
-
   handleSaveChanges = () => {
-    const user = this.state.currentUser
+    const user = this.props.currentUser
     
     user.updateProfile({
       displayName: this.state.modalDisplayName,
@@ -170,9 +134,13 @@ class ProfileScreen extends React.Component {
   }
 
   handleSignOut = () => {
-    firebase.auth().signOut()
-    this.props.logOutUser()
-    this.props.navigation.navigate('Login')
+    try {
+      firebase.auth().signOut()
+      this.props.logOutUser()
+      this.props.navigation.navigate('Login')
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   changePassword = (email, oldPassword, newPassword) => {
@@ -188,12 +156,8 @@ class ProfileScreen extends React.Component {
 
   render() {
     console.log("store state at profile: " + JSON.stringify(store.getState()))
-
-    // console.log("in profile " + JSON.stringify(this.state.reviewIds))
     let screen
     if (this.state.isLoading) {
-
-    // if (this.state.isLoading) {
       screen = <ActivityIndicator size="large" color="#0000ff" />
     } else {
   		screen =
