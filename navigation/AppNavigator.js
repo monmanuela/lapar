@@ -7,13 +7,9 @@ import MainTabNavigator from './MainTabNavigator';
 import SignedOutNavigator from './SignedOutNavigator';
 
 export default AppNavigator = () => {
-  let initialNavigator
-
-  return createSwitchNavigator(
-    {
-      LoadingScreen: LoadingScreen,
-      MainTabNavigator: MainTabNavigator,
-      SignedOutNavigator: SignedOutNavigator,
-    },
-  );
+	return createSwitchNavigator({
+  	LoadingScreen: LoadingScreen,
+  	MainTabNavigator: MainTabNavigator,
+    SignedOutNavigator: SignedOutNavigator,
+	})
 };

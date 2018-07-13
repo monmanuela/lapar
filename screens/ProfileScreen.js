@@ -40,47 +40,49 @@ class ProfileScreen extends React.Component {
       modalPreferences: '',
       modalPhotoURL: null,
       isLoading: true,
-      reviewIds: {},
+      reviews: {},
     }
   }
 
   componentDidMount = () => {
-    console.log("in profilescreen didmount")
     const currentUser = this.props.currentUser
     const userData = this.props.userData
     this.setCurrentUser(currentUser)
     this.setUserData(userData)
-
-    // const currentUser = firebase.auth().currentUser;
+    this.setState({ isLoading: false })
     const db = firebase.database()
-    
-    // if (this.props.currentUser != null) {
-    //   this.setCurrentUser(currentUser)
 
-    //   // fetch user data from database
-    //   db.ref("users").orderByKey().equalTo(currentUser.uid).once("value").then(snapshot => {
-    //     return snapshot.val()[currentUser.uid]
-    //   }).then(userData => {
-    //     this.setUserData(userData)
-    //   }).then(() => this.setState({ isLoading: false }))
+    // db.ref("users/" + currentUser.uid).orderByKey().equalTo("reviews").once("value")
+    // .then(snapshot => {
+    //   if (snapshot.val() !== null) {
+    //     console.log("reviews: " + JSON.stringify(snapshot.val().reviews))
+    //     this.setState({ reviewIds: snapshot.val().reviews })
+    //   }
+    // })
+    // .then(() => this.setState({ isLoading: false }))
 
-    // fetch reviews
-    db.ref("users/" + currentUser.uid).orderByKey().equalTo("reviews").once("value")
-    .then(snapshot => {
-      if (snapshot.val() !== null) {
-        console.log("reviews: " + JSON.stringify(snapshot.val().reviews))
-        this.setState({ reviewIds: snapshot.val().reviews })
-      }
-    })
-    .then(() => this.setState({ isLoading: false }))
+    let reviewIds
 
-    // add listener for added review
     db.ref("users/" + currentUser.uid + "/reviews/").on("child_added", snapshot => {
       console.log("\nGOT ADDED CHILD IN PROFILE SCREEN\n")
       // fetch user reviewIds again, set as state to trigger re render
       db.ref("users/" + currentUser.uid).orderByKey().equalTo("reviews").once("value").then(snapshot => {
         console.log("re fetched reviews: " + JSON.stringify(snapshot.val().reviews))
-        this.setState({ reviewIds: snapshot.val().reviews })
+        reviewIds = snapshot.val().reviews
+      })
+      .then(() => {
+        Object.keys(reviewIds).map((reviewId, index) => {
+          db.ref("reviews/" + reviewId).once("value")
+            .then(snapshot => snapshot.val())
+            .then(rev => {
+              let newReview = this.state.reviews
+              newReview[reviewId] = rev
+              this.setState({ reviews: newReview })
+            })
+        })
+      })
+      .then(() => {
+        console.log('REVIEWS ' + JSON.stringify(this.state.reviews))
       })
     })
   }
@@ -189,7 +191,7 @@ class ProfileScreen extends React.Component {
 
     // console.log("in profile " + JSON.stringify(this.state.reviewIds))
     let screen
-    if (this.state.isLoading || this.state.reviewIds.length === 0) {
+    if (this.state.isLoading) {
 
     // if (this.state.isLoading) {
       screen = <ActivityIndicator size="large" color="#0000ff" />
@@ -214,8 +216,8 @@ class ProfileScreen extends React.Component {
           <Text style={{ color: 'gray', marginBottom: 10, marginLeft: 20, marginRight: 20 }}>{this.state.userData && this.state.userData.bio}</Text>
           <Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
         </View>
-        <Text>reviews: {JSON.stringify(this.state.reviewIds)}</Text>
-        <VerticalReviewsList reviews={this.state.reviewIds} /> 
+
+        <VerticalReviewsList reviews={Object.values(this.state.reviews)} /> 
 
         <Text>{'\n'}</Text>
 

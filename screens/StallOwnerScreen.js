@@ -51,7 +51,12 @@ export default class StallOwnerScreen extends React.Component {
 	}
 
 	handleSaveChanges = () => {
-
+		this.setState({
+			photoURL: this.state.modalPhotoURL,
+			name: this.state.modalName,
+			location: this.state.modalLocation,
+			modalVisible: false
+		})
 	}
 
 	render() {

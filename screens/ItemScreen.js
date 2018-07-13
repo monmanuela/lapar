@@ -11,7 +11,7 @@ export default class ItemScreen extends React.Component {
 		this.state = {
 			modalVisible: false,
 			item: null,
-			reviews: [], // store reviews in state so if user adds review, render is triggered
+			reviews: {}, // store reviews in state so if user adds review, render is triggered
 		}
 	}
 
@@ -25,7 +25,6 @@ export default class ItemScreen extends React.Component {
 		this.setState({reviewIds: this.props.navigation.state.params.item.reviews})
     const db = firebase.database()
 		let reviewIds
-		let _reviews
 
 		db.ref("items/" + this.props.navigation.state.params.item.itemId + "/reviews/").on("child_added", snapshot => {
       console.log("\nGOT ADDED CHILD IN ITEM SCREEN\n")
@@ -33,19 +32,20 @@ export default class ItemScreen extends React.Component {
       db.ref("items/" + this.props.navigation.state.params.item.itemId).once("value").then(snapshot => {
       	console.log("refetched item: " + JSON.stringify(snapshot.val()))
       	this.setState({ item: snapshot.val() })
-      	reviewIds = Object.keys(snapshot.val().reviews)
-      	console.log('REVIEW IDS ' + JSON.stringify(reviewIds))
-      	//this.setState({ reviewIds: snapshot.val().reviews })
+      	reviewIds = snapshot.val().reviews
       })
       .then(() => {
-      	_reviews = reviewIds.map((reviewId, index) => {
+      	Object.keys(reviewIds).map((reviewId, index) => {
 					db.ref("reviews/" + reviewId).once("value")
 						.then(snapshot => snapshot.val())
-						// .then(rev => this.setState({ reviews: [...this.state.reviews, rev] }))
+						.then(rev => {
+							let newReview = this.state.reviews
+							newReview[reviewId] = rev
+							this.setState({ reviews: newReview })
+						})
 				})
       })
-      .then(() => console.log("REVIEWS " + JSON.stringify(_reviews)))
-      .then(() => this.setState({ reviews: reviewIds }))
+      .then(() => console.log("REVIEWS IN ITEM " + JSON.stringify(this.state.reviews)))
     })
 	}
 
@@ -79,8 +79,7 @@ export default class ItemScreen extends React.Component {
 					userId={this.props.navigation.state.params.userId}
 				/>
 
-        <Text>reviews: {this.state.reviews.length}</Text>
-				<VerticalReviewsList reviews={this.state.reviews} />
+				<VerticalReviewsList reviews={Object.values(this.state.reviews)} />
 
 				<Text>{'\n'}</Text>
 			</ScrollView>
