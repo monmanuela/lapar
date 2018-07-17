@@ -73,7 +73,7 @@ export const signUpUser = (email, password, displayName) => async dispatch => {
   dispatch({type: SIGN_UP_START})
   try {
     const result = await firebaseSignUp(email, password, displayName)
-
+    console.log("sign up result: " + JSON.stringify(result))
     dispatch({type: SIGN_UP_SUCCESS, payload: result})
     dispatch({type: SET_USER_DATA, payload: {bio: '', preferences: '', userId: result.uid}})
   } catch (err) {
@@ -85,37 +85,31 @@ export const signUpUser = (email, password, displayName) => async dispatch => {
 firebaseSignUp = async (email, password, displayName) => {
   try {
     const db = firebase.database()
-    const finalUser = firebase
+    const result = firebase
       .auth()
       .createUserAndRetrieveDataWithEmailAndPassword(email, password)
       .then(() => {
         const user = firebase.auth().currentUser
-        user.updateProfile({
-          displayName: displayName,
-          photoURL: "https://firebasestorage.googleapis.com/v0/b/newlapar-19607.appspot.com/o/avatar%2Fhappy.png?alt=media&token=51fa7ac1-bab9-4078-9f44-2db77f0f04bd",
-        })
+        
         db.ref('users/' + user.uid).set({
           bio: '',
           preferences: '',
           userId: user.uid,
         })
-        return user
+        
+        const newUser = user
+          .updateProfile({
+            displayName: displayName,
+            photoURL: "https://firebasestorage.googleapis.com/v0/b/newlapar-19607.appspot.com/o/avatar%2Fhappy.png?alt=media&token=51fa7ac1-bab9-4078-9f44-2db77f0f04bd",
+          })
+          .then(() => {
+            const newUser = firebase.auth().currentUser
+            return newUser
+          })
+          .catch(err => console.log(err))
+        return newUser
       })
-    return finalUser
-    // const user = await firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password)
-    // user.updateProfile({
-    //   displayName: displayName,
-    //   photoURL: "https://firebasestorage.googleapis.com/v0/b/newlapar-19607.appspot.com/o/avatar%2Fhappy.png?alt=media&token=51fa7ac1-bab9-4078-9f44-2db77f0f04bd",
-    // })
-    // .then(() => {
-    //   console.log("setting db for user uid: " + user.uid)
-    //   db.ref('users/' + user.uid).set({
-    //     bio: '',
-    //     preferences: '',
-    //     userId: user.uid,
-    //   })
-    // })
-    // return user
+    return result
   } catch(err) {
     console.log("errmsg: " + err.message)
     throw new Error(err.message)
