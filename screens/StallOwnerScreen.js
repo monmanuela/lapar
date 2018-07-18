@@ -1,6 +1,8 @@
 import React from 'react'
 import { ScrollView, View, Text, Button, StyleSheet, Image, UIManager, LayoutAnimation } from 'react-native'
+import firebase from 'react-native-firebase';
 import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Octicons'
 
 import EditStallProfileModal from '../components/EditStallProfileModal'
 import AddNewItemModal from '../components/AddNewItemModal'
@@ -103,12 +105,22 @@ export default class StallOwnerScreen extends React.Component {
     this._listViewOffset = currentOffset
   }
 
+  handleSignOut = () => {
+    try {
+      firebase.auth().signOut()
+      this.props.navigation.navigate('Login')
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
 	render() {
 		return (
       <View style={{ flex: 1 }}>
   			<ScrollView onScroll={this.onScroll} style={{ backgroundColor: 'white' }}>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ width: scale(350), backgroundColor: 'red', color: 'white', paddingLeft: scale(20), paddingTop: 13, paddingBottom: 13, fontSize: 22, fontWeight: 'bold' }}>Stall Profile</Text>
+            <Text style={{ width: scale(310), backgroundColor: 'red', color: 'white', paddingLeft: scale(20), paddingTop: 13, paddingBottom: 13, fontSize: 22, fontWeight: 'bold' }}>Stall Profile</Text>
+            <Icon onPress={this.handleSignOut} name='sign-out' size={scale(25)} color={'white'} style={{ backgroundColor: 'red', paddingLeft: scale(10), paddingTop: scale(15), paddingRight: scale(5) }} />
           </View>
 
           <Image source={{ uri: this.state.photoURL }} style={{ width: scale(350), height: verticalScale(180) }} />
