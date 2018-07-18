@@ -36,6 +36,7 @@ export default class StallOwnerSignUpScreen extends React.Component {
       })
       this.setState({ locationList: locNamesArr })
     })
+    // have a hashtable locname -> locId?
   }
 
   handleSignUp = () => {
@@ -55,7 +56,7 @@ export default class StallOwnerSignUpScreen extends React.Component {
           .then(() => {
           	console.log("update stall success")
 		        // create a new stall
-		        const newStallRef = db.ref("stalls").push();
+		        const newStallRef = firebase.database().ref("stalls").push();
 		        const stallId = newStallRef.key
 
 		        console.log("newStallRef: " + newStallRef)
@@ -64,7 +65,8 @@ export default class StallOwnerSignUpScreen extends React.Component {
 						newStallRef.set({
 						  name: this.state.stallName,
 						  location: this.state.stallLocation,
-						  stallId: stallId
+						  stallId: stallId,
+						  owner: user.uid
 						})
 						return stallId
           })
@@ -73,7 +75,7 @@ export default class StallOwnerSignUpScreen extends React.Component {
 		        // save the stall id in user
 		        firebase.database().ref('users/' + user.uid).set({
 		          isStall: true,
-		          stallId: stallId,
+		          stallId: stallId
 		        })
 					})
           .catch(err => console.log(err))        
@@ -81,7 +83,6 @@ export default class StallOwnerSignUpScreen extends React.Component {
   }
 
 	render() {
-		console.log(this.state.locationList)
 		return (
       <View style={styles.container}>
         <Image source={require('../assets/images/logo.png')} style={{ width: scale(100), height: verticalScale(150) }}/>

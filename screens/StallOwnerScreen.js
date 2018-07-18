@@ -1,6 +1,7 @@
 import React from 'react'
 import { ScrollView, View, Text, Button, StyleSheet, Image, UIManager, LayoutAnimation } from 'react-native'
 import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Octicons'
 
 import EditStallProfileModal from '../components/EditStallProfileModal'
 import AddNewItemModal from '../components/AddNewItemModal'
@@ -17,32 +18,36 @@ const verticalScale = size => height / guidelineBaseHeight * size;
 
 let _listViewOffset = 0
 
-const stall = {
-	items: {
-		item1: true,
-		item2: true,
-		item3: true,
-    item4: true,
-    item5: true,
-    item6: true,
-    item7: true
-	},
-	location: "Fine Food",
-	lowestPrice: 4.8,
-	name: "Korean & Japanese Stall",
-	rating: 5,
-	stallId: 's1'
-}
+import firebase from 'react-native-firebase'
+
+// const stall = {
+// 	items: {
+// 		item1: true,
+// 		item2: true,
+// 		item3: true,
+//     item4: true,
+//     item5: true,
+//     item6: true,
+//     item7: true
+// 	},
+// 	location: "Fine Food",
+// 	lowestPrice: 4.8,
+// 	name: "Korean & Japanese Stall",
+// 	rating: 5,
+// 	stallId: 's1'
+// }
 
 export default class StallOwnerScreen extends React.Component {
 	constructor() {
 		super()
     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 		this.state = {
-			photoURL: 'https://01iajxoiw1-flywheel.netdna-ssl.com/wp-content/uploads/2017/11/cute.jpg',
-			name: stall.name,
-			location: stall.location,
-			items: Object.keys(stall.items),
+			photoURL: null,
+			name: null,
+			location: null,
+			items: [],
+      rating: null,
+      lowestPrice: null,
 			modalPhotoURL: '',
 			modalName: '',
 			modalLocation: '',
@@ -52,6 +57,44 @@ export default class StallOwnerScreen extends React.Component {
       isActionButtonVisible: true
 		}
 	}
+
+  componentDidMount = () => {
+    const user = firebase.auth().currentUser
+    this.setState({
+      photoURL: user.photoURL,
+      name: user.displayName,
+    })
+    let stallId, stallData
+    
+    firebase.database().ref("users/" + user.uid).once("value").then(snapshot => {
+      console.log("owner data: " + JSON.stringify(snapshot.val()))
+      stallId = snapshot.val().stallId
+    })
+    .then(() => {
+      firebase.database().ref("stalls/" + stallId).once("value").then(snapshot => {
+        console.log("stall data: " + JSON.stringify(snapshot.val()))
+        stallData = snapshot.val()
+      })
+      .then(() => {
+        this.setState({
+          location: stallData.location,
+          rating: stallData.rating,
+          lowestPrice: stallData.lowestPrice
+        })
+        if (stallData.items) {
+          this.setState({items: Object.keys(stallOwnerData.items)})
+        }
+      })
+    })
+  }
+
+  // add listener for items
+  // upon adding item, add itemId to location, stall, and stall owner(?)
+
+  handleSignOut = () => {
+    firebase.auth().signOut()
+    this.props.navigation.navigate('Login')
+  }
 
 	handleEditProfile = () => {
 		this.setState({
@@ -109,6 +152,7 @@ export default class StallOwnerScreen extends React.Component {
   			<ScrollView onScroll={this.onScroll} style={{ backgroundColor: 'white' }}>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ width: scale(350), backgroundColor: 'red', color: 'white', paddingLeft: scale(20), paddingTop: 13, paddingBottom: 13, fontSize: 22, fontWeight: 'bold' }}>Stall Profile</Text>
+            <Icon onPress={this.handleSignOut} name='sign-out' size={scale(25)} color={'white'} style={{ backgroundColor: 'red', paddingLeft: scale(10), paddingTop: scale(15), paddingRight: scale(5) }} />
           </View>
 
           <Image source={{ uri: this.state.photoURL }} style={{ width: scale(350), height: verticalScale(180) }} />
@@ -116,8 +160,8 @@ export default class StallOwnerScreen extends React.Component {
           <View style={styles.container}>
             <Text style={{ fontSize: 20, color: 'black', marginBottom: 12, marginTop: 10 }}>{this.state.name}</Text>
             <Text style={{ color: 'gray', marginBottom: 5, marginRight: 20 }}>Location: {this.state.location}</Text>
-            <Text style={{ color: 'gray', marginBottom: 5, marginRight: 20 }}>Rating: {stall.rating}</Text>
-            <Text style={{ color: 'gray', marginBottom: 10, marginRight: 20 }}>Lowest Price: ${stall.lowestPrice}</Text>
+            <Text style={{ color: 'gray', marginBottom: 5, marginRight: 20 }}>Rating: {this.state.rating}</Text>
+            <Text style={{ color: 'gray', marginBottom: 10, marginRight: 20 }}>Lowest Price: ${this.state.lowestPrice}</Text>
           </View>
           
           <View style={styles.buttonContainer}>
