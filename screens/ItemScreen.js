@@ -61,7 +61,7 @@ export default class ItemScreen extends React.Component {
 			<ScrollView style={{ backgroundColor: 'white' }}>
 				<View style={{ borderBottomColor: '#d9dce0', borderBottomWidth: 1, paddingBottom: 10, marginBottom: 10 }}>
 					<Image source={{ uri: item.photoURL }} style={{ height: 150, width: 400 }} />
-					<Text style={{ color: 'black', fontSize: 28, paddingLeft: 20 }}>{item.name}</Text>
+					<Text style={{ color: 'black', fontSize: 28, paddingLeft: 20, marginTop: 15 }}>{item.name}</Text>
 					<Text style={{ fontSize: 16, paddingLeft: 20 }}>Rating: {item.rating}</Text>
 					<Text style={{ fontSize: 16, paddingLeft: 20 }}>Price: ${item.price}</Text>
 					

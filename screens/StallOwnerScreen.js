@@ -1,7 +1,9 @@
 import React from 'react'
-import { ScrollView, View, Text, Button, StyleSheet, Image } from 'react-native'
+import { ScrollView, View, Text, Button, StyleSheet, Image, UIManager, LayoutAnimation } from 'react-native'
+import ActionButton from 'react-native-action-button';
 
 import EditStallProfileModal from '../components/EditStallProfileModal'
+import AddNewItemModal from '../components/AddNewItemModal'
 import VerticalItemsList from '../components/VerticalItemsList'
 
 import { Dimensions } from 'react-native';
@@ -13,11 +15,17 @@ const guidelineBaseHeight = 680;
 const scale = size => width / guidelineBaseWidth * size;
 const verticalScale = size => height / guidelineBaseHeight * size;
 
+let _listViewOffset = 0
+
 const stall = {
 	items: {
 		item1: true,
 		item2: true,
-		item3: true
+		item3: true,
+    item4: true,
+    item5: true,
+    item6: true,
+    item7: true
 	},
 	location: "Fine Food",
 	lowestPrice: 4.8,
@@ -29,15 +37,19 @@ const stall = {
 export default class StallOwnerScreen extends React.Component {
 	constructor() {
 		super()
+    UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 		this.state = {
-			photoURL: '../assets/images/food.jpg',
+			photoURL: 'https://01iajxoiw1-flywheel.netdna-ssl.com/wp-content/uploads/2017/11/cute.jpg',
 			name: stall.name,
 			location: stall.location,
-			items: stall.items,
+			items: Object.keys(stall.items),
 			modalPhotoURL: '',
 			modalName: '',
 			modalLocation: '',
-			modalVisible: false
+			modalVisible: false,
+      newItemName: '',
+      newItemModalVisible: false,
+      isActionButtonVisible: true
 		}
 	}
 
@@ -59,39 +71,87 @@ export default class StallOwnerScreen extends React.Component {
 		})
 	}
 
+  handleAddItem = () => {
+    this.setState({
+      newItemModalVisible: true
+    })
+  }
+
+  handleSaveNewItem = () => {
+    this.setState({
+      items: [...this.state.items, this.state.newItemName],
+      newItemModalVisible: false
+    })
+  }
+
+  onScroll = (event) => {
+    const CustomLayoutLinear = {
+      duration: 200,
+      create: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
+      update: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
+      delete: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity }
+    }
+
+    const currentOffset = event.nativeEvent.contentOffset.y
+    const direction = (currentOffset > 0 && currentOffset > this._listViewOffset) ? 'down' : 'up'
+    const isActionButtonVisible = direction === 'up'
+    if (isActionButtonVisible !== this.state.isActionButtonVisible) {
+      LayoutAnimation.configureNext(CustomLayoutLinear)
+      this.setState({ isActionButtonVisible })
+    }
+
+    this._listViewOffset = currentOffset
+  }
+
 	render() {
 		return (
-			<ScrollView style={{ backgroundColor: 'white' }}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={{ width: scale(350), backgroundColor: 'red', color: 'white', paddingLeft: scale(20), paddingTop: 13, paddingBottom: 13, fontSize: 22, fontWeight: 'bold' }}>Stall Profile</Text>
-        </View>
-        <Image source={{ uri: this.state.photoURL }} style={{ width: scale(350), height: verticalScale(120) }} />
-        <View style={styles.container}>
-          <Text style={{ fontSize: 20, color: 'black', marginBottom: 12, marginTop: 10 }}>{stall.name}</Text>
-          <Text style={{ color: 'gray', marginBottom: 5, marginRight: 20 }}>Location: {stall.location}</Text>
-          <Text style={{ color: 'gray', marginBottom: 5, marginRight: 20 }}>Rating: {stall.rating}</Text>
-          <Text style={{ color: 'gray', marginBottom: 10, marginRight: 20 }}>Lowest Price: ${stall.lowestPrice}</Text>
-        </View>
-        <View style={styles.buttonContainer}>
-        	<Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
-        </View>
+      <View style={{ flex: 1 }}>
+  			<ScrollView onScroll={this.onScroll} style={{ backgroundColor: 'white' }}>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ width: scale(350), backgroundColor: 'red', color: 'white', paddingLeft: scale(20), paddingTop: 13, paddingBottom: 13, fontSize: 22, fontWeight: 'bold' }}>Stall Profile</Text>
+          </View>
 
-        {/*<VerticalItemsList items={this.state.items} />*/}
+          <Image source={{ uri: this.state.photoURL }} style={{ width: scale(350), height: verticalScale(180) }} />
+          
+          <View style={styles.container}>
+            <Text style={{ fontSize: 20, color: 'black', marginBottom: 12, marginTop: 10 }}>{this.state.name}</Text>
+            <Text style={{ color: 'gray', marginBottom: 5, marginRight: 20 }}>Location: {this.state.location}</Text>
+            <Text style={{ color: 'gray', marginBottom: 5, marginRight: 20 }}>Rating: {stall.rating}</Text>
+            <Text style={{ color: 'gray', marginBottom: 10, marginRight: 20 }}>Lowest Price: ${stall.lowestPrice}</Text>
+          </View>
+          
+          <View style={styles.buttonContainer}>
+          	<Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
+          </View>
 
-        <Text>{'\n'}</Text>
+          <VerticalItemsList items={this.state.items} navigation={this.props.navigation} />
+          
+          <Text>{'\n'}</Text>
 
-        <EditStallProfileModal
- 					modalVisible={this.state.modalVisible} 
-          photoURL={this.state.modalPhotoURL}
-          name={this.state.modalName}
-          location={this.state.modalLocation}
-          onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
-          onChangeName={ modalName => this.setState({ modalName }) }
-          onChangeLocation={ modalLocation => this.setState({ modalLocation })}
-          handleSaveChanges={this.handleSaveChanges}
-          handleClose={ () => this.setState({ modalVisible: false })}
-        />
-      </ScrollView>
+          <EditStallProfileModal
+   					modalVisible={this.state.modalVisible} 
+            photoURL={this.state.modalPhotoURL}
+            name={this.state.modalName}
+            location={this.state.modalLocation}
+            onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
+            onChangeName={ modalName => this.setState({ modalName }) }
+            onChangeLocation={ modalLocation => this.setState({ modalLocation })}
+            handleSaveChanges={this.handleSaveChanges}
+            handleClose={() => this.setState({ modalVisible: false })}
+          />
+
+          <AddNewItemModal
+            modalVisible={this.state.newItemModalVisible}
+            onAddItemName={ name => this.setState({ newItemName: name })}
+            handleSaveNewItem={this.handleSaveNewItem}
+            handleClose={() => this.setState({ newItemModalVisible: false })}
+          />
+
+        </ScrollView>     
+
+        {this.state.isActionButtonVisible ? <ActionButton onPress={this.handleAddItem} /> : null}
+
+      </View>
 		);
 	}
 }

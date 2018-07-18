@@ -8,10 +8,20 @@ import {
   StyleSheet, 
   Keyboard, 
   TouchableWithoutFeedback, 
-  ActivityIndicator, 
+  ActivityIndicator,
+  Image 
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker'
 import firebase from 'react-native-firebase';
+
+import { Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
+const guidelineBaseWidth = 350;
+const guidelineBaseHeight = 680;
+
+const scale = size => width / guidelineBaseWidth * size;
+const verticalScale = size => height / guidelineBaseHeight * size;
 
 export default class EditProfileModal extends React.Component {
 
@@ -26,6 +36,7 @@ export default class EditProfileModal extends React.Component {
           <View>
             <Text style={{ backgroundColor: 'red', color: 'white', paddingLeft: 20, paddingTop: 13, paddingBottom: 13, fontSize: 22, fontWeight: 'bold' }}>Edit Stall Profile</Text>
             <View style={{alignItems: 'center', marginTop: 20, marginBottom: 20 }}>
+              <Image source={{ uri: this.props.photoURL }} style={{ width: scale(320), height: verticalScale(180) }} />
               <Text style={{ marginTop: 10 }} onPress={this.onChangePicturePress}>Change Picture</Text>
             </View>
 
@@ -50,7 +61,7 @@ export default class EditProfileModal extends React.Component {
               />
             </View>
 
-            <View style={{ marginTop: 40, marginBottom: 20, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ marginTop: 20, marginBottom: 20, justifyContent: 'center', alignItems: 'center' }}>
               <Button title='     Save      ' color={'red'} onPress={this.props.handleSaveChanges} />
             </View>
             <View style={{ marginBottom: 20, justifyContent: 'center', alignItems: 'center' }}>
