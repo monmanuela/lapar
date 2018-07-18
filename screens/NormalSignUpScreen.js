@@ -19,37 +19,46 @@ class NormalSignUpScreen extends React.Component {
     super()
     this.state = {
       displayName: '',
-      username: '',
       email: '',
       password: '',
-      bio: '',
-      errorMessage: null
+      // errorMessage: null
     }
   }
 
-  handleSignUp = async () => {
-    let userID
-    const db = firebase.database()
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(() => {
-        const user = firebase.auth().currentUser
-        user.updateProfile({
-          displayName: this.state.displayName,
-          photoURL: "https://firebasestorage.googleapis.com/v0/b/newlapar-19607.appspot.com/o/avatar%2Fhappy.png?alt=media&token=51fa7ac1-bab9-4078-9f44-2db77f0f04bd",
-        })
-        return user
-      })
-      .then(user => {
-        db.ref('users/' + user.uid).set({
-          bio: '',
-          preferences: '',
-          userId: user.uid,
-        })
-      })
-      .then(() => this.props.navigation.navigate('Home'))
-      .catch(error => this.setState({ errorMessage: error.message }))
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.currentUser !== prevProps.currentUser
+        && this.props.userData !== prevProps.userData) {
+      console.log("comp did update, userData: " + JSON.stringify(this.props.userData))
+      this.props.navigation.navigate('Home')
+    }
+  }
+
+  handleSignUp = () => {
+    this.props.signUpUser(this.state.email, this.state.password, this.state.displayName)
+    // let userID
+    // const db = firebase.database()
+    // firebase
+    //   .auth()
+    //   .createUserWithEmailAndPassword(this.state.email, this.state.password)
+    //   .then(resultUser => {
+    //     console.log("resultUser: " + JSON.stringify(resultUser))
+    //     const user = firebase.auth().currentUser
+    //     user.updateProfile({
+    //       displayName: this.state.displayName,
+    //       photoURL: "https://firebasestorage.googleapis.com/v0/b/newlapar-19607.appspot.com/o/avatar%2Fhappy.png?alt=media&token=51fa7ac1-bab9-4078-9f44-2db77f0f04bd",
+    //     })
+    //     return user
+    //   })
+    //   .then(user => {
+    //     db.ref('users/' + user.uid).set({
+    //       bio: '',
+    //       preferences: '',
+    //       userId: user.uid,
+    //     })
+    //   })
+    //   .then(() => this.props.navigation.navigate('Home'))
+    //   .catch(error => this.setState({ errorMessage: error.message }))
   }
 
   render() {
@@ -57,10 +66,9 @@ class NormalSignUpScreen extends React.Component {
       <View style={styles.container}>
         <Image source={require('../assets/images/logo.png')} style={{ width: scale(100), height: verticalScale(150) }}/>
 
-        {this.state.errorMessage &&
-          <Text style={{ color: 'red' }}>
-            {this.state.errorMessage}
-          </Text>}
+        <Text style={{ color: 'red' }}>
+          {this.props.errMessage}
+        </Text>
 
         {/* Display name */}
         <TextInput
@@ -111,6 +119,7 @@ class NormalSignUpScreen extends React.Component {
 const mapStateToProps = state => ({
   errMessage: state.user.errMessage,
   currentUser: state.user.currentUser,
+  userData: state.user.userData
 })
 
 export default connect(mapStateToProps, {signUpUser})(NormalSignUpScreen)

@@ -9,7 +9,7 @@ export const SIGN_UP_START = 'SIGN_UP_START'
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS'
 export const SIGN_UP_FAIL = 'SIGN_UP_FAIL'
 export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS'
-export const FETCH_USER_DATA_SUCCESS = 'FETCH_USER_DATA_SUCCESS'
+export const SET_USER_DATA = 'SET_USER_DATA'
 export const UPDATE_USER_FROM_FIREBASE_LISTENER = 'UPDATE_USER_FROM_FIREBASE_LISTENER'
 
 // action creators
@@ -21,6 +21,8 @@ export const updateLocation = locations => {
 }
 
 export const updateUserFromFirebaseListener = user => {
+  console.log("act crt uuffl")
+  console.log("the user: " + JSON.stringify(user))
   return({
     type: UPDATE_USER_FROM_FIREBASE_LISTENER,
     payload: user
@@ -33,23 +35,12 @@ export const logOutUser = () => {
   })
 }
 
-fetchUserData = async userId => {
-  const userData = await firebase.database().ref("users").orderByKey()
-    .equalTo(userId).once("value")
-    .then(snapshot => {
-      return snapshot.val()[userId]
-    })
-  console.log("user data inside fetchUserData: " + JSON.stringify(userData))
-  return userData
-}
-
 // async action creators
 export const updateUserIfLoggedIn = user => async dispatch => {
   try {
     dispatch(updateUserFromFirebaseListener(user))
     const userData = await fetchUserData(user.uid)
-    console.log("user data inside updateUserFromFirebaseListener: " + JSON.stringify(userData))
-    dispatch({type: FETCH_USER_DATA_SUCCESS, payload: userData})
+    dispatch({type: SET_USER_DATA, payload: userData})
   } catch (err) {
     console.log(err)
   }
@@ -64,30 +55,73 @@ export const logInUser = (email, password) => async dispatch => {
   try {
     const result = await firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password)
     const currentUser = result.user
-    console.log("log in user: " + JSON.stringify(currentUser))
     dispatch({type: LOG_IN_SUCCESS, payload: currentUser})
 
     const userData = await fetchUserData(currentUser.uid)
-    console.log("user data inside logInUser: " + JSON.stringify(userData))
-    dispatch({type: FETCH_USER_DATA_SUCCESS, payload: userData})
+    dispatch({type: SET_USER_DATA, payload: userData})
 
   } catch (err) {
-    dispatch({type: LOG_IN_FAIL, payload: {errCode: err.code, errMessage: err.message}})
+    dispatch({type: LOG_IN_FAIL, payload: {errMessage: err.message}})
   }
 }
 
-export const signUpUser = (email, password) => async dispatch => {
-  if (email.length === 0 || password.length === 0) {
-    dispatch({type: SIGN_UP_FAIL, payload: {errCode: 404, errMessage: "Email or password cannot be empty"}})
+export const signUpUser = (email, password, displayName) => async dispatch => {
+  if (email.length === 0 || password.length === 0 || displayName.length === 0) {
+    dispatch({type: SIGN_UP_FAIL, payload: {errMessage: "Email, password or display name cannot be empty"}})
     return;
   }
   dispatch({type: SIGN_UP_START})
   try {
-    const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
-    // upload user data too
-    console.log("sign up user: " + JSON.stringify(user.user))
-    dispatch({type: SIGN_UP_SUCCESS, payload: user.user})
+    const result = await firebaseSignUp(email, password, displayName)
+    console.log("sign up result: " + JSON.stringify(result))
+    dispatch({type: SIGN_UP_SUCCESS, payload: result})
+    dispatch({type: SET_USER_DATA, payload: {bio: '', preferences: '', userId: result.uid}})
   } catch (err) {
-    dispatch({type: SIGN_UP_FAIL, payload: {errCode: err.code, errMessage: err.message}})
+    dispatch({type: SIGN_UP_FAIL, payload: {errMessage: err.message}})
   }
+}
+
+// helper functions
+firebaseSignUp = async (email, password, displayName) => {
+  try {
+    const db = firebase.database()
+    const result = firebase
+      .auth()
+      .createUserAndRetrieveDataWithEmailAndPassword(email, password)
+      .then(() => {
+        const user = firebase.auth().currentUser
+        
+        db.ref('users/' + user.uid).set({
+          bio: '',
+          preferences: '',
+          userId: user.uid,
+        })
+        
+        const newUser = user
+          .updateProfile({
+            displayName: displayName,
+            photoURL: "https://firebasestorage.googleapis.com/v0/b/newlapar-19607.appspot.com/o/avatar%2Fhappy.png?alt=media&token=51fa7ac1-bab9-4078-9f44-2db77f0f04bd",
+          })
+          .then(() => {
+            const newUser = firebase.auth().currentUser
+            return newUser
+          })
+          .catch(err => console.log(err))
+        return newUser
+      })
+    return result
+  } catch(err) {
+    console.log("errmsg: " + err.message)
+    throw new Error(err.message)
+  }
+}
+
+fetchUserData = async userId => {
+  console.log("userid: " + userId)
+  const userData = await firebase.database().ref("users").orderByKey()
+    .equalTo(userId).once("value")
+    .then(snapshot => {
+      return snapshot.val()[userId]
+    })
+  return userData
 }

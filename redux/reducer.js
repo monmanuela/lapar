@@ -3,8 +3,9 @@ import {
   UPDATE_LOCATION, 
   LOG_IN_START, LOG_IN_SUCCESS, LOG_IN_FAIL, 
   LOG_OUT_SUCCESS,
+  SIGN_UP_START, SIGN_UP_SUCCESS, SIGN_UP_FAIL,
   UPDATE_USER_FROM_FIREBASE_LISTENER,
-  FETCH_USER_DATA_SUCCESS,
+  SET_USER_DATA,
 } from './actions'
 
 const merge = (prev, next) => Object.assign({}, prev, next)
@@ -24,18 +25,25 @@ const userReducer = (state = initialState, action) => {
   console.log(action.type)
 
   switch (action.type) {
-    case LOG_IN_START:
-      return state
     case LOG_IN_SUCCESS:
       return merge(state, {currentUser: action.payload})
     case LOG_IN_FAIL:
-      return merge(state, {errCode: action.payload.errCode, errMessage: action.payload.errMessage})
-    case LOG_OUT_SUCCESS:
-      return merge(state, {currentUser: null})
+      return merge(state, {errMessage: action.payload.errMessage})
+
+    case SIGN_UP_SUCCESS:
+      return merge(state, {currentUser: action.payload})
+    case SIGN_UP_FAIL:
+      return merge(state, {errMessage: action.payload.errMessage})
+
     case UPDATE_USER_FROM_FIREBASE_LISTENER:
       return merge(state, {currentUser: action.payload})
-    case FETCH_USER_DATA_SUCCESS:
+
+    case LOG_OUT_SUCCESS:
+      return merge(state, {currentUser: null})
+
+    case SET_USER_DATA:
       return merge(state, {userData: action.payload})
+      
     default:
       return state
   }
