@@ -24,7 +24,7 @@ class VerticalStallsList extends React.Component {
     const filteredSortedStalls = stalls.sort(sortFunction)
       .map((stall, index) => {
         const stallId = stall.stallId
-        const itemIds = Object.keys(stall.items)
+        const itemIds = stall.items ? Object.keys(stall.items) : []
         const itemsPerStall = itemIds.map((id, index) => {
           return _items[id]
         })

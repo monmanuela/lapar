@@ -19,8 +19,6 @@ const verticalScale = size => height / guidelineBaseHeight * size;
 
 let _listViewOffset = 0
 
-import firebase from 'react-native-firebase'
-
 // const stall = {
 // 	items: {
 // 		item1: true,
@@ -43,6 +41,8 @@ export default class StallOwnerScreen extends React.Component {
 		super()
     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 		this.state = {
+      user: null,
+      stallId: null,
 			photoURL: null,
 			name: null,
 			location: null,
@@ -62,6 +62,7 @@ export default class StallOwnerScreen extends React.Component {
   componentDidMount = () => {
     const user = firebase.auth().currentUser
     this.setState({
+      user: user,
       photoURL: user.photoURL,
       name: user.displayName,
     })
@@ -70,6 +71,7 @@ export default class StallOwnerScreen extends React.Component {
     firebase.database().ref("users/" + user.uid).once("value").then(snapshot => {
       console.log("owner data: " + JSON.stringify(snapshot.val()))
       stallId = snapshot.val().stallId
+      this.setState({stallId: stallId})
     })
     .then(() => {
       firebase.database().ref("stalls/" + stallId).once("value").then(snapshot => {
@@ -113,6 +115,21 @@ export default class StallOwnerScreen extends React.Component {
 			location: this.state.modalLocation,
 			modalVisible: false
 		})
+
+    // upload to firebase
+    const user = this.state.user
+    
+    user.updateProfile({
+      displayName: this.state.modalName,
+      photoURL: this.state.modalPhotoURL,
+    })
+    .then(() => {
+      const db = firebase.database()
+      db.ref("stalls/" + this.state.stallId).update({
+        name: this.state.modalName,
+        location: this.state.modalLocation
+      })
+    })
 	}
 
   handleAddItem = () => {
