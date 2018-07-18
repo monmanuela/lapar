@@ -1,9 +1,7 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, Image } from 'react-native'
+import { StyleSheet, Text, TextInput, View, Image, Dimensions } from 'react-native'
 import { Button } from 'react-native-elements'
-import firebase from 'react-native-firebase'
 
-import { Dimensions } from 'react-native';
 import {signUpUser} from '../redux/actions'
 import {connect} from 'react-redux'
 
@@ -26,6 +24,7 @@ class NormalSignUpScreen extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    // ??? ini apa yah
     // Typical usage (don't forget to compare props):
     if (this.props.currentUser !== prevProps.currentUser
         && this.props.userData !== prevProps.userData) {
