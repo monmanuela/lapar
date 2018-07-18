@@ -11,6 +11,8 @@ const guidelineBaseHeight = 680;
 const scale = size => width / guidelineBaseWidth * size;
 const verticalScale = size => height / guidelineBaseHeight * size;
 
+import firebase from 'react-native-firebase'
+
 export default class StallOwnerSignUpScreen extends React.Component {
 	constructor() {
     super()
@@ -19,15 +21,67 @@ export default class StallOwnerSignUpScreen extends React.Component {
       password: '',
       stallName: '',
       stallLocation: '',
+      locationList: [],
       errorMessage: null
     }
   }
 
-  handleSignUp = () => {
+  componentDidMount = () => {
+  	// fetch list of locations for location dropdown
+  	firebase.database().ref("locations/").once("value").then(snapshot => {
+      console.log("locations data: " + JSON.stringify(snapshot.val()))
+      const locationsObj = snapshot.val()
+      const locNamesArr = Object.keys(locationsObj).map((locId, idx) => {
+      	return locationsObj[locId].name
+      })
+      this.setState({ locationList: locNamesArr })
+    })
+  }
 
+  handleSignUp = () => {
+    // this.props.signUpStallOwner(this.state.email, this.state.password, this.state.stallName, this.state.stallLocation)
+
+    firebase
+      .auth()
+      .createUserAndRetrieveDataWithEmailAndPassword(this.state.email, this.state.password)
+      .then(() => {
+        const user = firebase.auth().currentUser
+
+        user
+          .updateProfile({
+            displayName: this.state.stallName,
+            photoURL: "https://images.unsplash.com/photo-1483137140003-ae073b395549?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=1e392896fc645f9fc3797c9bb7dab4d3&auto=format&fit=crop&w=1350&q=80",
+          })
+          .then(() => {
+          	console.log("update stall success")
+		        // create a new stall
+		        const newStallRef = db.ref("stalls").push();
+		        const stallId = newStallRef.key
+
+		        console.log("newStallRef: " + newStallRef)
+		        console.log("stallId: " + stallId)
+
+						newStallRef.set({
+						  name: this.state.stallName,
+						  location: this.state.stallLocation,
+						  stallId: stallId
+						})
+						return stallId
+          })
+					.then(stallId => {
+						console.log("saving stall id in user")
+		        // save the stall id in user
+		        firebase.database().ref('users/' + user.uid).set({
+		          isStall: true,
+		          stallId: stallId,
+		        })
+					})
+          .catch(err => console.log(err))        
+      })
   }
 
 	render() {
+		console.log(this.state.locationList)
 		return (
       <View style={styles.container}>
         <Image source={require('../assets/images/logo.png')} style={{ width: scale(100), height: verticalScale(150) }}/>

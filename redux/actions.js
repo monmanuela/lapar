@@ -65,6 +65,20 @@ export const logInUser = (email, password) => async dispatch => {
   }
 }
 
+// export const signUpStallOwner(email, password, stallName, stallLocation) => async dispatch => {
+//   if (email.length === 0 || password.length === 0 || displayName.length === 0) {
+//     dispatch({type: SIGN_UP_FAIL, payload: {errMessage: "Email, password or display name cannot be empty"}})
+//     return;
+//   }
+//   dispatch({type: SIGN_UP_START})
+//   try {
+//     const result = await firebaseSignUpStall(email, password, stallName, stallLocation)
+//     console.log("sign up result: " + JSON.stringify(result))
+//     dispatch({type: SIGN_UP_SUCCESS, payload: result})
+//     dispatch({type: SET_USER_DATA, payload: {stallLocation: stallLocation, userId: result.uid}})
+//   }
+// }
+
 export const signUpUser = (email, password, displayName) => async dispatch => {
   if (email.length === 0 || password.length === 0 || displayName.length === 0) {
     dispatch({type: SIGN_UP_FAIL, payload: {errMessage: "Email, password or display name cannot be empty"}})
@@ -72,17 +86,21 @@ export const signUpUser = (email, password, displayName) => async dispatch => {
   }
   dispatch({type: SIGN_UP_START})
   try {
-    const result = await firebaseSignUp(email, password, displayName)
+    const result = await firebaseSignUpUser(email, password, displayName)
     console.log("sign up result: " + JSON.stringify(result))
     dispatch({type: SIGN_UP_SUCCESS, payload: result})
-    dispatch({type: SET_USER_DATA, payload: {bio: '', preferences: '', userId: result.uid}})
+    dispatch({type: SET_USER_DATA, payload: {type: "USER", bio: '', preferences: '', userId: result.uid}})
   } catch (err) {
     dispatch({type: SIGN_UP_FAIL, payload: {errMessage: err.message}})
   }
 }
 
 // helper functions
-firebaseSignUp = async (email, password, displayName) => {
+// firebaseSignUpStall = async (email, password, stallName, stallLocation) => {
+  
+// }
+
+firebaseSignUpUser = async (email, password, displayName) => {
   try {
     const db = firebase.database()
     const result = firebase

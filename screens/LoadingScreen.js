@@ -10,7 +10,19 @@ import {connect} from 'react-redux'
 class LoadingScreen extends React.Component {
   componentDidMount = () => {
     firebase.auth().onAuthStateChanged(user => {
+      let userData
       if (user) {
+        // fetch user data, check if it's stall owner
+        firebase.database().ref("users/" + user.uid).once("value").then(snapshot => {
+          console.log("user data: " + JSON.stringify(snapshot.val()))
+          userData = snapshot.val()
+        })
+        .then(() => {
+          if (userData.isStall) {
+            console.log("WE HAVE A STALL OWNER!")
+          }
+        })
+
         console.log("user in listener: " + JSON.stringify(user))
         this.props.updateUserIfLoggedIn(user)
         
