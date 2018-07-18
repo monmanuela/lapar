@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 
 import StallOwnerScreen from '../screens/StallOwnerScreen';
-import EditItemScreen from '../screens/EditItemScreen';
+import StallOwnerItemScreen from '../screens/StallOwnerItemScreen';
 
 export default StallOwnerNavigator = createStackNavigator({
 	Home: {
@@ -12,6 +12,6 @@ export default StallOwnerNavigator = createStackNavigator({
 		}
 	},
 	EditItem: {
-		screen: EditItemScreen,
+		screen: StallOwnerItemScreen,
 	},
 });
