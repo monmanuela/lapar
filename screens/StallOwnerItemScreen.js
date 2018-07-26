@@ -78,7 +78,7 @@ export default class StallOwnerItemScreen extends React.Component {
 
 	render() {
 		const item = this.props.navigation.state.params.item
-		const itemTags = _items[item].tags.map((tag, index) => {
+		const itemTags = item.tags.map((tag, index) => {
 			return (
 				<Text key={index} style={{ color: 'white', backgroundColor: 'red', marginRight: 5, marginTop: 5, borderRadius: 10, padding: 7 }}>{tag}</Text>
 			);

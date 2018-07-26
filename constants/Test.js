@@ -183,3 +183,4 @@ export const items = {
 export const filterCriterias = ['halal', 'vegetarian', 'spicy', 'beef', 'pork', 'fish', 'duck', 'chicken', 'japanese', 'chinese', 'korean'];
 export const locationCriterias = ['Fine Food', 'The Deck', 'Techno Edge'];
 export const sortCriterias = ['rating', 'price'];
+export const preferenceCriterias = ['spicy', 'halal', 'vegetarian'];

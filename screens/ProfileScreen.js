@@ -4,6 +4,7 @@ import firebase from 'react-native-firebase';
 import { Avatar, Card } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Octicons'
 import EditProfileModal from '../components/EditProfileModal'
+import EditPreferencesModal from '../components/EditPreferencesModal'
 import VerticalReviewsList from '../components/VerticalReviewsList'
 import { Dimensions } from 'react-native';
 
@@ -24,23 +25,20 @@ class ProfileScreen extends React.Component {
       currentUser: null,
       userData: {
         displayName: '',
-        email: '',
-        username: '',
-        uid: '',
         bio: '',
-        preferences: '',
         photoURL: null,
+        uid: '',
         userID: '',
+        preferences: []
       },
       modalVisible: false,
       modalDisplayName: '',
-      modalUsername: '',
-      modalEmail: '',
       modalBio: '',
-      modalPreferences: '',
       modalPhotoURL: null,
       isLoading: true,
       reviews: {},
+      preferencesModalVisible: false,
+      modalPreferences: []
     }
   }
 
@@ -82,7 +80,6 @@ class ProfileScreen extends React.Component {
     this.setState({ 
       userData: {
         displayName: this.props.currentUser.displayName,
-        email: this.props.currentUser.email,
         photoURL: this.props.currentUser.photoURL,
         ...userData
       } 
@@ -93,10 +90,7 @@ class ProfileScreen extends React.Component {
     this.setState({ 
       modalVisible: true,
       modalDisplayName: this.state.userData.displayName,
-      modalEmail: this.state.userData.email,
-      modalUsername: this.state.userData.username,
       modalBio: this.state.userData.bio,
-      modalPreferences: this.state.userData.preferences,
       modalPhotoURL: this.state.userData.photoURL,
     });
   }
@@ -109,26 +103,55 @@ class ProfileScreen extends React.Component {
       photoURL: this.state.modalPhotoURL,
     })
     .then(() => {
-      user.updateEmail(this.state.modalEmail)
-
       const db = firebase.database()
       db.ref("users/" + user.uid).update({
-        username: this.state.modalUsername,
         bio: this.state.modalBio,
-        preferences: this.state.modalPreferences,
       })
     })
     .then(() => {
       this.setState({
         userData: {
+          ...this.state.userData,
           displayName: this.state.modalDisplayName,
-          email: this.state.modalEmail,
-          username: this.state.modalUsername,
           bio: this.state.modalBio,
-          preferences: this.state.modalPreferences,
           photoURL: this.state.modalPhotoURL,
         },
         modalVisible: false 
+      })
+    })
+  }
+
+  onCheckPreference = preference => {
+    const modalPreferences = this.state.modalPreferences;
+
+    if (!modalPreferences.includes(preference)) {
+      this.setState({ modalPreferences: [...modalPreferences, preference] });
+    } else {
+      this.setState({ modalPreferences: modalPreferences.filter( p => p !== preference) });
+    }
+  }
+
+  handleSetPreferences = () => {
+    this.setState({
+      preferencesModalVisible: true,
+      modalPreferences: this.state.userData.preferences === undefined ? [] : this.state.userData.preferences
+    })
+  }
+
+  handlePreferencesChanges = () => {
+    const user = this.props.currentUser
+    const db = firebase.database()
+
+    db.ref("users/" + user.uid).update({
+      preferences: this.state.modalPreferences
+    })
+    .then(() => {
+      this.setState({
+        userData: {
+          ...this.state.userData,
+          preferences: this.state.modalPreferences
+        },
+        preferencesModalVisible: false
       })
     })
   }
@@ -179,6 +202,8 @@ class ProfileScreen extends React.Component {
           <Text style={{ fontSize: 20, color: 'black' }}>{this.state.userData && this.state.userData.displayName}</Text>
           <Text style={{ color: 'gray', marginBottom: 10, marginLeft: 20, marginRight: 20 }}>{this.state.userData && this.state.userData.bio}</Text>
           <Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
+          <Text style={{ fontSize: 5 }}>{'\n'}</Text>
+          <Button title='Set Preferences' color={'red'} onPress={this.handleSetPreferences} />
         </View>
 
         <VerticalReviewsList reviews={Object.values(this.state.reviews)} /> 
@@ -190,21 +215,23 @@ class ProfileScreen extends React.Component {
           currentUser={this.state.currentUser} 
           displayName={this.state.modalDisplayName}
           userID={this.state.userData.userID}
-          username={this.state.modalUsername}
-          email={this.state.modalEmail}
           bio={this.state.modalBio}
-          preferences={this.state.modalPreferences}
           photoURL={this.state.modalPhotoURL}
           onChangeDisplayName={ modalDisplayName => this.setState({ modalDisplayName }) }
-          onChangeEmail={ modalEmail => this.setState({ modalEmail }) }
-          onChangeUsername={ modalUsername => this.setState({ modalUsername }) }
           onChangeBio={ modalBio => this.setState({ modalBio }) }
-          onChangePreferences={ modalPreferences => this.setState({ modalPreferences }) }
           onChangePhotoURL={ modalPhotoURL => this.setState({ modalPhotoURL }) }
           handleSaveChanges={this.handleSaveChanges}
           handleClose={ () => this.setState({ modalVisible: false })} 
         />
-        
+        <Text>{this.state.modalPreferences}</Text>
+        <EditPreferencesModal
+          modalVisible={this.state.preferencesModalVisible}
+          preferences={this.state.modalPreferences}
+          onCheckPreference={this.onCheckPreference}
+          handleSaveChanges={this.handlePreferencesChanges}
+          handleClose={ () => this.setState({ preferencesModalVisible: false })}
+        />
+
         </ScrollView>
       }
 

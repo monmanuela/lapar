@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, View, Text, FlatList, Picker, ScrollView } from 'react-native';
 import { CheckBox, Button } from 'react-native-elements';
-import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 import { filterCriterias, locationCriterias, sortCriterias } from '../constants/Test';
 
@@ -25,10 +25,6 @@ class ExploreModal extends React.Component {
     }
   }
 
-  onCheckFilter = criteria => {
-    this.props.onCheckFilter(criteria);
-  }
-
   onCheckLocation = criteria => {
     // this.props.onCheckLocation(criteria);
     const locations = this.props.locationCriterias
@@ -45,9 +41,9 @@ class ExploreModal extends React.Component {
   	this.props.onSortChange(value, index);
   }
 
-  onClear = () => {
-  	this.props.onClear();
-  }
+  // onClear = () => {
+  // 	this.props.onClear();
+  // }
 
 	render() {
     const radio_props = sortCriterias.map(c => {
@@ -67,7 +63,7 @@ class ExploreModal extends React.Component {
                 checkedColor={'red'}
                 title={criteria}
                 textStyle={{ fontWeight: 'normal' }}
-                onPress={() => this.onCheckFilter(criteria)}
+                onPress={() => this.props.onCheckFilter(criteria)}
                 checked={this.props.filters.includes(criteria)}
                 containerStyle={{ backgroundColor: 'white', borderColor: 'transparent', width: scale(150), paddingTop: 0, paddingBottom: 0 }}
               />

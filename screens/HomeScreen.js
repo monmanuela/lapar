@@ -21,11 +21,21 @@ class HomeScreen extends React.Component {
   }
 
   componentDidMount = () => {
-
+    console.log("didMount")
     const db = firebase.database()
     // fetch recommended items
-    db.ref("items").orderByChild("recommended").equalTo(true).once("value").then(snapshot => {
-      this.setState({ recommendedItems: snapshot.val() })
+    // db.ref("items").orderByChild("recommended").equalTo(true).once("value").then(snapshot => {
+    //   this.setState({ recommendedItems: snapshot.val() })
+    // })
+    db.ref("items").orderByChild("name").once("value").then(snapshot => {
+      const items = snapshot.val()
+      const filteredArray = Object.keys(items).filter(item => this.props.userData.preferences === undefined ? item : this.props.userData.preferences.every(pref => items[item].tags.includes(pref))).slice(0, 5)
+      const itemsArray = filteredArray.length === 0 ? Object.keys(items).slice(0, 5) : filteredArray
+      const filteredObject = itemsArray.reduce((obj, key) => { 
+        obj[key] = items[key]; 
+        return obj;
+      }, {})
+      this.setState({ recommendedItems: filteredObject })
     })
 
     // fetch top 5 items
@@ -70,6 +80,7 @@ class HomeScreen extends React.Component {
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
+  userData: state.user.userData
 })
 
 const mapDispatchToProps = {

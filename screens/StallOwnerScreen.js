@@ -19,23 +19,6 @@ const verticalScale = size => height / guidelineBaseHeight * size;
 
 let _listViewOffset = 0
 
-// const stall = {
-// 	items: {
-// 		item1: true,
-// 		item2: true,
-// 		item3: true,
-//     item4: true,
-//     item5: true,
-//     item6: true,
-//     item7: true
-// 	},
-// 	location: "Fine Food",
-// 	lowestPrice: 4.8,
-// 	name: "Korean & Japanese Stall",
-// 	rating: 5,
-// 	stallId: 's1'
-// }
-
 export default class StallOwnerScreen extends React.Component {
 	constructor() {
 		super()
@@ -46,7 +29,7 @@ export default class StallOwnerScreen extends React.Component {
 			photoURL: null,
 			name: null,
 			location: null,
-			items: [],
+			items: {},
       rating: null,
       lowestPrice: null,
 			modalPhotoURL: '',
@@ -54,6 +37,7 @@ export default class StallOwnerScreen extends React.Component {
 			modalLocation: '',
 			modalVisible: false,
       newItemName: '',
+      newItemPrice: 0,
       newItemModalVisible: false,
       isActionButtonVisible: true
 		}
@@ -67,14 +51,15 @@ export default class StallOwnerScreen extends React.Component {
       name: user.displayName,
     })
     let stallId, stallData
-    
-    firebase.database().ref("users/" + user.uid).once("value").then(snapshot => {
+    const db = firebase.database()
+
+    db.ref("users/" + user.uid).once("value").then(snapshot => {
       console.log("owner data: " + JSON.stringify(snapshot.val()))
       stallId = snapshot.val().stallId
       this.setState({stallId: stallId})
     })
     .then(() => {
-      firebase.database().ref("stalls/" + stallId).once("value").then(snapshot => {
+      db.ref("stalls/" + stallId).once("value").then(snapshot => {
         console.log("stall data: " + JSON.stringify(snapshot.val()))
         stallData = snapshot.val()
       })
@@ -85,8 +70,29 @@ export default class StallOwnerScreen extends React.Component {
           lowestPrice: stallData.lowestPrice
         })
         if (stallData.items) {
-          this.setState({items: Object.keys(stallOwnerData.items)})
+          console.log(stallId)
+          this.setState({items: stallData.items})
         }
+      }).then(() => {
+        let itemIds
+
+        db.ref("stalls/" + stallId + "/items/").on("child_added", snapshot => {
+          db.ref("stalls/" + stallId).once("value").then(snapshot => {
+            itemIds = snapshot.val().items
+          })
+          .then(() => {
+            Object.keys(itemIds).map((itemId, index) => {
+              db.ref("items/" + itemId).once("value")
+                .then(snapshot => snapshot.val())
+                .then(i => {
+                  let newItem = this.state.items
+                  newItem[itemId] = i
+                  this.setState({ items: newItem })
+                })
+            })
+          })
+          .then(() => console.log("ITEMS IN STALL " + JSON.stringify(this.state.items)))
+        })
       })
     })
   }
@@ -194,8 +200,8 @@ export default class StallOwnerScreen extends React.Component {
           <View style={styles.buttonContainer}>
           	<Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
           </View>
-
-          <VerticalItemsList items={this.state.items} navigation={this.props.navigation} />
+          
+          <VerticalItemsList items={Object.values(this.state.items)} navigation={this.props.navigation} />
           
           <Text>{'\n'}</Text>
 
@@ -213,8 +219,7 @@ export default class StallOwnerScreen extends React.Component {
 
           <AddNewItemModal
             modalVisible={this.state.newItemModalVisible}
-            onAddItemName={ name => this.setState({ newItemName: name })}
-            handleSaveNewItem={this.handleSaveNewItem}
+            stallId={this.state.stallId}
             handleClose={() => this.setState({ newItemModalVisible: false })}
           />
 

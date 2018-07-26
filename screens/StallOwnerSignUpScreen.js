@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, Image } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Image, Picker } from 'react-native'
 import { Button } from 'react-native-elements'
 
 import { Dimensions } from 'react-native';
@@ -78,11 +78,14 @@ export default class StallOwnerSignUpScreen extends React.Component {
 		          stallId: stallId
 		        })
 					})
-          .catch(err => console.log(err))        
+          .catch(err => console.log(err))     
       })
   }
 
 	render() {
+    const locationsPicker = this.state.locationList.map((loc, index) => {
+      return <Picker.Item key={index} label={loc} value={loc} />
+    })
 		return (
       <View style={styles.container}>
         <Image source={require('../assets/images/logo.png')} style={{ width: scale(100), height: verticalScale(150) }}/>
@@ -119,13 +122,21 @@ export default class StallOwnerSignUpScreen extends React.Component {
           value={this.state.stallName}
         />
 
-        <TextInput
+        {/*<TextInput
           placeholder="Stall Location"
           autoCapitalize="none"
           style={styles.textInput}
           onChangeText={stallLocation => this.setState({ stallLocation })}
           value={this.state.stallLocation}
-        />
+        />*/}
+
+        <Picker
+          selectedValue={this.state.stallLocation}
+          style={{ height: 40, width: '80%' }}
+          onValueChange={(itemValue, itemIndex) => this.setState({ stallLocation: itemValue })}
+        >
+          {locationsPicker}
+        </Picker>
 
         <Button 
           title="Create Account"
