@@ -24,9 +24,38 @@ const scale = size => width / guidelineBaseWidth * size;
 const verticalScale = size => height / guidelineBaseHeight * size;
 
 export default class EditProfileModal extends React.Component {
-
   onChangePicturePress = () => {
+    const options = {
+      title: 'Select Picture',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
+    }
 
+    ImagePicker.showImagePicker(options, response => {
+      console.log('response: ', response)
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker')
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error)
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton)
+      } else {
+        console.log("response: " + JSON.stringify(response))
+        // change to uid? or push user data?
+        const imageRef = firebase.storage().ref('stall').child(`${this.props.stallId}.jpg`)
+        let mime = 'image/jpg'
+        imageRef.put(response.uri, {contentType: mime})
+          .then(() => {
+            return imageRef.getDownloadURL()
+          })
+          .then(url => {
+            this.props.onChangePhotoURL(url)
+          })
+      }
+    })
   }
 
   render() {

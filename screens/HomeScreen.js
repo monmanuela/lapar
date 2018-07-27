@@ -29,6 +29,7 @@ class HomeScreen extends React.Component {
     // })
     db.ref("items").orderByChild("name").once("value").then(snapshot => {
       const items = snapshot.val()
+      console.log("MY ITEMS " + JSON.stringify(items))
       const filteredArray = Object.keys(items).filter(item => this.props.userData.preferences === undefined ? item : this.props.userData.preferences.every(pref => items[item].tags.includes(pref))).slice(0, 5)
       const itemsArray = filteredArray.length === 0 ? Object.keys(items).slice(0, 5) : filteredArray
       const filteredObject = itemsArray.reduce((obj, key) => { 

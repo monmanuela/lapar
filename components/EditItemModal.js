@@ -43,9 +43,9 @@ export default class EditItemModal extends React.Component {
               <Text style={{ marginLeft: 20 }}>Name: </Text>
               <TextInput
                 style={styles.textInput}
-                placeholder = { this.props.name }
+                placeholder = { this.props.item.name }
                 onChangeText = { name => this.props.onChangeName(name) }
-                value = { this.props.name }
+                value = { this.props.item.name }
               />
             </View>
 

@@ -206,6 +206,7 @@ export default class StallOwnerScreen extends React.Component {
           <Text>{'\n'}</Text>
 
           <EditStallProfileModal
+            stallId={this.state.stallId}
    					modalVisible={this.state.modalVisible} 
             photoURL={this.state.modalPhotoURL}
             name={this.state.modalName}

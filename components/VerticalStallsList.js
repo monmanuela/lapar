@@ -28,7 +28,7 @@ class VerticalStallsList extends React.Component {
         const itemsPerStall = itemIds.map((id, index) => {
           return _items[id]
         })
-
+        
         const filteredItems = itemsPerStall
           .filter(item => item.name.includes(this.props.search) &&
             filterCriterias.every(criteria => item.tags.includes(criteria)) &&
