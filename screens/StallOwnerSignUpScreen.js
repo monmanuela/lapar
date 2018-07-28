@@ -23,8 +23,9 @@ class StallOwnerSignUpScreen extends React.Component {
       email: '',
       password: '',
       stallName: '',
-      stallLocation: '',
+      stallLocation: 'Techno Edge',
       locationList: [],
+      locNameToLocIdHashtable: {},
       errorMessage: null
     }
   }
@@ -38,8 +39,13 @@ class StallOwnerSignUpScreen extends React.Component {
       	return locationsObj[locId].name
       })
       this.setState({ locationList: locNamesArr })
+
+      let hash = {}
+      Object.keys(locationsObj).forEach((id, idx) => {
+        hash[locationsObj[id].name] = id
+      })
+      this.setState({ locNameToLocIdHashtable: hash })
     })
-    // have a hashtable locname -> locId?
   }
 
   handleSignUp = () => {
@@ -81,6 +87,13 @@ class StallOwnerSignUpScreen extends React.Component {
 		          isStall: true,
 		          stallId: stallId
 		        })
+
+            // save in location too
+            const locId = this.state.locNameToLocIdHashtable[this.state.stallLocation]
+            let newStall = {}
+            newStall[stallId] = true
+
+            firebase.database().ref('locations/' + locId + '/stalls/').update(newStall)
 					})
           .catch(err => console.log(err))     
       })
@@ -90,6 +103,7 @@ class StallOwnerSignUpScreen extends React.Component {
     const locationsPicker = this.state.locationList.map((loc, index) => {
       return <Picker.Item key={index} label={loc} value={loc} />
     })
+    console.log("stall location: " + this.state.stallLocation)
 		return (
       <View style={styles.container}>
         <Image source={require('../assets/images/logo.png')} style={{ width: scale(100), height: verticalScale(150) }}/>
