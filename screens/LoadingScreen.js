@@ -3,32 +3,42 @@ import React from 'react'
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native'
 import firebase from 'react-native-firebase'
 
-import {updateUserIfLoggedIn} from '../redux/actions'
+import {updateUserIfLoggedIn, NORMAL, STALL} from '../redux/actions'
 import {connect} from 'react-redux'
+import store from '../redux/store'
 
 class LoadingScreen extends React.Component {
   componentDidMount = () => {
+
     firebase.auth().onAuthStateChanged(user => {
+      const userType = store.getState().user.userType
       let userData
       if (user) {
-
         console.log("user in listener: " + JSON.stringify(user))
         this.props.updateUserIfLoggedIn(user)
 
-        // fetch user data, check if it's stall owner
-        firebase.database().ref("users/" + user.uid).once("value").then(snapshot => {
-          console.log("user data: " + JSON.stringify(snapshot.val()))
-          userData = snapshot.val()
-        })
-        .then(() => {
-          if (userData.isStall) {
-            this.props.navigation.navigate('StallOwnerNavigator')
-            console.log("WE HAVE A STALL OWNER!")
-          } else {
-            this.props.navigation.navigate('MainTabNavigator')
+        if (userType) {
+          // a new sign up
+          // but then at the stall screen, snapshot.val() is null?
+          switch(userType) {
+            case NORMAL:
+              this.props.navigation.navigate('MainTabNavigator')
+            case STALL:
+              this.props.navigation.navigate('StallOwnerNavigator')
           }
-        })
-
+        } else {
+          firebase.database().ref("users/" + user.uid).once("value").then(snapshot => {
+            console.log("user data: " + JSON.stringify(snapshot.val()))
+            userData = snapshot.val()
+          })
+          .then(() => {
+            if (userData.isStall) {
+              this.props.navigation.navigate('StallOwnerNavigator')
+            } else {
+              this.props.navigation.navigate('MainTabNavigator')
+            }
+          })
+        }
       } else {
         this.props.navigation.navigate('SignedOutNavigator')
       }

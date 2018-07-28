@@ -12,6 +12,10 @@ export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS'
 export const SET_USER_DATA = 'SET_USER_DATA'
 export const UPDATE_USER_FROM_FIREBASE_LISTENER = 'UPDATE_USER_FROM_FIREBASE_LISTENER'
 
+// other constants
+export const NORMAL = 'NORMAL'
+export const STALL = 'STALL'
+
 // action creators
 export const updateLocation = locations => {
 	return({
@@ -32,6 +36,20 @@ export const updateUserFromFirebaseListener = user => {
 export const logOutUser = () => {
   return({
     type: LOG_OUT_SUCCESS,
+  })
+}
+
+export const indicateSignUpStall = () => {
+  return({
+    type: SIGN_UP_START,
+    payload: STALL
+  })
+}
+
+export const indicateSignUpNormal = () => {
+  return({
+    type: SIGN_UP_START,
+    payload: NORMAL
   })
 }
 
@@ -84,12 +102,13 @@ export const signUpUser = (email, password, displayName) => async dispatch => {
     dispatch({type: SIGN_UP_FAIL, payload: {errMessage: "Email, password or display name cannot be empty"}})
     return;
   }
-  dispatch({type: SIGN_UP_START})
+  dispatch(indicateSignUpNormal())
   try {
+    // dispatch action to tell that this is Normal User
     const result = await firebaseSignUpUser(email, password, displayName)
     console.log("sign up result: " + JSON.stringify(result))
     dispatch({type: SIGN_UP_SUCCESS, payload: result})
-    dispatch({type: SET_USER_DATA, payload: {type: "USER", bio: '', preferences: '', userId: result.uid}})
+    dispatch({type: SET_USER_DATA, payload: {bio: '', preferences: '', userId: result.uid}})
   } catch (err) {
     dispatch({type: SIGN_UP_FAIL, payload: {errMessage: err.message}})
   }

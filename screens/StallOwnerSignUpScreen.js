@@ -13,7 +13,10 @@ const verticalScale = size => height / guidelineBaseHeight * size;
 
 import firebase from 'react-native-firebase'
 
-export default class StallOwnerSignUpScreen extends React.Component {
+import {connect} from 'react-redux'
+import {indicateSignUpStall} from '../redux/actions'
+
+class StallOwnerSignUpScreen extends React.Component {
 	constructor() {
     super()
     this.state = {
@@ -41,6 +44,7 @@ export default class StallOwnerSignUpScreen extends React.Component {
 
   handleSignUp = () => {
     // this.props.signUpStallOwner(this.state.email, this.state.password, this.state.stallName, this.state.stallLocation)
+    this.props.indicateSignUpStall()
 
     firebase
       .auth()
@@ -145,6 +149,8 @@ export default class StallOwnerSignUpScreen extends React.Component {
     )
 	}
 }
+
+export default connect(null, {indicateSignUpStall})(StallOwnerSignUpScreen)
 
 const styles = StyleSheet.create({
   container: {

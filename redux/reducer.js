@@ -23,6 +23,8 @@ const locationReducer = (state = initialState, action) => {
 
 const userReducer = (state = initialState, action) => {
   console.log(action.type)
+  console.log("inside user reducer")
+  console.log("action: " + JSON.stringify(action))
 
   switch (action.type) {
     case LOG_IN_SUCCESS:
@@ -30,6 +32,8 @@ const userReducer = (state = initialState, action) => {
     case LOG_IN_FAIL:
       return merge(state, {errMessage: action.payload.errMessage})
 
+    case SIGN_UP_START:
+      return merge(state, {userType: action.payload})
     case SIGN_UP_SUCCESS:
       return merge(state, {currentUser: action.payload})
     case SIGN_UP_FAIL:
