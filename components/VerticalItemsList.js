@@ -53,19 +53,18 @@ const _items = {
 export default class VerticalItemsList extends React.Component {
 	render() {
     const items = this.props.items.map((item, index) => {
-      const itemDetails = _items[item]
       return(
         <Card key={index}>
         	<View style={{ flexDirection: 'row' }}>
             <View style={{ width: scale(270) }}>
               <Text style={{ color: 'black', fontSize: 16 }}>
-                {item}
+                {item.name}
               </Text>
               <Text style={{ color: 'gray', fontSize: 14 }}>
-                Rating: {itemDetails.rating}
+                Rating: {item.rating}
               </Text>
               <Text style={{ color: 'gray', fontSize: 14 }}>
-                Price: ${itemDetails.price}
+                Price: ${item.price}
               </Text>
             </View>
 

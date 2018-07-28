@@ -33,14 +33,6 @@ export default MainTabNavigator = createBottomTabNavigator(
         )
       },
     },
-    StallOwner: {
-      screen: StallOwnerNavigator,
-      navigationOptions: {
-        tabBarIcon: ({tintColor}) => (
-          <Icon name='ios-cart' size={30} color={tintColor} />
-        )
-      },
-    }
   },
   {
     tabBarOptions: {

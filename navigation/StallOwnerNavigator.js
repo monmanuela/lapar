@@ -5,7 +5,7 @@ import StallOwnerScreen from '../screens/StallOwnerScreen';
 import StallOwnerItemScreen from '../screens/StallOwnerItemScreen';
 
 export default StallOwnerNavigator = createStackNavigator({
-	Home: {
+	StallHome: {
 		screen: StallOwnerScreen,
 		navigationOptions: {
 			header: null
