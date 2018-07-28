@@ -154,6 +154,9 @@ class ProfileScreen extends React.Component {
         preferencesModalVisible: false
       })
     })
+
+    // change redux store preferences
+    
   }
 
   handleSignOut = () => {

@@ -2,6 +2,7 @@ import firebase from 'react-native-firebase'
 
 // action types
 export const UPDATE_LOCATION = 'UPDATE_LOCATION'
+export const UPDATE_PREFERENCE = 'UPDATE_PREFERENCE'
 export const LOG_IN_START = 'LOG_IN_START'
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS'
 export const LOG_IN_FAIL = 'LOG_IN_FAIL'
@@ -24,8 +25,15 @@ export const updateLocation = locations => {
 	})
 }
 
+export const updatePreferences = pref => {
+  return({
+    type: UPDATE_PREFERENCE,
+    payload: pref
+  })
+}
+
 export const updateUserFromFirebaseListener = user => {
-  console.log("act crt uuffl")
+  console.log("update user from firebase listener")
   console.log("the user: " + JSON.stringify(user))
   return({
     type: UPDATE_USER_FROM_FIREBASE_LISTENER,
@@ -40,6 +48,7 @@ export const logOutUser = () => {
 }
 
 export const indicateSignUpStall = () => {
+  console.log("sign up start for stall")
   return({
     type: SIGN_UP_START,
     payload: STALL
@@ -47,6 +56,7 @@ export const indicateSignUpStall = () => {
 }
 
 export const indicateSignUpNormal = () => {
+  console.log("sign up start for normal")
   return({
     type: SIGN_UP_START,
     payload: NORMAL
@@ -108,16 +118,11 @@ export const signUpUser = (email, password, displayName) => async dispatch => {
     const result = await firebaseSignUpUser(email, password, displayName)
     console.log("sign up result: " + JSON.stringify(result))
     dispatch({type: SIGN_UP_SUCCESS, payload: result})
-    dispatch({type: SET_USER_DATA, payload: {bio: '', preferences: '', userId: result.uid}})
+    dispatch({type: SET_USER_DATA, payload: {bio: '', userId: result.uid}})
   } catch (err) {
     dispatch({type: SIGN_UP_FAIL, payload: {errMessage: err.message}})
   }
 }
-
-// helper functions
-// firebaseSignUpStall = async (email, password, stallName, stallLocation) => {
-  
-// }
 
 firebaseSignUpUser = async (email, password, displayName) => {
   try {
@@ -130,7 +135,6 @@ firebaseSignUpUser = async (email, password, displayName) => {
         
         db.ref('users/' + user.uid).set({
           bio: '',
-          preferences: '',
           userId: user.uid,
         })
         

@@ -12,21 +12,28 @@ class LoadingScreen extends React.Component {
 
     firebase.auth().onAuthStateChanged(user => {
       const userType = store.getState().user.userType
+      console.log("store state in loading screen: " + JSON.stringify(store.getState()))
       let userData
       if (user) {
         console.log("user in listener: " + JSON.stringify(user))
         this.props.updateUserIfLoggedIn(user)
 
         if (userType) {
+          console.log("userType: " + userType)
           // a new sign up
           // but then at the stall screen, snapshot.val() is null?
           switch(userType) {
             case NORMAL:
+              console.log("NORMAL USER in loading")
               this.props.navigation.navigate('MainTabNavigator')
+              break
             case STALL:
+              console.log("STALL OWNER in loading")
               this.props.navigation.navigate('StallOwnerNavigator')
+              break
           }
         } else {
+          console.log("not new user")
           firebase.database().ref("users/" + user.uid).once("value").then(snapshot => {
             console.log("user data: " + JSON.stringify(snapshot.val()))
             userData = snapshot.val()

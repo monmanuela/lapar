@@ -1,7 +1,8 @@
 import {combineReducers} from 'redux'
 import {
-  UPDATE_LOCATION, 
-  LOG_IN_START, LOG_IN_SUCCESS, LOG_IN_FAIL, 
+  UPDATE_LOCATION,
+  UPDATE_PREFERENCE,
+  LOG_IN_START, LOG_IN_SUCCESS, LOG_IN_FAIL,
   LOG_OUT_SUCCESS,
   SIGN_UP_START, SIGN_UP_SUCCESS, SIGN_UP_FAIL,
   UPDATE_USER_FROM_FIREBASE_LISTENER,
@@ -47,7 +48,11 @@ const userReducer = (state = initialState, action) => {
 
     case SET_USER_DATA:
       return merge(state, {userData: action.payload})
-      
+    
+    case UPDATE_PREFERENCE:
+      const newUserData = merge(state.userData, action.payload)
+      return merge(state, {userData: newUserData})
+
     default:
       return state
   }
