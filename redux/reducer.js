@@ -1,7 +1,8 @@
 import {combineReducers} from 'redux'
 import {
-  UPDATE_LOCATION, 
-  LOG_IN_START, LOG_IN_SUCCESS, LOG_IN_FAIL, 
+  UPDATE_LOCATION,
+  UPDATE_PREFERENCE,
+  LOG_IN_START, LOG_IN_SUCCESS, LOG_IN_FAIL,
   LOG_OUT_SUCCESS,
   SIGN_UP_START, SIGN_UP_SUCCESS, SIGN_UP_FAIL,
   UPDATE_USER_FROM_FIREBASE_LISTENER,
@@ -10,7 +11,7 @@ import {
 
 const merge = (prev, next) => Object.assign({}, prev, next)
 
-const initialState = {}
+const initialState = {userData: {stallId: null}}
 
 const locationReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -23,6 +24,8 @@ const locationReducer = (state = initialState, action) => {
 
 const userReducer = (state = initialState, action) => {
   console.log(action.type)
+  console.log("inside user reducer")
+  console.log("action: " + JSON.stringify(action))
 
   switch (action.type) {
     case LOG_IN_SUCCESS:
@@ -30,6 +33,8 @@ const userReducer = (state = initialState, action) => {
     case LOG_IN_FAIL:
       return merge(state, {errMessage: action.payload.errMessage})
 
+    case SIGN_UP_START:
+      return merge(state, {userType: action.payload})
     case SIGN_UP_SUCCESS:
       return merge(state, {currentUser: action.payload})
     case SIGN_UP_FAIL:
@@ -43,7 +48,11 @@ const userReducer = (state = initialState, action) => {
 
     case SET_USER_DATA:
       return merge(state, {userData: action.payload})
-      
+    
+    case UPDATE_PREFERENCE:
+      const newUserData = merge(state.userData, action.payload)
+      return merge(state, {userData: newUserData})
+
     default:
       return state
   }

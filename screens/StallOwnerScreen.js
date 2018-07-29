@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, View, Text, Button, StyleSheet, Image, UIManager, LayoutAnimation, Alert } from 'react-native'
+import { ScrollView, View, Text, Button, StyleSheet, Image, UIManager, LayoutAnimation, ActivityIndicator, Alert } from 'react-native'
 import firebase from 'react-native-firebase';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Octicons'
@@ -10,6 +10,9 @@ import VerticalItemsList from '../components/VerticalItemsList'
 
 import { Dimensions } from 'react-native';
 
+import {connect} from 'react-redux'
+
+
 const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
 const guidelineBaseHeight = 680;
@@ -19,7 +22,7 @@ const verticalScale = size => height / guidelineBaseHeight * size;
 
 let _listViewOffset = 0
 
-export default class StallOwnerScreen extends React.Component {
+class StallOwnerScreen extends React.Component {
 	constructor() {
 		super()
     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -39,12 +42,83 @@ export default class StallOwnerScreen extends React.Component {
       newItemName: '',
       newItemPrice: 0,
       newItemModalVisible: false,
-      isActionButtonVisible: true
+      isActionButtonVisible: true,
+      isLoading: false
 		}
 	}
 
+  // when stallId is stored in redux store, then trigger the logic in did mount
+  // use stallId from redux instead of firebase
+
+  componentDidUpdate(prevProps) {
+    // console.log("stall owner screen DID UPDATE")
+    // console.log("currentstate: " + JSON.stringify(this.state))
+    // console.log("prevprops: " + JSON.stringify(prevProps))
+    // console.log("currentprops: " + JSON.stringify(this.props))
+    // let stallData
+    // if (!prevProps.userData && !this.props.userData) {
+    //   console.log("enter if")
+    // } else if (this.props.userData && this.props.userData.stallId 
+    //     && (this.props.userData.stallId !== prevProps.userData.stallId)) {
+    //   const user = firebase.auth().currentUser
+    //   console.log("user in did mount: " + JSON.stringify(user))
+    //   this.setState({
+    //     user: user,
+    //     photoURL: user.photoURL,
+    //     name: user.displayName,
+    //   })
+    //   console.log("enter else if")
+    //   const stallId = this.props.userData.stallId
+    //   console.log("stall id: " + stallId)
+    //   // this.setState({stallId: stallId})
+
+    //   const db = firebase.database()
+
+    //   db.ref("stalls/" + stallId).once("value").then(snapshot => {
+    //     console.log("stall data: " + JSON.stringify(snapshot.val()))
+    //     stallData = snapshot.val()
+    //   })
+    //   .then(() => {
+    //     this.setState({
+    //       // name: stallData.name,
+    //       location: stallData.location,
+    //       rating: stallData.rating,
+    //       lowestPrice: stallData.lowestPrice
+    //     })
+    //     if (stallData.items) {
+    //       console.log(stallId)
+    //       this.setState({items: stallData.items})
+    //     }
+    //   }).then(() => {
+    //     // let itemIds
+
+    //     // db.ref("stalls/" + stallId + "/items/").on("child_added", snapshot => {
+    //     //   db.ref("stalls/" + stallId).once("value").then(snapshot => {
+    //     //     itemIds = snapshot.val().items
+    //     //   })
+    //     //   .then(() => {
+    //     //     Object.keys(itemIds).map((itemId, index) => {
+    //     //       db.ref("items/" + itemId).once("value")
+    //     //         .then(snapshot => snapshot.val())
+    //     //         .then(i => {
+    //     //           let newItem = this.state.items
+    //     //           newItem[itemId] = i
+    //     //           this.setState({ items: newItem })
+    //     //         })
+    //     //     })
+    //     //   })
+    //     //   .then(() => console.log("ITEMS IN STALL " + JSON.stringify(this.state.items)))
+    //     // })
+    //     this.setState({isLoading: false})
+    //   })
+    // }
+  }
+
   componentDidMount = () => {
+    console.log("stall owner screen DID MOUNT")
+    // this.setState({user: null})
     const user = firebase.auth().currentUser
+    console.log("user in did mount: " + JSON.stringify(user))
     this.setState({
       user: user,
       photoURL: user.photoURL,
@@ -99,6 +173,8 @@ export default class StallOwnerScreen extends React.Component {
 
   // add listener for items
   // upon adding item, add itemId to location, stall, and stall owner(?)
+
+  // make an activity indicator to wait for result?
 
   handleSignOut = () => {
     firebase.auth().signOut()
@@ -192,8 +268,12 @@ export default class StallOwnerScreen extends React.Component {
   }
 
 	render() {
-		return (
-      <View style={{ flex: 1 }}>
+		let screen
+
+    // if (this.state.isLoading) {
+    //   screen = <ActivityIndicator size="large" color="#0000ff" />
+    // } else {
+      screen = 
   			<ScrollView onScroll={this.onScroll} style={{ backgroundColor: 'white' }}>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ width: scale(310), backgroundColor: 'red', color: 'white', paddingLeft: scale(20), paddingTop: 13, paddingBottom: 13, fontSize: 22, fontWeight: 'bold' }}>Stall Profile</Text>
@@ -239,11 +319,19 @@ export default class StallOwnerScreen extends React.Component {
         </ScrollView>     
 
         {this.state.isActionButtonVisible ? <ActionButton onPress={this.handleAddItem} /> : null}
+    // }
 
-      </View>
-		);
+		return (
+      <View style={{ flex: 1, alignItems: 'center' }}>{screen}</View>
+    );
 	}
 }
+
+const mapStateToProps = state => ({
+  userData: state.user.userData
+})
+
+export default connect(mapStateToProps)(StallOwnerScreen)
 
 const styles = StyleSheet.create({
   container: {

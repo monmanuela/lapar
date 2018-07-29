@@ -2,6 +2,7 @@ import firebase from 'react-native-firebase'
 
 // action types
 export const UPDATE_LOCATION = 'UPDATE_LOCATION'
+export const UPDATE_PREFERENCE = 'UPDATE_PREFERENCE'
 export const LOG_IN_START = 'LOG_IN_START'
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS'
 export const LOG_IN_FAIL = 'LOG_IN_FAIL'
@@ -12,6 +13,10 @@ export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS'
 export const SET_USER_DATA = 'SET_USER_DATA'
 export const UPDATE_USER_FROM_FIREBASE_LISTENER = 'UPDATE_USER_FROM_FIREBASE_LISTENER'
 
+// other constants
+export const NORMAL = 'NORMAL'
+export const STALL = 'STALL'
+
 // action creators
 export const updateLocation = locations => {
 	return({
@@ -20,8 +25,15 @@ export const updateLocation = locations => {
 	})
 }
 
+export const updatePreferences = pref => {
+  return({
+    type: UPDATE_PREFERENCE,
+    payload: pref
+  })
+}
+
 export const updateUserFromFirebaseListener = user => {
-  console.log("act crt uuffl")
+  console.log("update user from firebase listener")
   console.log("the user: " + JSON.stringify(user))
   return({
     type: UPDATE_USER_FROM_FIREBASE_LISTENER,
@@ -35,12 +47,44 @@ export const logOutUser = () => {
   })
 }
 
+export const indicateSignUpStall = () => {
+  return({
+    type: SIGN_UP_START,
+    payload: STALL
+  })
+}
+
+export const indicateSignUpNormal = () => {
+  return({
+    type: SIGN_UP_START,
+    payload: NORMAL
+  })
+}
+
+export const setUserData = data => {
+  return({
+    type: SET_USER_DATA,
+    payload: data
+  })
+}
+
 // async action creators
 export const updateUserIfLoggedIn = user => async dispatch => {
   try {
     dispatch(updateUserFromFirebaseListener(user))
     const userData = await fetchUserData(user.uid)
-    dispatch({type: SET_USER_DATA, payload: userData})
+    dispatch(setUserData(userData))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const updateUserIfNewSignUp = user => async dispatch => {
+  try {
+    dispatch(updateUserFromFirebaseListener(user))
+    // const userData = await fetchUserData(user.uid)
+    // don't fetch user data just yet?
+    // dispatch({type: SET_USER_DATA, payload: userData})
   } catch (err) {
     console.log(err)
   }
@@ -84,21 +128,17 @@ export const signUpUser = (email, password, displayName) => async dispatch => {
     dispatch({type: SIGN_UP_FAIL, payload: {errMessage: "Email, password or display name cannot be empty"}})
     return;
   }
-  dispatch({type: SIGN_UP_START})
+  dispatch(indicateSignUpNormal())
   try {
+    // dispatch action to tell that this is Normal User
     const result = await firebaseSignUpUser(email, password, displayName)
     console.log("sign up result: " + JSON.stringify(result))
     dispatch({type: SIGN_UP_SUCCESS, payload: result})
-    dispatch({type: SET_USER_DATA, payload: {type: "USER", bio: '', preferences: '', userId: result.uid}})
+    dispatch({type: SET_USER_DATA, payload: {bio: '', userId: result.uid}})
   } catch (err) {
     dispatch({type: SIGN_UP_FAIL, payload: {errMessage: err.message}})
   }
 }
-
-// helper functions
-// firebaseSignUpStall = async (email, password, stallName, stallLocation) => {
-  
-// }
 
 firebaseSignUpUser = async (email, password, displayName) => {
   try {
@@ -111,7 +151,6 @@ firebaseSignUpUser = async (email, password, displayName) => {
         
         db.ref('users/' + user.uid).set({
           bio: '',
-          preferences: '',
           userId: user.uid,
         })
         
@@ -141,5 +180,6 @@ fetchUserData = async userId => {
     .then(snapshot => {
       return snapshot.val()[userId]
     })
+  console.log("FETCHED USER DATA: " + JSON.stringify(userData))
   return userData
 }

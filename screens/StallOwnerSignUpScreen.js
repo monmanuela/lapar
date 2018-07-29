@@ -13,15 +13,19 @@ const verticalScale = size => height / guidelineBaseHeight * size;
 
 import firebase from 'react-native-firebase'
 
-export default class StallOwnerSignUpScreen extends React.Component {
+import {connect} from 'react-redux'
+import {indicateSignUpStall, setUserData} from '../redux/actions'
+
+class StallOwnerSignUpScreen extends React.Component {
 	constructor() {
     super()
     this.state = {
       email: '',
       password: '',
       stallName: '',
-      stallLocation: '',
+      stallLocation: 'Techno Edge',
       locationList: [],
+      locNameToLocIdHashtable: {},
       errorMessage: null
     }
   }
@@ -35,12 +39,18 @@ export default class StallOwnerSignUpScreen extends React.Component {
       	return locationsObj[locId].name
       })
       this.setState({ locationList: locNamesArr })
+
+      let hash = {}
+      Object.keys(locationsObj).forEach((id, idx) => {
+        hash[locationsObj[id].name] = id
+      })
+      this.setState({ locNameToLocIdHashtable: hash })
     })
-    // have a hashtable locname -> locId?
   }
 
   handleSignUp = () => {
     // this.props.signUpStallOwner(this.state.email, this.state.password, this.state.stallName, this.state.stallLocation)
+    this.props.indicateSignUpStall()
 
     firebase
       .auth()
@@ -72,11 +82,19 @@ export default class StallOwnerSignUpScreen extends React.Component {
           })
 					.then(stallId => {
 						console.log("saving stall id in user")
+            const userData = {isStall: true, stallId: stallId}
+
 		        // save the stall id in user
-		        firebase.database().ref('users/' + user.uid).set({
-		          isStall: true,
-		          stallId: stallId
-		        })
+		        firebase.database().ref('users/' + user.uid).set(userData)
+
+            // save in location too
+            const locId = this.state.locNameToLocIdHashtable[this.state.stallLocation]
+            let newStall = {}
+            newStall[stallId] = true
+            firebase.database().ref('locations/' + locId + '/stalls/').update(newStall)
+
+            // manually dispatch action to set user data without fetching
+            this.props.setUserData(userData)
 					})
           .catch(err => console.log(err))     
       })
@@ -156,6 +174,13 @@ export default class StallOwnerSignUpScreen extends React.Component {
     )
 	}
 }
+
+mapDispatchToProps = {
+  indicateSignUpStall: indicateSignUpStall,
+  setUserData: setUserData
+}
+
+export default connect(null, mapDispatchToProps)(StallOwnerSignUpScreen)
 
 const styles = StyleSheet.create({
   container: {

@@ -19,22 +19,15 @@ export default class StallOwnerItemScreen extends React.Component {
     let reviewIds = this.props.navigation.state.params.item.reviews || []
     console.log("TEST " + JSON.stringify(this.props.navigation.state.params.item))
 
-    // db.ref("items/" + this.props.navigation.state.params.item.itemId).once("value").then(snapshot => {
-    //   reviewIds = snapshot.val().reviews
-    //   console.log("HELP " + JSON.stringify(reviewIds))
-    // })
-    // .then(() => {
-      Object.keys(reviewIds).map((reviewId, index) => {
-        db.ref("reviews/" + reviewId).once("value")
-          .then(snapshot => snapshot.val())
-          .then(rev => {
-            let newReview = this.state.reviews
-            newReview[reviewId] = rev
-            this.setState({ reviews: newReview })
-          })
-      })
-    // })
-    // .then(() => console.log("REVIEWS IN ITEM " + JSON.stringify(this.state.reviews)))
+    Object.keys(reviewIds).map((reviewId, index) => {
+      db.ref("reviews/" + reviewId).once("value")
+        .then(snapshot => snapshot.val())
+        .then(rev => {
+          let newReview = this.state.reviews
+          newReview[reviewId] = rev
+          this.setState({ reviews: newReview })
+        })
+    })
   }
 
 	handleSaveChanges = () => {
