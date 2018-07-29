@@ -22,7 +22,7 @@ export default class AddNewItemModal extends React.Component {
       name: '',
 			photoURL: null,
       price: 0,
-      suggestions : [ { name:'Mickey Mouse' }, ],
+      suggestions : [ { name:'halal' }, { name:'chicken' }, { name:'spicy' }, { name:'chinese' }],
       tagsSelected : []
 		}
 	}

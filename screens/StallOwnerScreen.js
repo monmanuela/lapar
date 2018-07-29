@@ -268,13 +268,16 @@ class StallOwnerScreen extends React.Component {
   }
 
 	render() {
-		let screen
 
     // if (this.state.isLoading) {
     //   screen = <ActivityIndicator size="large" color="#0000ff" />
     // } else {
-      screen = 
-  			<ScrollView onScroll={this.onScroll} style={{ backgroundColor: 'white' }}>
+
+    // }
+
+		return (
+      <View style={{ flex: 1, alignItems: 'center' }}>
+              <ScrollView onScroll={this.onScroll} style={{ backgroundColor: 'white' }}>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ width: scale(310), backgroundColor: 'red', color: 'white', paddingLeft: scale(20), paddingTop: 13, paddingBottom: 13, fontSize: 22, fontWeight: 'bold' }}>Stall Profile</Text>
             <Icon onPress={this.handleSignOut} name='sign-out' size={scale(25)} color={'white'} style={{ backgroundColor: 'red', paddingLeft: scale(10), paddingTop: scale(15), paddingRight: scale(5) }} />
@@ -290,7 +293,7 @@ class StallOwnerScreen extends React.Component {
           </View>
           
           <View style={styles.buttonContainer}>
-          	<Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
+            <Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
           </View>
           
           <VerticalItemsList items={Object.values(this.state.items)} navigation={this.props.navigation} />
@@ -299,7 +302,7 @@ class StallOwnerScreen extends React.Component {
 
           <EditStallProfileModal
             stallId={this.state.stallId}
-   					modalVisible={this.state.modalVisible} 
+            modalVisible={this.state.modalVisible} 
             photoURL={this.state.modalPhotoURL}
             name={this.state.modalName}
             location={this.state.modalLocation}
@@ -319,10 +322,7 @@ class StallOwnerScreen extends React.Component {
         </ScrollView>     
 
         {this.state.isActionButtonVisible ? <ActionButton onPress={this.handleAddItem} /> : null}
-    // }
-
-		return (
-      <View style={{ flex: 1, alignItems: 'center' }}>{screen}</View>
+      </View>
     );
 	}
 }
