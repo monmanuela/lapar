@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Button, StyleSheet, Image, ActivityIndicator, ScrollView, TextInput } from 'react-native';
+import { Text, View, Button, StyleSheet, Image, ActivityIndicator, ScrollView, TextInput, Alert } from 'react-native';
 import firebase from 'react-native-firebase';
 import { Avatar, Card } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Octicons'
