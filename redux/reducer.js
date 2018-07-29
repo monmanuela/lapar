@@ -11,7 +11,7 @@ import {
 
 const merge = (prev, next) => Object.assign({}, prev, next)
 
-const initialState = {}
+const initialState = {userData: {stallId: null}}
 
 const locationReducer = (state = initialState, action) => {
   switch (action.type) {

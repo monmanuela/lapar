@@ -14,7 +14,7 @@ const verticalScale = size => height / guidelineBaseHeight * size;
 import firebase from 'react-native-firebase'
 
 import {connect} from 'react-redux'
-import {indicateSignUpStall} from '../redux/actions'
+import {indicateSignUpStall, setUserData} from '../redux/actions'
 
 class StallOwnerSignUpScreen extends React.Component {
 	constructor() {
@@ -82,18 +82,19 @@ class StallOwnerSignUpScreen extends React.Component {
           })
 					.then(stallId => {
 						console.log("saving stall id in user")
+            const userData = {isStall: true, stallId: stallId}
+
 		        // save the stall id in user
-		        firebase.database().ref('users/' + user.uid).set({
-		          isStall: true,
-		          stallId: stallId
-		        })
+		        firebase.database().ref('users/' + user.uid).set(userData)
 
             // save in location too
             const locId = this.state.locNameToLocIdHashtable[this.state.stallLocation]
             let newStall = {}
             newStall[stallId] = true
-
             firebase.database().ref('locations/' + locId + '/stalls/').update(newStall)
+
+            // manually dispatch action to set user data without fetching
+            this.props.setUserData(userData)
 					})
           .catch(err => console.log(err))     
       })
@@ -103,7 +104,6 @@ class StallOwnerSignUpScreen extends React.Component {
     const locationsPicker = this.state.locationList.map((loc, index) => {
       return <Picker.Item key={index} label={loc} value={loc} />
     })
-    console.log("stall location: " + this.state.stallLocation)
 		return (
       <View style={styles.container}>
         <Image source={require('../assets/images/logo.png')} style={{ width: scale(100), height: verticalScale(150) }}/>
@@ -175,7 +175,12 @@ class StallOwnerSignUpScreen extends React.Component {
 	}
 }
 
-export default connect(null, {indicateSignUpStall})(StallOwnerSignUpScreen)
+mapDispatchToProps = {
+  indicateSignUpStall: indicateSignUpStall,
+  setUserData: setUserData
+}
+
+export default connect(null, mapDispatchToProps)(StallOwnerSignUpScreen)
 
 const styles = StyleSheet.create({
   container: {

@@ -3,51 +3,47 @@ import React from 'react'
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native'
 import firebase from 'react-native-firebase'
 
-import {updateUserIfLoggedIn, NORMAL, STALL} from '../redux/actions'
+import {updateUserIfLoggedIn, updateUserIfNewSignUp, NORMAL, STALL} from '../redux/actions'
 import {connect} from 'react-redux'
 import store from '../redux/store'
 
 class LoadingScreen extends React.Component {
   componentDidMount = () => {
-
     firebase.auth().onAuthStateChanged(user => {
       const userType = store.getState().user.userType
       console.log("store state in loading screen: " + JSON.stringify(store.getState()))
       let userData
       if (user) {
         console.log("user in listener: " + JSON.stringify(user))
-        this.props.updateUserIfLoggedIn(user)
+        // this.props.updateUserIfLoggedIn(user)
 
         if (userType) {
-          console.log("userType: " + userType)
+          this.props.updateUserIfNewSignUp(user)
+
           // a new sign up
-          // but then at the stall screen, snapshot.val() is null?
           switch(userType) {
             case NORMAL:
-              console.log("NORMAL USER in loading")
-              this.props.navigation.navigate('MainTabNavigator')
-              break
+              return this.props.navigation.navigate('MainTabNavigator')
             case STALL:
-              console.log("STALL OWNER in loading")
-              this.props.navigation.navigate('StallOwnerNavigator')
-              break
+              return this.props.navigation.navigate('StallOwnerNavigator')
           }
         } else {
-          console.log("not new user")
+          this.props.updateUserIfLoggedIn(user)
+
           firebase.database().ref("users/" + user.uid).once("value").then(snapshot => {
             console.log("user data: " + JSON.stringify(snapshot.val()))
             userData = snapshot.val()
           })
           .then(() => {
             if (userData.isStall) {
-              this.props.navigation.navigate('StallOwnerNavigator')
+              return this.props.navigation.navigate('StallOwnerNavigator')
             } else {
-              this.props.navigation.navigate('MainTabNavigator')
+              return this.props.navigation.navigate('MainTabNavigator')
             }
           })
         }
       } else {
-        this.props.navigation.navigate('SignedOutNavigator')
+        return this.props.navigation.navigate('SignedOutNavigator')
       }
     })
   }
@@ -62,7 +58,13 @@ class LoadingScreen extends React.Component {
   }
 }
 
-export default connect(null, {updateUserIfLoggedIn})(LoadingScreen)
+mapDispatchToProps = {
+  updateUserIfLoggedIn: updateUserIfLoggedIn,
+  updateUserIfNewSignUp: updateUserIfNewSignUp
+}
+
+
+export default connect(null, mapDispatchToProps)(LoadingScreen)
 
 const styles = StyleSheet.create({
   container: {

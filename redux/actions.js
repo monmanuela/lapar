@@ -48,7 +48,6 @@ export const logOutUser = () => {
 }
 
 export const indicateSignUpStall = () => {
-  console.log("sign up start for stall")
   return({
     type: SIGN_UP_START,
     payload: STALL
@@ -56,10 +55,16 @@ export const indicateSignUpStall = () => {
 }
 
 export const indicateSignUpNormal = () => {
-  console.log("sign up start for normal")
   return({
     type: SIGN_UP_START,
     payload: NORMAL
+  })
+}
+
+export const setUserData = data => {
+  return({
+    type: SET_USER_DATA,
+    payload: data
   })
 }
 
@@ -68,7 +73,18 @@ export const updateUserIfLoggedIn = user => async dispatch => {
   try {
     dispatch(updateUserFromFirebaseListener(user))
     const userData = await fetchUserData(user.uid)
-    dispatch({type: SET_USER_DATA, payload: userData})
+    dispatch(setUserData(userData))
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const updateUserIfNewSignUp = user => async dispatch => {
+  try {
+    dispatch(updateUserFromFirebaseListener(user))
+    // const userData = await fetchUserData(user.uid)
+    // don't fetch user data just yet?
+    // dispatch({type: SET_USER_DATA, payload: userData})
   } catch (err) {
     console.log(err)
   }
@@ -164,5 +180,6 @@ fetchUserData = async userId => {
     .then(snapshot => {
       return snapshot.val()[userId]
     })
+  console.log("FETCHED USER DATA: " + JSON.stringify(userData))
   return userData
 }
