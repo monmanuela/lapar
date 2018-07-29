@@ -3,6 +3,7 @@ import { Modal, View, Text, TextInput, Image, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements'
 import firebase from 'react-native-firebase';
 import ImagePicker from 'react-native-image-picker'
+import AutoTags from 'react-native-tag-autocomplete'
 
 import { Dimensions } from 'react-native';
 
@@ -21,7 +22,8 @@ export default class AddNewItemModal extends React.Component {
       name: '',
 			photoURL: null,
       price: 0,
-      tags: []
+      suggestions : [ { name:'Mickey Mouse' }, ],
+      tagsSelected : []
 		}
 	}
 
@@ -64,7 +66,7 @@ export default class AddNewItemModal extends React.Component {
       name: '', 
       photoURL: null,
       price: 0,
-      tags: []
+      tagsSelected: []
     })
     this.props.handleClose()
   }
@@ -83,7 +85,7 @@ export default class AddNewItemModal extends React.Component {
       rating: 0,
       reviews: {},
       stallId: this.props.stallId,
-      tags: this.state.tags
+      tags: this.state.tagsSelected.map(tag => tag.name)
     })
     .then(() => {
       // upload photo
@@ -114,6 +116,16 @@ export default class AddNewItemModal extends React.Component {
     .catch(error => console.log(error))
   }
 
+  handleDelete = index => {
+    let tagsSelected = this.state.tagsSelected;
+    tagsSelected.splice(index, 1);
+    this.setState({ tagsSelected });
+  }
+   
+  handleAddition = suggestion => {
+    this.setState({ tagsSelected: this.state.tagsSelected.concat([suggestion]) });
+  }
+
 	render() {
 		return (
 			<Modal animationType='fade' onRequestClose={() => alert("Add") } visible={this.props.modalVisible}>
@@ -131,18 +143,26 @@ export default class AddNewItemModal extends React.Component {
               resizeMode="cover"
               source={{uri: this.state.photoURL}}
             />
-
-            <Text style={{ marginLeft: 20, marginTop: 30 }}>Name: </Text>
+            
+            <Text style={{ marginLeft: 20, marginTop: 10 }}>Name: </Text>
             <TextInput
   						style={{ height: 50, width: '90%', borderBottomColor: 'gray', borderBottomWidth: 1, paddingLeft: 8, paddingRight: 8 }} 
   						onChangeText={name => this.onAddItemName(name)} 
   					/>
 
-            <Text style={{ marginLeft: 20, marginTop: 30 }}>Price: </Text>
+            <Text style={{ marginLeft: 20, marginTop: 10 }}>Price: </Text>
             <TextInput
               style={{ height: 50, width: '90%', borderBottomColor: 'gray', borderBottomWidth: 1, paddingLeft: 8, paddingRight: 8 }} 
               onChangeText={price => this.onAddItemPrice(price)} 
             />
+            
+            <Text style={{ marginLeft: 20, marginTop: 30 }}>Tags: </Text>
+            <AutoTags
+              suggestions={this.state.suggestions}
+              tagsSelected={this.state.tagsSelected}
+              handleAddition={this.handleAddition}
+              handleDelete={this.handleDelete}
+              placeholder="Add tags.." />
 
   					<Button 
               title='SUBMIT' 

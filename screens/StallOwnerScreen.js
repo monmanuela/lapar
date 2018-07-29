@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, View, Text, Button, StyleSheet, Image, UIManager, LayoutAnimation } from 'react-native'
+import { ScrollView, View, Text, Button, StyleSheet, Image, UIManager, LayoutAnimation, Alert } from 'react-native'
 import firebase from 'react-native-firebase';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Octicons'
@@ -171,6 +171,18 @@ export default class StallOwnerScreen extends React.Component {
   }
 
   handleSignOut = () => {
+    return Alert.alert(
+      'Sign Out',
+      'Are you sure you want to quit?',
+      [
+        {text: 'Sign Out', onPress: () => this.onSignOut()},
+        {text: 'Cancel', onPress: () => {}}
+      ],
+      { cancelable: false }
+    );
+  }
+
+  onSignOut = () => {
     try {
       firebase.auth().signOut()
       this.props.navigation.navigate('Login')

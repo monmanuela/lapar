@@ -157,6 +157,18 @@ class ProfileScreen extends React.Component {
   }
 
   handleSignOut = () => {
+    return Alert.alert(
+      'Sign Out',
+      'Are you sure you want to quit?',
+      [
+        {text: 'Sign Out', onPress: () => this.onSignOut()},
+        {text: 'Cancel', onPress: () => {}}
+      ],
+      { cancelable: false }
+    );
+  }
+
+  onSignOut = () => {
     try {
       firebase.auth().signOut()
       this.props.logOutUser()

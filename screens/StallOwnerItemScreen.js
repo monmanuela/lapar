@@ -51,11 +51,11 @@ export default class StallOwnerItemScreen extends React.Component {
 
 	render() {
 		const item = this.props.navigation.state.params.item
-		// const itemTags = item.tags.map((tag, index) => {
-		// 	return (
-		// 		<Text key={index} style={{ color: 'white', backgroundColor: 'red', marginRight: 5, marginTop: 5, borderRadius: 10, padding: 7 }}>{tag}</Text>
-		// 	);
-		// })
+		const itemTags = item.tags ? item.tags.map((tag, index) => {
+			return (
+				<Text key={index} style={{ color: 'white', backgroundColor: 'red', marginRight: 5, marginTop: 5, borderRadius: 10, padding: 7 }}>{tag}</Text>
+			);
+		}) : null;
 
 		return (
 			<ScrollView style={{ backgroundColor: 'white' }}>
@@ -66,7 +66,7 @@ export default class StallOwnerItemScreen extends React.Component {
 					<Text style={{ fontSize: 16, paddingLeft: 20 }}>Price: ${item.price}</Text>
 					
 					<View style={{ flexDirection: 'row', paddingLeft: 20 }}>
-						{/*itemTags*/}
+						{itemTags}
 					</View>
 
 					<View style={{ justifyContent: 'center', alignItems: 'center' }}>
