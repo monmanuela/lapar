@@ -32,13 +32,13 @@ export default class StallOwnerItemScreen extends React.Component {
 
 	handleSaveChanges = () => {
 		this.setState({
-			modalVisible: true
+			modalVisible: false
 		})
 	}
 
 	handleClose = () => {
 		this.setState({
-			modalVisible: false,
+			modalVisible: false
 		})
 	}
 
@@ -71,7 +71,7 @@ export default class StallOwnerItemScreen extends React.Component {
 					modalVisible={this.state.modalVisible}
           item={item}
 					handleSaveChanges={this.handleSaveChanges} 
-					handleClose={this.handleClose} 
+					handleClose={this.handleClose}
 				/>
 
 				<VerticalReviewsList reviews={Object.values(this.state.reviews)} />
