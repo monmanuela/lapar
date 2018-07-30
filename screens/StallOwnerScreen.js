@@ -288,13 +288,6 @@ class StallOwnerScreen extends React.Component {
   }
 
 	render() {
-
-    // if (this.state.isLoading) {
-    //   screen = <ActivityIndicator size="large" color="#0000ff" />
-    // } else {
-
-    // }
-
 		return (
       <View style={{ flex: 1, alignItems: 'center' }}>
               <ScrollView onScroll={this.onScroll} style={{ backgroundColor: 'white' }}>
@@ -305,13 +298,21 @@ class StallOwnerScreen extends React.Component {
 
           <Image source={{ uri: this.state.photoURL }} style={{ width: scale(350), height: verticalScale(180) }} />
           
-          <View style={styles.container}>
+          {/*<View style={styles.container}>
             <Text style={{ fontSize: 20, color: 'black', marginBottom: 12, marginTop: 10 }}>{this.state.name}</Text>
             <Text style={{ color: 'gray', marginBottom: 5, marginRight: 20 }}>Location: {this.state.location}</Text>
             <Text style={{ color: 'gray', marginBottom: 5, marginRight: 20 }}>Rating: {this.state.rating}</Text>
             <Text style={{ color: 'gray', marginBottom: 10, marginRight: 20 }}>Lowest Price: ${this.state.lowestPrice}</Text>
           </View>
+          */}
           
+          <View style={styles.container}>
+            <Text style={{ fontSize: 20, color: 'black', marginBottom: 12, marginTop: 10 }}>Example Stall</Text>
+            <Text style={{ color: 'gray', marginBottom: 5, marginRight: 20 }}>Location: Techno Edge</Text>
+            <Text style={{ color: 'gray', marginBottom: 5, marginRight: 20 }}>Rating: {this.state.rating}</Text>
+            <Text style={{ color: 'gray', marginBottom: 10, marginRight: 20 }}>Lowest Price: ${this.state.lowestPrice}</Text>
+          </View>
+
           <View style={styles.buttonContainer}>
             <Button title='Edit Profile' color={'red'} onPress={this.handleEditProfile} />
           </View>

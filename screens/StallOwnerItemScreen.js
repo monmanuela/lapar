@@ -111,6 +111,7 @@ export default class StallOwnerItemScreen extends React.Component {
 					modalVisible={this.state.modalVisible}
 					photoURL={this.state.modalPhotoURL}
 					price={this.state.modalPrice}
+					itemId={item.itemId}
 					onChangePrice={this.onChangePrice}
           onChangePhotoURL={ this.onChangePhotoURL }
 					handleSaveChanges={this.handleSaveChanges} 

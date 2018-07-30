@@ -45,8 +45,7 @@ export default class EditItemModal extends React.Component {
         console.log('User tapped custom button: ', response.customButton)
       } else {
         console.log("response: " + JSON.stringify(response))
-        // change to uid? or push user data?
-        const imageRef = firebase.storage().ref('items').child(`${this.props.name}.jpg`)
+        const imageRef = firebase.storage().ref('items').child(`${this.props.itemId}.jpg`)
         let mime = 'image/jpg'
         imageRef.put(response.uri, {contentType: mime})
           .then(() => {
