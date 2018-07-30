@@ -169,6 +169,26 @@ class StallOwnerScreen extends React.Component {
         })
       })
     })
+
+    db.ref("items/").on("child_changed", snapshot => {
+      console.log("CHILD_CHANGED")
+      db.ref("stalls/" + stallId).once("value").then(snapshot => {
+        itemIds = snapshot.val().items
+      })
+      .then(() => {
+        Object.keys(itemIds).map((itemId, index) => {
+          db.ref("items/" + itemId).once("value")
+            .then(snapshot => snapshot.val())
+            .then(i => {
+              let newItem = this.state.items
+              newItem[itemId] = i
+              this.setState({ items: newItem })
+            })
+        })
+      })
+      .then(() => console.log("ITEMS IN STALL " + JSON.stringify(this.state.items)))
+    })
+
   }
 
   // add listener for items

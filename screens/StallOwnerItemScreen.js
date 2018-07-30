@@ -52,14 +52,26 @@ export default class StallOwnerItemScreen extends React.Component {
   	this.setState({ modalPrice: price })
   }
 
+  onChangePhotoURL = url => {
+  	this.setState({ modalPhotoURL: url })
+  }
+
 	handleSaveChanges = () => {
 		this.setState({
 			photoURL: this.state.modalPhotoURL,
-			name: this.state.modalName,
+			// name: this.state.modalName,
 			price: this.state.modalPrice,
-			tags: this.state.modalTags,
+			// tags: this.state.modalTags,
 			modalVisible: false
 		})
+		// link to firebase
+    const item = this.props.navigation.state.params.item
+
+    const db = firebase.database()
+    db.ref("items/" + item.itemId).update({
+      price: parseFloat(this.state.modalPrice),
+      photoURL: this.state.modalPhotoURL
+    })
 	}
 
 	handleClose = () => {
@@ -100,6 +112,7 @@ export default class StallOwnerItemScreen extends React.Component {
 					photoURL={this.state.modalPhotoURL}
 					price={this.state.modalPrice}
 					onChangePrice={this.onChangePrice}
+          onChangePhotoURL={ this.onChangePhotoURL }
 					handleSaveChanges={this.handleSaveChanges} 
 					handleClose={this.handleClose}
 				/>

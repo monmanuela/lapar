@@ -53,6 +53,7 @@ export default class EditItemModal extends React.Component {
             return imageRef.getDownloadURL()
           })
           .then(url => {
+            console.log("item photo url: " + url)
             this.props.onChangePhotoURL(url)
           })
       }
