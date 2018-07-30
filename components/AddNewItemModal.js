@@ -21,7 +21,7 @@ export default class AddNewItemModal extends React.Component {
       location: '',
       name: '',
 			photoURL: null,
-      price: 0,
+      price: '',
       suggestions : [ { name:'halal' }, { name:'chicken' }, { name:'spicy' }, { name:'chinese' }],
       tagsSelected : []
 		}
@@ -81,7 +81,7 @@ export default class AddNewItemModal extends React.Component {
       itemId: newItemRefKey,
       name: this.state.name,
       photoURL: this.state.photoURL,
-      price: this.state.price,
+      price: parseFloat(this.state.price),
       rating: 0,
       reviews: {},
       stallId: this.props.stallId,
@@ -90,7 +90,7 @@ export default class AddNewItemModal extends React.Component {
     .then(() => {
       // upload photo
       if (this.state.photoURL) {
-        const imageRef = firebase.storage().ref('reviewPhotos').child(`${newItemRef.key}.jpg`)
+        const imageRef = firebase.storage().ref('items').child(`${newItemRef.key}.jpg`)
         let mime = 'image/jpg'
         imageRef
           .put(this.state.photoURL, {contentType: mime})

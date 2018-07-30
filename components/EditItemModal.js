@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker'
 import firebase from 'react-native-firebase';
+import AutoTags from 'react-native-tag-autocomplete'
 
 import { Dimensions } from 'react-native';
 
@@ -25,7 +26,37 @@ const verticalScale = size => height / guidelineBaseHeight * size;
 
 export default class EditItemModal extends React.Component {
 	onChangePicturePress = () => {
+    const options = {
+      title: 'Select Picture',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
+    }
 
+    ImagePicker.showImagePicker(options, response => {
+      console.log('response: ', response)
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker')
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error)
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton)
+      } else {
+        console.log("response: " + JSON.stringify(response))
+        // change to uid? or push user data?
+        const imageRef = firebase.storage().ref('items').child(`${this.props.name}.jpg`)
+        let mime = 'image/jpg'
+        imageRef.put(response.uri, {contentType: mime})
+          .then(() => {
+            return imageRef.getDownloadURL()
+          })
+          .then(url => {
+            this.props.onChangePhotoURL(url)
+          })
+      }
+    })
   }
 
   render() {
@@ -40,16 +71,6 @@ export default class EditItemModal extends React.Component {
             </View>
 
             <View>
-              <Text style={{ marginLeft: 20 }}>Name: </Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder = { this.props.item.name }
-                onChangeText = { name => this.props.onChangeName(name) }
-                value = { this.props.item.name }
-              />
-            </View>
-
-            <View>
               <Text style={{ marginLeft: 20, marginTop: 30 }}>Price: </Text>
               <TextInput
                 style={styles.textInput}
@@ -60,22 +81,11 @@ export default class EditItemModal extends React.Component {
               />
             </View>
 
-            <View>
-              <Text style={{ marginLeft: 20, marginTop: 30 }}>Tags: </Text>
-              <TextInput
-                style={styles.textInput}
-                autoCapitalize="none"
-                placeholder= { JSON.stringify(this.props.tags) }
-                onChangeText={ tag => this.props.onChangeTags(tag)}
-                value={ this.props.tags }
-              />
-            </View>
-
             <View style={{ marginTop: 20, marginBottom: 20, justifyContent: 'center', alignItems: 'center' }}>
               <Button title='     Save      ' color={'red'} onPress={this.props.handleSaveChanges} />
             </View>
             <View style={{ marginBottom: 20, justifyContent: 'center', alignItems: 'center' }}>
-              <Button title='    Close    ' color={'red'} onPress={this.props.handleClose} />
+              <Button title='    Cancel    ' color={'red'} onPress={this.props.handleClose} />
             </View>
           </View>
         </TouchableWithoutFeedback>

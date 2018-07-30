@@ -9,8 +9,12 @@ export default class StallOwnerItemScreen extends React.Component {
 	constructor() {
 		super();
 		this.state = {
+			photoURL: null,
+			price: null,
+			reviews: {},
+			modalPhotoURL: null,
+			modalPrice: '',
 			modalVisible: false,
-      reviews: {}
 		}
 	}
 
@@ -28,16 +32,40 @@ export default class StallOwnerItemScreen extends React.Component {
           this.setState({ reviews: newReview })
         })
     })
+
+    const item = this.props.navigation.state.params.item
+    this.setState({
+    	photoURL: item.photoURL,
+    	price: item.price,
+    })
+  }
+
+  handleEditItem = () => {
+  	this.setState({
+  		modalPhotoURL: this.state.photoURL,
+  		modalPrice: this.state.price.toString(),
+  		modalVisible: true
+  	})
+  }
+
+  onChangePrice = price => {
+  	this.setState({ modalPrice: price })
   }
 
 	handleSaveChanges = () => {
 		this.setState({
-			modalVisible: true
+			photoURL: this.state.modalPhotoURL,
+			name: this.state.modalName,
+			price: this.state.modalPrice,
+			tags: this.state.modalTags,
+			modalVisible: false
 		})
 	}
 
 	handleClose = () => {
 		this.setState({
+			modalPhotoURL: null,
+			modalPrice: '',
 			modalVisible: false,
 		})
 	}
@@ -53,23 +81,25 @@ export default class StallOwnerItemScreen extends React.Component {
 		return (
 			<ScrollView style={{ backgroundColor: 'white' }}>
 				<View style={{ borderBottomColor: '#d9dce0', borderBottomWidth: 1, paddingBottom: 10, marginBottom: 10 }}>
-					<Image source={{ uri: item.photoURL }} style={{ height: 150, width: 400 }} />
+					<Image source={{ uri: this.state.photoURL }} style={{ height: 150, width: 400 }} />
 					<Text style={{ color: 'black', fontSize: 28, paddingLeft: 20, marginTop: 15 }}>{item.name}</Text>
 					<Text style={{ fontSize: 16, paddingLeft: 20 }}>Rating: {item.rating}</Text>
-					<Text style={{ fontSize: 16, paddingLeft: 20 }}>Price: ${item.price}</Text>
+					<Text style={{ fontSize: 16, paddingLeft: 20 }}>Price: ${this.state.price}</Text>
 					
 					<View style={{ flexDirection: 'row', paddingLeft: 20 }}>
 						{itemTags}
 					</View>
 
 					<View style={{ justifyContent: 'center', alignItems: 'center' }}>
-						<Button title='Edit Item' color={'red'} onPress={() => this.setState({ modalVisible: true })} />
+						<Button title='Edit Item' color={'red'} onPress={this.handleEditItem} />
 					</View>
 				</View>
 
 				<EditItemModal 
 					modalVisible={this.state.modalVisible}
-          item={item}
+					photoURL={this.state.modalPhotoURL}
+					price={this.state.modalPrice}
+					onChangePrice={this.onChangePrice}
 					handleSaveChanges={this.handleSaveChanges} 
 					handleClose={this.handleClose} 
 				/>
