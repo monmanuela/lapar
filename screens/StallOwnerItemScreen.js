@@ -101,7 +101,7 @@ export default class StallOwnerItemScreen extends React.Component {
 					price={this.state.modalPrice}
 					onChangePrice={this.onChangePrice}
 					handleSaveChanges={this.handleSaveChanges} 
-					handleClose={this.handleClose} 
+					handleClose={this.handleClose}
 				/>
 
 				<VerticalReviewsList reviews={Object.values(this.state.reviews)} />
